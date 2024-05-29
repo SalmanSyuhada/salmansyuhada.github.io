@@ -387,7 +387,7 @@
 													To
 													<span class="font-weight-semibold">Present</span>
 												</span>
-												<p class="text-color-dark">(4 Years 9 Months)</p>
+												<p id="result1" class="text-color-dark"></p>
 												<span class="company text-color-dark font-weight-semibold">
 													Dinas Komunikasi dan Informatika
 													<span
@@ -416,7 +416,7 @@
 													To
 													<span class="font-weight-semibold">Des 2020</span>
 												</span>
-												<p class="text-color-dark">(2 Years)</p>
+												<p id="result2" class="text-color-dark"></p>
 												<span class="company text-color-dark font-weight-semibold">
 													RSUD ARIFIN ACHMAD Prov. Riau
 													<span
@@ -445,7 +445,7 @@
 													To
 													<span class="font-weight-semibold">Des 2017</span>
 												</span>
-												<p class="text-color-dark">(2 Years 7 Months)</p>
+												<p id="result3" class="text-color-dark"></p>
 												<span class="company text-color-dark font-weight-semibold">
 													Dinas Perpustakaan dan Kearsipan
 													<span
@@ -742,13 +742,6 @@
 									</div>
 
 									
-
-									
-									
-
-									
-							
-								
 									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
 										<div class="image-gallery-item mb-4 pb-3">
 											<a href="assets/img/portfolio/App_ServerMon.png" class="lightbox-portfolio">
@@ -991,9 +984,6 @@
 											</a>
 										</div>
 									</div>
-
-									
-									
 
 								</div>
 							</div>
@@ -1318,6 +1308,50 @@
 				</div>
 			</footer>
 		</div>
+
+		<script>
+			function calculateDifference(startDateStr, endDateStr) {
+				const startDate = new Date(startDateStr);
+				const endDate = new Date(endDateStr);
+	
+				const diffInTime = endDate.getTime() - startDate.getTime();
+				const diffInDays = diffInTime / (1000 * 3600 * 24);
+	
+				let years = endDate.getFullYear() - startDate.getFullYear();
+				let months = endDate.getMonth() - startDate.getMonth();
+				let days = endDate.getDate() - startDate.getDate();
+	
+				if (days < 0) {
+					months--;
+					days += new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
+				}
+	
+				if (months < 0) {
+					years--;
+					months += 12;
+				}
+	
+				return ` ( ${years} tahun, ${months} bulan, ${days} hari )`;
+			}
+	
+			function displayDifferences() {
+				const date1 = '2020-12-31';
+				const today = new Date().toISOString().split('T')[0]; // Tanggal Hari Ini
+				
+				const date2 = '2017-12-31';
+				const refDate2 = '2020-12-31'; // Referensi Tanggal 2
+
+				const date3 = '2015-05-18';
+				const refDate3 = '2017-12-31'; // Referensi Tanggal 1
+				
+	
+				document.getElementById('result1').innerHTML = ` ${calculateDifference(date1, today)}`;
+				document.getElementById('result2').innerHTML = ` ${calculateDifference(date2, refDate2)}`;
+				document.getElementById('result3').innerHTML = ` ${calculateDifference(date3, refDate3)}`;
+			}
+	
+			window.onload = displayDifferences;
+		</script>
 
 		<!-- Vendor -->
 		<script src="assets/vendor/jquery/jquery.min.js"></script>
