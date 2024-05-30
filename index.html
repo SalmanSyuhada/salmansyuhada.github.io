@@ -1190,28 +1190,39 @@
 								<div class="col-half-section col-half-section-right mr-3">
 									<h2 class="text-color-quaternary text-uppercase font-weight-extra-bold">Say Hello
 									</h2>
-									<form id="callSendMessage" class="custom-form-style" action="#" method="POST">
+									<div class="alert alert-form alert-success alert-dismissible d-none" role="alert">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<strong><i class="far fa-thumbs-up"></i>  Success!</strong> Pesan berhasil terkirim.
+									</div>
+									<form name="contact-form" class="custom-form-style"  method="POST">
 										<div class="form-content">
 											<div class="form-control-custom">
-												<input type="text" class="form-control" name="callName"
-													placeholder="Your Name *"
+												<input type="text" class="form-control" name="nama_pengirim"
+													placeholder="Name *"
 													data-msg-required="This field is required." id="callName"
 													required="" />
 											</div>
 											<div class="form-control-custom">
-												<input type="text" class="form-control" name="callSubject"
-													placeholder="Subject *" data-msg-required="This field is required."
-													id="callSubject" required="" />
+												<input type="text" class="form-control" name="no_hp"
+													placeholder="HandPhone Number *"
+													data-msg-required="This field is required." id="callHp"
+													required="" />
+											</div>
+											<div class="form-control-custom">
+												<input type="text" class="form-control" name="email"
+													placeholder="Email *" data-msg-required="This field is required."
+													id="callEmail" required="" />
 											</div>
 											<div class="form-control-custom">
 												<textarea maxlength="5000"
 													data-msg-required="Please enter your message." rows="10"
-													class="form-control" name="message" placeholder="Message*"
+													class="form-control" name="pesan" placeholder="Message*"
 													id="message" required="" aria-required="true"></textarea>
 											</div>
-											<input type="submit"
-												class="btn btn-quaternary text-color-light text-uppercase font-weight-semibold outline-none custom-btn-style-2 custom-border-radius-1"
-												value="Submit" />
+											<div class="loader btn-loading d-none"> Loading...</div>
+											<button class="btn btn-kirim btn-quaternary text-color-light text-uppercase font-weight-semibold outline-none custom-btn-style-2 custom-border-radius-1" type="submit">
+												Submit
+											</button>
 										</div>
 									</form>
 								</div>
@@ -1308,6 +1319,31 @@
 				</div>
 			</footer>
 		</div>
+
+		<script>
+			const scriptURL = 'https://script.google.com/macros/s/AKfycbwAW1ZhQw7dEa7okFXnMTqh5Uv9yE_MUyncOb7mQAicRe9BNzTjAEcGzGZqXvelMjsD/exec'
+			const form = document.forms['contact-form'];
+			const btnKirim = document.querySelector('.btn-kirim');
+			const btnLoading = document.querySelector('.btn-loading');
+			const alertForm = document.querySelector('.alert-form');
+		  
+			form.addEventListener('submit', e => {
+			  e.preventDefault();
+			  // ketika tombol submit diklik
+			  btnLoading.classList.toggle('d-none');
+			  btnKirim.classList.toggle('d-none');
+			  fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+				.then(response => {
+					btnLoading.classList.toggle('d-none');
+			  		btnKirim.classList.toggle('d-none');
+					alertForm.classList.toggle('d-none');
+					form.reset();
+					  
+					console.log('Success!', response)
+				})
+				.catch(error => console.error('Error!', error.message))
+			})
+		</script>
 
 		<script>
 			function calculateDifference(startDateStr, endDateStr) {
