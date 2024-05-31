@@ -553,7 +553,7 @@ section.custom-timeline .timeline-box.right:before {
 section.custom-timeline .timeline-box.right:after {
 	top: 50%;
 	left: -22px;
-	background: #ffd93e;
+	background: #17a2b8;
 	border: none;
 	-webkit-transform: translateY(-50%) rotate(45deg);
 					transform: translateY(-50%) rotate(45deg);

@@ -11,14 +11,14 @@ a:focus {
 }
 
 a:active {
-	color: #ffd424;
+	color: #17a2b8;
 }
 
 html .heading-primary,
 html .lnk-primary,
 html .text-color-primary,
 html .text-primary {
-	color: #ffd93e !important;
+	color: #17a2b8 !important;
 }
 
 html .heading.heading-primary h1,
@@ -201,7 +201,7 @@ html .nav-pills-primary a:focus {
 }
 
 html .nav-pills-primary a:active {
-	color: #ffd424;
+	color: #17a2b8;
 }
 
 html .nav-pills-primary .nav-link.active,
@@ -402,7 +402,7 @@ html .badge-light {
 }
 
 .btn-link:active {
-	color: #ffd424;
+	color: #17a2b8;
 }
 
 html .btn-primary {
@@ -1211,7 +1211,7 @@ html .progress-bar-light {
 
 html section.section-primary {
 	background-color: #ffd93e !important;
-	border-color: #ffd424 !important;
+	border-color: #17a2b8 !important;
 }
 
 html section.section-primary h1,
@@ -1466,7 +1466,7 @@ section.page-header h1 {
 }
 
 section.page-header.custom-product {
-	background-color: #ffd424;
+	background-color: #17a2b8;
 	border-top-color: #ffd734;
 }
 
@@ -3652,7 +3652,7 @@ html[dir="rtl"] #header .tip-light:before {
 
 html #header .header-top.header-top-primary {
 	background: #ffd93e;
-	border-top-color: #ffd424;
+	border-top-color: #17a2b8;
 }
 
 html #header .header-top.header-top-primary .header-nav-top ul > li.open > a {
@@ -4684,7 +4684,7 @@ html .featured-boxes-full-scale > .featured-box-full-primary:nth-child(1) {
 }
 
 html .featured-boxes-full-scale > .featured-box-full-primary:nth-child(2) {
-	background-color: #ffd424;
+	background-color: #17a2b8;
 }
 
 html .featured-boxes-full-scale > .featured-box-full-primary:nth-child(3) {
@@ -5070,8 +5070,8 @@ html .slider-container .tp-caption-overlay-opacity-light {
 }
 
 #footer.color .footer-copyright {
-	background: #ffd424;
-	border-top-color: #ffd424;
+	background: #17a2b8;
+	border-top-color: #17a2b8;
 }
 
 html #footer.color-primary {
@@ -5088,8 +5088,8 @@ html #footer.color-primary .footer-ribbon:before {
 }
 
 html #footer.color-primary .footer-copyright {
-	background: #ffd424;
-	border-top-color: #ffd424;
+	background: #17a2b8;
+	border-top-color: #17a2b8;
 }
 
 html #footer.color-secondary {
