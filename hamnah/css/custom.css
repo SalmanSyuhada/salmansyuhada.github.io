@@ -1,4 +1,12 @@
 /* Fixed/sticky icon bar (vertically aligned 50% from the top of the screen) */
+
+#player-controls button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 .icon-bar {
     position: fixed;
     top: 50%;

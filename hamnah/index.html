@@ -68,9 +68,37 @@
 <body data-target="#header" data-spy="scroll" data-offset="100">
 
 	<div class="body">
-		<a class="icon-bar hidden-mobile">
+		<a class="icon-bar">
 			<div id="soundButton">
 				<img src="img/sound.gif" height="80px" width="80px">
+				<audio id="audioPlayer" autoplay>
+					<source src="music/background.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+				<div id="player-controls">
+					<button onclick="playAudio()"><i class="icon-control-play icons"></i></button>
+					<button onclick="pauseAudio()"><i class="icon-control-pause icons"></i></button>
+					<button onclick="nextAudio()"><i class="icon-control-forward icons"></i></button>
+				</div>
+				<script>
+					const audioPlayer = document.getElementById('audioPlayer');
+					const tracks = ["music/background.mp3", "music/cover.mp3", "music/music.mp3"];
+					let trackIndex = 0;
+			
+					function playAudio() {
+						audioPlayer.play();
+					}
+			
+					function pauseAudio() {
+						audioPlayer.pause();
+					}
+			
+					function nextAudio() {
+						trackIndex = (trackIndex + 1) % tracks.length;
+						audioPlayer.src = tracks[trackIndex];
+						audioPlayer.play();
+					}
+				</script>
 			</div>
 		</a>
 		<header id="header" class="header-narrow"
@@ -753,7 +781,7 @@
 							<p class="alternative-font text-color-secondary" style="font-size: 40px;">Semoga Allah
 								memberkahi setiap langkahnya dan memberikan kebahagiaan serta kesuksesan dalam hidupnya.
 								Aamiin."</p>
-							<h2 class="alternative-font custom-font-size-2 text-color-light">Hamnah Almaheera</h2>
+							<h2 class="alternative-font custom-font-size-2 text-color-light">Hamnah Refsanjani Almahyra</h2>
 							<span
 								class="text-uppercase text-color-light background-color-primary custom-border-radius p-1 pl-3 pr-3">13th
 								July 2024</span><br /> <br />
