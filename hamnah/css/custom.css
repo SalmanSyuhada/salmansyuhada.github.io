@@ -1,26 +1,47 @@
-/* Fixed/sticky icon bar (vertically aligned 50% from the top of the screen) */
+#player-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 #player-controls button {
   margin: 5px;
-  padding: 5px 10px;
+  padding: 10px; /* Menambah padding agar lebih proporsional */
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.1s ease;
   border: none;
   background-color: #f0f0f0;
   border-radius: 5px;
+  font-size: 1.2rem; /* Sesuaikan ukuran font dengan gambar 800x600 */
 }
 
+/* Efek saat tombol ditekan */
 #player-controls button:active {
   transform: scale(0.95);
   background-color: #d0d0d0;
 }
 
-/* Styling for mobile devices */
+/* Responsif untuk perangkat dengan ukuran layar di bawah 800px */
+@media only screen and (max-width: 800px) {
+  #player-controls button {
+      padding: 8px;
+      font-size: 1rem; /* Menyesuaikan ukuran font */
+  }
+}
+
+/* Responsif untuk perangkat dengan ukuran layar di bawah 600px */
 @media only screen and (max-width: 600px) {
   #player-controls button {
-      width: 2vw; /* 30% of viewport width for smaller screens */
-      padding: 0.75rem 1.5rem;
-      font-size: 0.875rem;
+      padding: 5px;
+      font-size: 0.875rem; /* Menyesuaikan ukuran font lebih kecil */
+  }
+}
+
+/* Responsif untuk perangkat dengan ukuran layar di bawah 400px */
+@media only screen and (max-width: 400px) {
+  #player-controls button {
+      padding: 3px;
+      font-size: 0.75rem; /* Menyesuaikan ukuran font lebih kecil lagi */
   }
 }
 
@@ -122,6 +143,7 @@
   background-color: #c53c1d;
 }
 
+/* Fixed/sticky icon bar (vertically aligned 50% from the top of the screen) */
 
 .icon-bar {
     position: fixed;
