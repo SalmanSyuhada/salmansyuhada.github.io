@@ -701,39 +701,39 @@
 											<p class="mb-1">Klik pada salah satu e-Wallet : </p>
 
 											<button class="popup-btn btn-dana" href="#popup-dana">
-												<img src="img/gift-registry/icon-dana.png" alt="DANA Icon" width="100px">
+												<i class="icon-docs icons"></i> DANA 
 											</button>
-
+										
 											<button class="popup-btn btn-bri" href="#popup-bri">
-												<img src="img/gift-registry/icon-bri.png" alt="BRI Icon" width="100px">
+												<i class="icon-docs icons"></i> BRI
 											</button>
-
+										
 											<button class="popup-btn btn-jago" href="#popup-jago">
-												<img src="img/gift-registry/icon-jago.png" alt="JAGO Icon" width="100px">
+												<i class="icon-docs icons"></i> JAGO 
 											</button>
 										
 											<div id="popup-dana" class="mfp-hide">
 												<div class="popup-content">
 													<h2>e-Wallet Dana</h2>
-													<img src="img/gift-registry/gift-dana.jpg" alt="Barcode Dana" width="200px">
+													<img src="img/gift-registry/gift-dana.jpg" alt="Barcode Dana">
 													<p id="popup-code">081266883949</p>
 													<button class="copy-btn" onclick="copyText()">Salin Text</button>
 												</div>
 											</div>
-
+										
 											<div id="popup-bri" class="mfp-hide">
 												<div class="popup-content">
 													<h2>e-Wallet BRI</h2>
-													<img src="img/gift-registry/gift-bri.png" alt="Barcode BRI" width="200px">
+													<img src="img/gift-registry/gift-bri.png" alt="Barcode BRI">
 													<p id="popup-code">017001085347503</p>
 													<button class="copy-btn" onclick="copyText()">Salin Text</button>
 												</div>
 											</div>
-
+										
 											<div id="popup-jago" class="mfp-hide">
 												<div class="popup-content">
 													<h2>e-Wallet JAGO</h2>
-													<img src="img/gift-registry/gift-jago.png" alt="Barcode Jago" width="200px">
+													<img src="img/gift-registry/gift-jago.png" alt="Barcode Jago">
 													<p id="popup-code">4889506097737138</p>
 													<button class="copy-btn" onclick="copyText()">Salin Text</button>
 												</div>
@@ -746,14 +746,14 @@
 													$('.popup-btn').magnificPopup({
 														type: 'inline',
 														midClick: true,
-														closeBtnInside: true // Menambahkan tombol close di dalam popup
+														closeBtnInside: true
 													});
 												});
 										
 												function copyText() {
 													var textToCopy = $('#popup-code').text();
 													navigator.clipboard.writeText(textToCopy).then(function() {
-														alert('Text berhasil disalin: ' + textToCopy);
+														alert('Text copied: ' + textToCopy);
 													}).catch(function(err) {
 														console.error('Failed to copy text: ', err);
 													});
