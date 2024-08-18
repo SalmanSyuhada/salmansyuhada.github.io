@@ -136,6 +136,22 @@
   background-color: #0056b3;
 }
 
+.btn-gopay {
+  background-color: #5cc8e4;
+}
+
+.btn-gopay:hover {
+  background-color: #0ca0c7;
+}
+
+.btn-shopeepay {
+  background-color: 	#EE4D2D;
+}
+
+.btn-shopeepay:hover {
+  background-color: #D0011B;
+}
+
 .btn-bri {
   background-color: #000080;
 }
