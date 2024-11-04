@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumlah Keluarga Berdasarkan Kepemilikan Kartu Keluarga</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 300px;
+            max-height: 300px;
+            width: 100%;
+            height: auto;
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <center><h3>Jumlah Keluarga Berdasarkan Kepemilikan Kartu Keluarga</h3></center>
+
+    <label for="bulan">Filter Bulan:</label>
+    <select id="bulan" onchange="updateChart()">
+        <option value="Januari">Januari</option>
+        <option value="Februari">Februari</option>
+        <option value="Maret">Maret</option>
+        <option value="April">April</option>
+        <option value="Mei">Mei</option>
+        <option value="Juni">Juni</option>
+        <option value="Juli">Juli</option>
+        <option value="Agustus">Agustus</option>
+        <option value="September">September</option>
+        <option value="Oktober">Oktober</option>
+        <option value="November">November</option>
+        <option value="Desember">Desember</option>
+    </select>
+
+    <center><canvas id="myDonutChart"></canvas></center>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Keterangan</th>
+                <th>Jumlah (Keluarga)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        const dataKeluarga = {
+            'Januari': {
+                total: 1139,
+                sesuai: 1100,
+                diluar: 39
+            },
+            'Februari': {
+                total: 1200,
+                sesuai: 1150,
+                diluar: 50
+            },
+            // Tambahkan data untuk bulan lainnya jika perlu
+        };
+
+        const ctx = document.getElementById('myDonutChart').getContext('2d');
+        let myDonutChart;
+
+        function updateChart() {
+            const bulan = document.getElementById('bulan').value;
+            const data = dataKeluarga[bulan];
+
+            if (myDonutChart) {
+                myDonutChart.destroy();
+            }
+
+            myDonutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Keluarga dengan Alamat KK sesuai Desa/Kelurahan', 'Keluarga dengan Alamat KK diluar Desa/Kelurahan'],
+                    datasets: [{
+                        data: [data.sesuai, data.diluar],
+                        backgroundColor: ['#36A2EB', '#FF6384'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: `Jumlah Keluarga Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+
+            updateTable(bulan);
+        }
+
+        function updateTable(bulan) {
+            const data = dataKeluarga[bulan];
+            const tbody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Clear existing rows
+
+            const rows = [
+                { keterangan: 'Jumlah Keluarga', jumlah: data.total },
+                { keterangan: 'Keluarga dengan Alamat KK sesuai Desa/Kelurahan', jumlah: data.sesuai },
+                { keterangan: 'Keluarga dengan Alamat KK diluar Desa/Kelurahan', jumlah: data.diluar },
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.keterangan;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        // Inisialisasi chart dan tabel saat halaman dimuat
+        window.onload = function() {
+            updateChart();
+        };
+    </script>
+</body>
+</html>

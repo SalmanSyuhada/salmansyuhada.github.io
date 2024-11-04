@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistik Keagamaan</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 600px;
+            max-height: 400px;
+            width: 100%;
+            height: auto;
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <center><h3>Statistik Keagamaan</h3></center>
+
+    <label for="bulan">Filter Bulan:</label>
+    <select id="bulan" onchange="updateChart()">
+        <option value="Januari">Januari</option>
+        <option value="Februari">Februari</option>
+    </select>
+
+    <center><canvas id="myBarChart"></canvas></center>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Tempat Ibadah</th>
+                <th>Jumlah (Unit)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        const dataKeagamaan = {
+            'Januari': {
+                mesjid: 4,
+                surau: 3,
+                gereja_kristen: 0,
+                gereja_katolik: 0,
+                kapel: 0,
+                pura: 0,
+                wihara: 0,
+                kelenteng: 0,
+                balai_basarah: 0,
+                lainnya: 0,
+                tahfidz: 7
+            },
+            'Februari': {
+                mesjid: 5,
+                surau: 4,
+                gereja_kristen: 0,
+                gereja_katolik: 1,
+                kapel: 0,
+                pura: 0,
+                wihara: 0,
+                kelenteng: 0,
+                balai_basarah: 0,
+                lainnya: 1,
+                tahfidz: 6
+            },
+            // Data bulan tambahan bisa ditambahkan di sini
+        };
+
+        const ctx = document.getElementById('myBarChart').getContext('2d');
+        let myBarChart;
+
+        function updateChart() {
+            const bulan = document.getElementById('bulan').value;
+            const data = dataKeagamaan[bulan];
+
+            if (myBarChart) {
+                myBarChart.destroy();
+            }
+
+            myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Mesjid', 'Surau/Langgar/Musala', 'Gereja Kristen', 
+                        'Gereja Katolik', 'Kapel', 'Pura', 'Wihara', 
+                        'Kelenteng', 'Balai Basarah', 'Lainnya', 'Tempat Kegiatan Tahfidz'
+                    ],
+                    datasets: [{
+                        label: 'Jumlah (Unit)',
+                        data: [
+                            data.mesjid, data.surau, data.gereja_kristen, 
+                            data.gereja_katolik, data.kapel, data.pura, 
+                            data.wihara, data.kelenteng, data.balai_basarah, 
+                            data.lainnya, data.tahfidz
+                        ],
+                        backgroundColor: '#36A2EB',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: `Statistik Keagamaan Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+
+            updateTable(bulan);
+        }
+
+        function updateTable(bulan) {
+            const data = dataKeagamaan[bulan];
+            const tbody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Bersihkan data tabel sebelumnya
+
+            const rows = [
+                { tempat: 'Mesjid', jumlah: data.mesjid },
+                { tempat: 'Surau/Langgar/Musala', jumlah: data.surau },
+                { tempat: 'Gereja Kristen', jumlah: data.gereja_kristen },
+                { tempat: 'Gereja Katolik', jumlah: data.gereja_katolik },
+                { tempat: 'Kapel', jumlah: data.kapel },
+                { tempat: 'Pura', jumlah: data.pura },
+                { tempat: 'Wihara', jumlah: data.wihara },
+                { tempat: 'Kelenteng', jumlah: data.kelenteng },
+                { tempat: 'Balai Basarah', jumlah: data.balai_basarah },
+                { tempat: 'Lainnya', jumlah: data.lainnya },
+                { tempat: 'Tempat Kegiatan Tahfidz', jumlah: data.tahfidz },
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.tempat;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        // Inisialisasi chart dan tabel saat halaman dimuat
+        window.onload = function() {
+            updateChart();
+        };
+    </script>
+</body>
+</html>

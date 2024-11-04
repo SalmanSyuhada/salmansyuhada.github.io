@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piramida Penduduk Berdasarkan Umur</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 600px;
+            max-height: 600px;
+            width: 100%;
+            height: auto;
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <center><h3>Piramida Penduduk Berdasarkan Umur dan Jenis Kelamin</h3></center>
+
+    <label for="bulan">Filter Bulan:</label>
+    <select id="bulan" onchange="updateChart()">
+        <option value="Januari">Januari</option>
+        <option value="Februari">Februari</option>
+        <option value="Maret">Maret</option>
+        <option value="April">April</option>
+        <option value="Mei">Mei</option>
+        <option value="Juni">Juni</option>
+        <option value="Juli">Juli</option>
+        <option value="Agustus">Agustus</option>
+        <option value="September">September</option>
+        <option value="Oktober">Oktober</option>
+        <option value="November">November</option>
+        <option value="Desember">Desember</option>
+    </select>
+
+    <center><canvas id="myPyramidChart"></canvas></center>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Umur</th>
+                <th>Laki-Laki</th>
+                <th>Perempuan</th>
+                <th>Jumlah (Jiwa)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        const dataPenduduk = {
+            'Januari': {
+                '75+ tahun': { laki: -22, perempuan: 19, jumlah: 41 },
+                '70-74 tahun': { laki: -29, perempuan: 26, jumlah: 55 },
+                '65-69 tahun': { laki: -39, perempuan: 34, jumlah: 73 },
+                '60-64 tahun': { laki: -146, perempuan: 130, jumlah: 276 },
+                '55-59 tahun': { laki: -89, perempuan: 80, jumlah: 169 },
+                '50-54 tahun': { laki: -132, perempuan: 117, jumlah: 249 },
+                '45-49 tahun': { laki: -149, perempuan: 133, jumlah: 282 },
+                '40-44 tahun': { laki: -159, perempuan: 143, jumlah: 302 },
+                '35-39 tahun': { laki: -170, perempuan: 151, jumlah: 321 },
+                '30-34 tahun': { laki: -139, perempuan: 124, jumlah: 263 },
+                '25-29 tahun': { laki: -135, perempuan: 121, jumlah: 256 },
+                '20-24 tahun': { laki: -182, perempuan: 162, jumlah: 344 },
+                '15-19 tahun': { laki: -181, perempuan: 161, jumlah: 342 },
+                '10-14 tahun': { laki: -225, perempuan: 201, jumlah: 426 },
+                '5-9 tahun': { laki: -133, perempuan: 119, jumlah: 252 },
+                '0-4 tahun': { laki: -166, perempuan: 148, jumlah: 314 },
+            },
+            'Februari': {
+                '75+ tahun': { laki: -25, perempuan: 22, jumlah: 47 },
+                // Tambahkan data untuk bulan lainnya jika perlu
+            },
+            // Tambahkan bulan lain dengan data yang sesuai
+        };
+
+        const ctx = document.getElementById('myPyramidChart').getContext('2d');
+        let myPyramidChart;
+
+        function updateChart() {
+            const bulan = document.getElementById('bulan').value;
+            const labels = Object.keys(dataPenduduk[bulan]);
+            const lakiData = Object.values(dataPenduduk[bulan]).map(data => data.laki);
+            const perempuanData = Object.values(dataPenduduk[bulan]).map(data => data.perempuan);
+
+            if (myPyramidChart) {
+                myPyramidChart.destroy();
+            }
+
+            myPyramidChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Laki-Laki',
+                            data: lakiData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            categoryPercentage: 0.5,
+                            barPercentage: 1,
+                            borderSkipped: 'right',
+                        },
+                        {
+                            label: 'Perempuan',
+                            data: perempuanData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            categoryPercentage: 0.5,
+                            barPercentage: 1,
+                            borderSkipped: 'left',
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y', // Menampilkan bar secara horizontal
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            beginAtZero: true,
+                        },
+                        y: {
+                            stacked: true,
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Piramida Penduduk Berdasarkan Umur'
+                        }
+                    }
+                }
+            });
+
+            updateTable(bulan);
+        }
+
+        function updateTable(bulan) {
+            const tbody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Clear existing rows
+
+            for (const umur in dataPenduduk[bulan]) {
+                const data = dataPenduduk[bulan][umur];
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                const cell3 = newRow.insertCell(2);
+                const cell4 = newRow.insertCell(3);
+                cell1.textContent = umur;
+                cell2.textContent = data.laki;
+                cell3.textContent = data.perempuan;
+                cell4.textContent = data.jumlah;
+            }
+        }
+
+        // Inisialisasi chart dan tabel saat halaman dimuat
+        window.onload = function() {
+            updateChart();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumlah Penyandang Disabilitas</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 600px;
+            max-height: 400px;
+            width: 100%;
+            height: auto;
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <center><h3>Jumlah Penyandang Disabilitas</h3></center>
+
+    <label for="bulan">Filter Bulan:</label>
+    <select id="bulan" onchange="updateChart()">
+        <option value="Januari">Januari</option>
+        <option value="Februari">Februari</option>
+        <option value="Maret">Maret</option>
+        <option value="April">April</option>
+        <option value="Mei">Mei</option>
+        <option value="Juni">Juni</option>
+        <option value="Juli">Juli</option>
+        <option value="Agustus">Agustus</option>
+        <option value="September">September</option>
+        <option value="Oktober">Oktober</option>
+        <option value="November">November</option>
+        <option value="Desember">Desember</option>
+    </select>
+
+    <center><canvas id="myBarChart"></canvas></center>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Keterangan</th>
+                <th>Jumlah (Jiwa)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        const dataDisabilitas = {
+            'Januari': {
+                penyandang_disabilitas: 23,
+                tuna_netra: 1,
+                tuna_rungu: 3,
+                tuna_wicara: 9,
+                tuna_rungu_wicara: 2,
+                tuna_daksa: 6,
+                tuna_grahita: 2
+            },
+            'Februari': {
+                penyandang_disabilitas: 25,
+                tuna_netra: 2,
+                tuna_rungu: 4,
+                tuna_wicara: 8,
+                tuna_rungu_wicara: 1,
+                tuna_daksa: 7,
+                tuna_grahita: 3
+            },
+            // Tambahkan data untuk bulan lainnya jika perlu
+        };
+
+        const ctx = document.getElementById('myBarChart').getContext('2d');
+        let myBarChart;
+
+        function updateChart() {
+            const bulan = document.getElementById('bulan').value;
+            const data = dataDisabilitas[bulan];
+
+            if (myBarChart) {
+                myBarChart.destroy();
+            }
+
+            myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Penyandang Disabilitas', 
+                        'Tuna Netra', 
+                        'Tuna Rungu', 
+                        'Tuna Wicara', 
+                        'Tuna Rungu-Wicara', 
+                        'Tuna Daksa', 
+                        'Tuna Grahita'
+                    ],
+                    datasets: [{
+                        label: 'Jumlah (Jiwa)',
+                        data: [
+                            data.penyandang_disabilitas,
+                            data.tuna_netra,
+                            data.tuna_rungu,
+                            data.tuna_wicara,
+                            data.tuna_rungu_wicara,
+                            data.tuna_daksa,
+                            data.tuna_grahita
+                        ],
+                        backgroundColor: '#36A2EB',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: `Jumlah Penyandang Disabilitas Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+
+            updateTable(bulan);
+        }
+
+        function updateTable(bulan) {
+            const data = dataDisabilitas[bulan];
+            const tbody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Clear existing rows
+
+            const rows = [
+                { keterangan: 'Penyandang Disabilitas', jumlah: data.penyandang_disabilitas },
+                { keterangan: 'Tuna Netra', jumlah: data.tuna_netra },
+                { keterangan: 'Tuna Rungu', jumlah: data.tuna_rungu },
+                { keterangan: 'Tuna Wicara', jumlah: data.tuna_wicara },
+                { keterangan: 'Tuna Rungu-Wicara', jumlah: data.tuna_rungu_wicara },
+                { keterangan: 'Tuna Daksa', jumlah: data.tuna_daksa },
+                { keterangan: 'Tuna Grahita', jumlah: data.tuna_grahita },
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.keterangan;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        // Inisialisasi chart dan tabel saat halaman dimuat
+        window.onload = function() {
+            updateChart();
+        };
+    </script>
+</body>
+</html>

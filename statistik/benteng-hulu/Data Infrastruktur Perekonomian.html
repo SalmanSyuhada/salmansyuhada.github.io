@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Infrastruktur Perekonomian</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 600px;
+            max-height: 400px;
+            width: 100%;
+            height: auto;
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <center><h3>Data Infrastruktur Perekonomian</h3></center>
+
+    <label for="bulan">Filter Bulan:</label>
+    <select id="bulan" onchange="updateCharts()">
+        <option value="Januari">Januari</option>
+        <option value="Februari">Februari</option>
+    </select>
+
+    <div class="chart-container">
+        <center><canvas id="myBarChart1"></canvas></center>
+        <table id="dataTable1">
+            <thead>
+                <tr>
+                    <th>Sarana Lembaga Keuangan</th>
+                    <th>Jumlah (Unit)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data akan diisi oleh JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="chart-container">
+        <center><canvas id="myBarChart2"></canvas></center>
+        <table id="dataTable2">
+            <thead>
+                <tr>
+                    <th>Mesin ATM</th>
+                    <th>Jumlah (Unit)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data akan diisi oleh JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="chart-container">
+        <center><canvas id="myBarChart3"></canvas></center>
+        <table id="dataTable3">
+            <thead>
+                <tr>
+                    <th>Koperasi</th>
+                    <th>Jumlah (Unit)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data akan diisi oleh JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="chart-container">
+        <center><canvas id="myBarChart4"></canvas></center>
+        <table id="dataTable4">
+            <thead>
+                <tr>
+                    <th>Sarana Ekonomi</th>
+                    <th>Jumlah (Unit)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data akan diisi oleh JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const dataInfrastruktur = {
+            'Januari': {
+                lembaga_keuangan: {
+                    bank_pemerintah: 1,
+                    bank_swasta: 0,
+                    bpr: 0
+                },
+                mesin_atm: {
+                    bank_pemerintah: 0,
+                    bank_swasta: 0,
+                    bpr: 0
+                },
+                koperasi: {
+                    kud: 0,
+                    kopinkra: 0,
+                    kospin: 0,
+                    bumdes: 1,
+                    koperasi_lainnya: 0
+                },
+                sarana_ekonomi: {
+                    pasar_permanen: 1,
+                    pasar_semi_permanen: 0,
+                    pasar_tanpa_bangunan: 0
+                }
+            },
+            'Februari': {
+                lembaga_keuangan: {
+                    bank_pemerintah: 2,
+                    bank_swasta: 1,
+                    bpr: 0
+                },
+                mesin_atm: {
+                    bank_pemerintah: 1,
+                    bank_swasta: 0,
+                    bpr: 0
+                },
+                koperasi: {
+                    kud: 1,
+                    kopinkra: 0,
+                    kospin: 0,
+                    bumdes: 1,
+                    koperasi_lainnya: 0
+                },
+                sarana_ekonomi: {
+                    pasar_permanen: 2,
+                    pasar_semi_permanen: 1,
+                    pasar_tanpa_bangunan: 0
+                }
+            },
+        };
+
+        const ctx1 = document.getElementById('myBarChart1').getContext('2d');
+        const ctx2 = document.getElementById('myBarChart2').getContext('2d');
+        const ctx3 = document.getElementById('myBarChart3').getContext('2d');
+        const ctx4 = document.getElementById('myBarChart4').getContext('2d');
+
+        let myBarChart1, myBarChart2, myBarChart3, myBarChart4;
+
+        function updateCharts() {
+            const bulan = document.getElementById('bulan').value;
+            const data1 = dataInfrastruktur[bulan].lembaga_keuangan;
+            const data2 = dataInfrastruktur[bulan].mesin_atm;
+            const data3 = dataInfrastruktur[bulan].koperasi;
+            const data4 = dataInfrastruktur[bulan].sarana_ekonomi;
+
+            // Chart 1: Lembaga Keuangan
+            if (myBarChart1) {
+                myBarChart1.destroy();
+            }
+            myBarChart1 = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Bank Umum Pemerintah',
+                        'Bank Umum Swasta',
+                        'Bank Perkreditan Rakyat'
+                    ],
+                    datasets: [{
+                        label: 'Jumlah (Unit)',
+                        data: [
+                            data1.bank_pemerintah,
+                            data1.bank_swasta,
+                            data1.bpr
+                        ],
+                        backgroundColor: '#36A2EB',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: `Jumlah Sarana Lembaga Keuangan Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+            updateTable1(bulan);
+
+            // Chart 2: Mesin ATM
+            if (myBarChart2) {
+                myBarChart2.destroy();
+            }
+            myBarChart2 = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Bank Umum Pemerintah',
+                        'Bank Umum Swasta',
+                        'Bank Perkreditan Rakyat'
+                    ],
+                    datasets: [{
+                        label: 'Jumlah (Unit)',
+                        data: [
+                            data2.bank_pemerintah,
+                            data2.bank_swasta,
+                            data2.bpr
+                        ],
+                        backgroundColor: '#36A2EB',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: `Jumlah Mesin ATM Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+            updateTable2(bulan);
+
+            // Chart 3: Koperasi
+            if (myBarChart3) {
+                myBarChart3.destroy();
+            }
+            myBarChart3 = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Koperasi Unit Desa (KUD)',
+                        'Koperasi Industri Kecil dan Kerajinan Rakyat',
+                        'Koperasi Simpan Pinjam (Kospin)',
+                        'Badan Usaha Milik Desa (BumDes)',
+                        'Koperasi Lainnya'
+                    ],
+                    datasets: [{
+                        label: 'Jumlah (Unit)',
+                        data: [
+                            data3.kud,
+                            data3.kopinkra,
+                            data3.kospin,
+                            data3.bumdes,
+                            data3.koperasi_lainnya
+                        ],
+                        backgroundColor: '#36A2EB',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: `Jumlah Koperasi Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+            updateTable3(bulan);
+
+            // Chart 4: Sarana Ekonomi
+            if (myBarChart4) {
+                myBarChart4.destroy();
+            }
+            myBarChart4 = new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Pasar Permanen',
+                        'Pasar Semi Permanen',
+                        'Pasar Tanpa Bangunan'
+                    ],
+                    datasets: [{
+                        label: 'Jumlah (Unit)',
+                        data: [
+                            data4.pasar_permanen,
+                            data4.pasar_semi_permanen,
+                            data4.pasar_tanpa_bangunan
+                        ],
+                        backgroundColor: '#36A2EB',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: `Jumlah Sarana Ekonomi Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+            updateTable4(bulan);
+        }
+
+        function updateTable1(bulan) {
+            const data = dataInfrastruktur[bulan].lembaga_keuangan;
+            const tbody = document.getElementById('dataTable1').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Bersihkan data tabel sebelumnya
+
+            const rows = [
+                { jenis: 'Bank Umum Pemerintah (BRI, BNI, Mandiri, BPD, BTN)', jumlah: data.bank_pemerintah },
+                { jenis: 'Bank Umum Swasta (BCA, Permata, Sinarmas, CIMB, dll)', jumlah: data.bank_swasta },
+                { jenis: 'Bank Perkreditan Rakyat (BPR)', jumlah: data.bpr },
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.jenis;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        function updateTable2(bulan) {
+            const data = dataInfrastruktur[bulan].mesin_atm;
+            const tbody = document.getElementById('dataTable2').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Bersihkan data tabel sebelumnya
+
+            const rows = [
+                { jenis: 'Bank Umum Pemerintah (BRI, BNI, Mandiri, BPD, BTN)', jumlah: data.bank_pemerintah },
+                { jenis: 'Bank Umum Swasta (BCA, Permata, Sinarmas, CIMB, dll)', jumlah: data.bank_swasta },
+                { jenis: 'Bank Perkreditan Rakyat (BPR)', jumlah: data.bpr },
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.jenis;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        function updateTable3(bulan) {
+            const data = dataInfrastruktur[bulan].koperasi;
+            const tbody = document.getElementById('dataTable3').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Bersihkan data tabel sebelumnya
+
+            const rows = [
+                { jenis: 'Koperasi Unit Desa (KUD)', jumlah: data.kud },
+                { jenis: 'Koperasi Industri Kecil dan Kerajinan Rakyat (Kopinkra)', jumlah: data.kopinkra },
+                { jenis: 'Koperasi Simpan Pinjam (Kospin)', jumlah: data.kospin },
+                { jenis: 'Badan Usaha Milik Desa (BumDes)', jumlah: data.bumdes },
+                { jenis: 'Koperasi Lainnya', jumlah: data.koperasi_lainnya },
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.jenis;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        function updateTable4(bulan) {
+            const data = dataInfrastruktur[bulan].sarana_ekonomi;
+            const tbody = document.getElementById('dataTable4').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Bersihkan data tabel sebelumnya
+
+            const rows = [
+                { jenis: 'Pasar dengan bangunan permanen', jumlah: data.pasar_permanen },
+                { jenis: 'Pasar dengan bangunan semi permanen', jumlah: data.pasar_semi_permanen },
+                { jenis: 'Pasar tanpa bangunan', jumlah: data.pasar_tanpa_bangunan },
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.jenis;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        // Inisialisasi chart dan tabel saat halaman dimuat
+        window.onload = function() {
+            updateCharts();
+        };
+    </script>
+</body>
+</html>

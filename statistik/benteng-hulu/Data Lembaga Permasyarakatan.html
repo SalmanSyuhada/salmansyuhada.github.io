@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Lembaga Permasyarakatan</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 600px;
+            max-height: 400px;
+            width: 100%;
+            height: auto;
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <center><h3>Data Lembaga Permasyarakatan</h3></center>
+
+    <label for="bulan">Filter Bulan:</label>
+    <select id="bulan" onchange="updateChart()">
+        <option value="Januari">Januari</option>
+        <option value="Februari">Februari</option>
+    </select>
+
+    <center><canvas id="myBarChart"></canvas></center>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Jenis Lembaga Kemasyarakatan</th>
+                <th>Jumlah (Unit)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        const dataLembaga = {
+            'Januari': {
+                pkk: 1,
+                karang_taruna: 1,
+                lembaga_adat: 1,
+                kelompok_tani: 3,
+                pengelola_air: 0,
+                pokmas: 0,
+                penggunaan_air_pertanian: 0
+            },
+            'Februari': {
+                pkk: 2,
+                karang_taruna: 1,
+                lembaga_adat: 1,
+                kelompok_tani: 4,
+                pengelola_air: 1,
+                pokmas: 0,
+                penggunaan_air_pertanian: 1
+            },
+            // Tambahkan data untuk bulan lainnya jika diperlukan
+        };
+
+        const ctx = document.getElementById('myBarChart').getContext('2d');
+        let myBarChart;
+
+        function updateChart() {
+            const bulan = document.getElementById('bulan').value;
+            const data = dataLembaga[bulan];
+
+            if (myBarChart) {
+                myBarChart.destroy();
+            }
+
+            myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'PKK', 'Karang Taruna', 'Lembaga Adat', 
+                        'Kelompok Tani', 'Lembaga Pengelola Air', 
+                        'Kelompok Masyarakat (Pokmas)', 'Kelompok Penggunaan Air Pertanian'
+                    ],
+                    datasets: [{
+                        label: 'Jumlah (Unit)',
+                        data: [
+                            data.pkk, data.karang_taruna, data.lembaga_adat,
+                            data.kelompok_tani, data.pengelola_air, data.pokmas, 
+                            data.penggunaan_air_pertanian
+                        ],
+                        backgroundColor: '#36A2EB',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: `Data Lembaga Permasyarakatan Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+
+            updateTable(bulan);
+        }
+
+        function updateTable(bulan) {
+            const data = dataLembaga[bulan];
+            const tbody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Bersihkan data tabel sebelumnya
+
+            const rows = [
+                { jenis: 'PKK', jumlah: data.pkk },
+                { jenis: 'Karang Taruna', jumlah: data.karang_taruna },
+                { jenis: 'Lembaga Adat', jumlah: data.lembaga_adat },
+                { jenis: 'Kelompok Tani', jumlah: data.kelompok_tani },
+                { jenis: 'Lembaga Pengelola Air', jumlah: data.pengelola_air },
+                { jenis: 'Kelompok Masyarakat (Pokmas)', jumlah: data.pokmas },
+                { jenis: 'Kelompok Penggunaan Air Pertanian', jumlah: data.penggunaan_air_pertanian },
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.jenis;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        // Inisialisasi chart dan tabel saat halaman dimuat
+        window.onload = function() {
+            updateChart();
+        };
+    </script>
+</body>
+</html>

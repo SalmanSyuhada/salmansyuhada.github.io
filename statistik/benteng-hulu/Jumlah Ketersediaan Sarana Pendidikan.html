@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumlah Keberadaan Sarana Pendidikan</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Mengatur ukuran canvas chart lebih kecil dan responsive */
+        #chart-container {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h3>Jumlah Keberadaan Sarana Pendidikan</h3>
+    
+    <!-- Filter Bulan -->
+    <label for="month-filter">Pilih Bulan:</label>
+    <select id="month-filter">
+        <option value="january">Januari</option>
+        <option value="february">Februari</option>
+    </select>
+
+    <!-- Container untuk Chart -->
+	<center>
+		<div id="chart-container">
+			<canvas id="educationChart"></canvas>
+		</div>
+	</center>
+
+    <!-- Tabel Data Sarana Pendidikan -->
+    <table>
+        <thead>
+            <tr>
+                <th>Sarana Pendidikan</th>
+                <th>Negeri (Unit)</th>
+                <th>Swasta (Unit)</th>
+            </tr>
+        </thead>
+        <tbody id="data-table">
+            <!-- Data tabel akan diisi secara dinamis -->
+        </tbody>
+    </table>
+
+    <script>
+        const ctx = document.getElementById('educationChart').getContext('2d');
+
+        // Data untuk masing-masing bulan
+        const dataByMonth = {
+            january: {
+                labels: [
+                    'Pos Paud', 'TK', 'TK/RB', 'SD', 'MI', 
+                    'SMP', 'MTs', 'SMA', 'MA', 'SMK', 
+                    'Akademi/Perguruan Tinggi', 'SDLB', 'SMPLB', 
+                    'SMALB', 'Pondok Pesantren', 'Madrasah Diniyah'
+                ],
+                negeri: [0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                swasta: [0, 3, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1]
+            },
+            february: {
+                labels: [
+                    'Pos Paud', 'TK', 'TK/RB', 'SD', 'MI', 
+                    'SMP', 'MTs', 'SMA', 'MA', 'SMK', 
+                    'Akademi/Perguruan Tinggi', 'SDLB', 'SMPLB', 
+                    'SMALB', 'Pondok Pesantren', 'Madrasah Diniyah'
+                ],
+                negeri: [0, 2, 0, 3, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+                swasta: [0, 2, 0, 1, 0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 2, 0]
+            }
+        };
+
+        // Fungsi untuk update chart dan tabel berdasarkan bulan
+        function updateChartAndTable(month) {
+            const data = dataByMonth[month];
+            educationChart.data.labels = data.labels;
+            educationChart.data.datasets[0].data = data.negeri;
+            educationChart.data.datasets[1].data = data.swasta;
+            educationChart.update();
+
+            // Update tabel
+            const dataTable = document.getElementById('data-table');
+            dataTable.innerHTML = ''; // Hapus data tabel sebelumnya
+            data.labels.forEach((label, index) => {
+                const row = `
+                    <tr>
+                        <td>${label}</td>
+                        <td>${data.negeri[index]}</td>
+                        <td>${data.swasta[index]}</td>
+                    </tr>
+                `;
+                dataTable.innerHTML += row;
+            });
+        }
+
+        // Configurasi Chart
+        const config = {
+            type: 'bar',
+            data: {
+                labels: dataByMonth.january.labels,
+                datasets: [
+                    {
+                        label: 'Negeri (Unit)',
+                        data: dataByMonth.january.negeri,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Swasta (Unit)',
+                        data: dataByMonth.january.swasta,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        // Render Chart
+        const educationChart = new Chart(ctx, config);
+
+        // Event untuk Filter Bulan
+        document.getElementById('month-filter').addEventListener('change', (event) => {
+            const selectedMonth = event.target.value;
+            updateChartAndTable(selectedMonth);
+        });
+
+        // Inisialisasi awal dengan bulan Januari
+        updateChartAndTable('january');
+    </script>
+</body>
+</html>

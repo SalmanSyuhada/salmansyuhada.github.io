@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Penduduk Berdasarkan Jenis Kelamin</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 400px; /* Ubah lebar maksimum */
+            max-height: 400px; /* Ubah tinggi maksimum */
+            width: 100%; /* Atur agar responsif */
+            height: auto; /* Atur tinggi agar responsif */
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <center><h3>Data Penduduk Berdasarkan Jenis Kelamin</h3></center>
+    
+    <label for="bulan">Filter Bulan:</label>
+    <select id="bulan" onchange="updateChart()">
+        <option value="Januari">Januari</option>
+        <option value="Februari">Februari</option>
+        <option value="Maret">Maret</option>
+        <option value="April">April</option>
+        <option value="Mei">Mei</option>
+        <option value="Juni">Juni</option>
+        <option value="Juli">Juli</option>
+        <option value="Agustus">Agustus</option>
+        <option value="September">September</option>
+        <option value="Oktober">Oktober</option>
+        <option value="November">November</option>
+        <option value="Desember">Desember</option>
+    </select>
+
+    <center><canvas id="myPieChart"></canvas></center>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Keterangan</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        const dataPenduduk = {
+            'Januari': { total: 3874, laki: 1990, perempuan: 1884 },
+            'Februari': { total: 4000, laki: 2050, perempuan: 1950 },
+            'Maret': { total: 3900, laki: 2000, perempuan: 1900 },
+            // Tambahkan data untuk bulan lainnya jika perlu
+        };
+
+        const ctx = document.getElementById('myPieChart').getContext('2d');
+        let myPieChart;
+
+        function updateChart() {
+            const bulan = document.getElementById('bulan').value;
+            const data = dataPenduduk[bulan];
+
+            if (myPieChart) {
+                myPieChart.destroy();
+            }
+
+            myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Laki-laki', 'Perempuan'],
+                    datasets: [{
+                        data: [data.laki, data.perempuan],
+                        backgroundColor: ['#36A2EB', '#FF6384'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: `Data Penduduk Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+
+            updateTable(bulan);
+        }
+
+        function updateTable(bulan) {
+            const data = dataPenduduk[bulan];
+            const tbody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Clear existing rows
+
+            const rows = [
+                { keterangan: 'Jumlah Penduduk', jumlah: data.total },
+                { keterangan: 'Jumlah Penduduk Laki-laki', jumlah: data.laki },
+                { keterangan: 'Jumlah Penduduk Perempuan', jumlah: data.perempuan },
+                { keterangan: 'Rasio Jenis Kelamin', jumlah: (data.laki / data.perempuan).toFixed(2) }
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.keterangan;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        // Inisialisasi dengan bulan pertama
+        window.onload = function() {
+            updateChart();
+        };
+    </script>
+</body>
+</html>

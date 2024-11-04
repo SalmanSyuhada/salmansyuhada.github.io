@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penduduk Prioritas Penerima Bantuan</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        canvas {
+            max-width: 600px;
+            max-height: 400px;
+            width: 100%;
+            height: auto;
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <center><h3>Penduduk Prioritas Penerima Bantuan</h3></center>
+
+    <label for="bulan">Filter Bulan:</label>
+    <select id="bulan" onchange="updateChart()">
+        <option value="Januari">Januari</option>
+        <option value="Februari">Februari</option>
+        <option value="Maret">Maret</option>
+        <option value="April">April</option>
+        <option value="Mei">Mei</option>
+        <option value="Juni">Juni</option>
+        <option value="Juli">Juli</option>
+        <option value="Agustus">Agustus</option>
+        <option value="September">September</option>
+        <option value="Oktober">Oktober</option>
+        <option value="November">November</option>
+        <option value="Desember">Desember</option>
+    </select>
+
+    <center><canvas id="myBarChart"></canvas></center>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Keterangan</th>
+                <th>Jumlah (Jiwa)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data akan diisi oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        const dataPenduduk = {
+            'Januari': {
+                ibu_hamil: 15,
+                ibu_menyusui: 85,
+                balita_stunting: 9,
+                lansia: 169,
+                janda: 144,
+                anak_yatim: 48,
+                anak_piatu: 7
+            },
+            'Februari': {
+                ibu_hamil: 18,
+                ibu_menyusui: 80,
+                balita_stunting: 10,
+                lansia: 170,
+                janda: 140,
+                anak_yatim: 50,
+                anak_piatu: 5
+            },
+            // Tambahkan data untuk bulan lainnya jika perlu
+        };
+
+        const ctx = document.getElementById('myBarChart').getContext('2d');
+        let myBarChart;
+
+        function updateChart() {
+            const bulan = document.getElementById('bulan').value;
+            const data = dataPenduduk[bulan];
+
+            if (myBarChart) {
+                myBarChart.destroy();
+            }
+
+            myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ibu Hamil', 'Ibu Menyusui', 'Balita Stunting', 'Lansia', 'Janda', 'Anak Yatim', 'Anak Piatu'],
+                    datasets: [{
+                        label: 'Jumlah (Jiwa)',
+                        data: [
+                            data.ibu_hamil,
+                            data.ibu_menyusui,
+                            data.balita_stunting,
+                            data.lansia,
+                            data.janda,
+                            data.anak_yatim,
+                            data.anak_piatu
+                        ],
+                        backgroundColor: '#36A2EB',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text: `Penduduk Prioritas Penerima Bantuan Bulan ${bulan}`
+                        }
+                    }
+                }
+            });
+
+            updateTable(bulan);
+        }
+
+        function updateTable(bulan) {
+            const data = dataPenduduk[bulan];
+            const tbody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Clear existing rows
+
+            const rows = [
+                { keterangan: 'Ibu Hamil', jumlah: data.ibu_hamil },
+                { keterangan: 'Ibu Menyusui', jumlah: data.ibu_menyusui },
+                { keterangan: 'Balita Stunting', jumlah: data.balita_stunting },
+                { keterangan: 'Lansia', jumlah: data.lansia },
+                { keterangan: 'Janda', jumlah: data.janda },
+                { keterangan: 'Anak Yatim', jumlah: data.anak_yatim },
+                { keterangan: 'Anak Piatu', jumlah: data.anak_piatu },
+            ];
+
+            rows.forEach(row => {
+                const newRow = tbody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = row.keterangan;
+                cell2.textContent = row.jumlah;
+            });
+        }
+
+        // Inisialisasi chart dan tabel saat halaman dimuat
+        window.onload = function() {
+            updateChart();
+        };
+    </script>
+</body>
+</html>
