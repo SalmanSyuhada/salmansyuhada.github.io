@@ -3,228 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prediksi AI</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://apis.google.com/js/api.js"></script>
+  <title>Login - TryToWin AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(145deg, #010918, #061529);
       font-family: 'Orbitron', sans-serif;
-      background: #010918;
       color: #00ffcc;
     }
-    .container {
-      max-width: 600px;
-      margin: 2rem auto;
+
+    .title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #00f2fe;
+      text-shadow: 0 0 10px #00f2fe;
+      animation: flicker 2s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 22%, 24%, 55% {
+        opacity: 0.4;
+      }
+    }
+
+    .login-box {
+      background: #031b2f;
       padding: 2rem;
-      background: #061529;
       border-radius: 15px;
       box-shadow: 0 0 20px #00f2fe;
       text-align: center;
+      width: 300px;
     }
-    h1 {
-      font-size: 2rem;
+
+    .login-box h2 {
       margin-bottom: 1rem;
+      font-size: 1.5rem;
+      color: #00f2fe;
     }
-    input, button, select {
+
+    input, button {
       width: 100%;
       padding: 0.75rem;
       margin: 0.5rem 0;
       border: none;
       border-radius: 5px;
       font-size: 1rem;
+      font-family: 'Orbitron', sans-serif;
     }
+
     input {
-      background: #fff;
+      background: #e0f7fa;
       color: #000;
     }
+
     button {
       background: #00f2fe;
       color: #000;
       font-weight: bold;
       cursor: pointer;
+      transition: 0.3s;
     }
-    #resultBox {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #0f2027;
-      border-radius: 10px;
+
+    button:hover {
+      background: #00c3cc;
     }
-    #resultBox h2 {
-      color: #00ff7f;
-      margin-bottom: 0.5rem;
+
+    #message {
+      margin-top: 0.5rem;
+      color: red;
     }
-    .detail-section {
-      display: none;
-      text-align: left;
-      background: #031b2f;
-      margin-top: 1rem;
-      padding: 1rem;
-      border-radius: 10px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    .toggle-detail {
-      background: transparent;
-      color: #00f2fe;
-      border: 1px solid #00f2fe;
-    }
-    table {
-      width: 100%;
-      margin-top: 1rem;
-      border-collapse: collapse;
-      color: white;
-    }
-    th, td {
-      border: 1px solid #00f2fe;
-      padding: 0.5rem;
-    }
+
     footer {
-      margin-top: 2rem;
-      padding: 1rem;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
       background: #02131f;
-      border-top: 2px solid #00f2fe;
+      padding: 0.5rem;
+      text-align: center;
       box-shadow: 0 -2px 10px #00f2fe;
     }
-    footer marquee {
+
+    footer p {
+      margin: 0;
+      font-size: 0.8rem;
       color: #00f2fe;
-      font-size: 1rem;
-      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>TryToWin Prediction</h1>
-    <p><strong>"Prediction without data is just guessing."</strong></p>
-    <div>
-      <label>Enter Period Number:</label>
-      <input type="text" id="period" placeholder="e.g. 2025000">
-      <button onclick="predict()">▶ Start Prediction</button>
-    </div>
-    <div id="resultBox">
-      <h2 id="predictResult">-</h2>
-      <p>Prediction will appear here.</p>
-      <button class="toggle-detail" onclick="toggleDetails('statDetail')">📊 Detail Statistik</button>
-      <div id="statDetail" class="detail-section">
-        <canvas id="algoChart"></canvas>
-        <table>
-          <thead>
-            <tr>
-              <th>Algoritma</th>
-              <th>Tanggal</th>
-              <th>Data Latih</th>
-              <th>Angka</th>
-              <th>Huruf</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="resultTable"></tbody>
-        </table>
-      </div>
-      <button class="toggle-detail" onclick="toggleDetails('trainDetail')">📂 Detail Data Latih</button>
-      <div id="trainDetail" class="detail-section">
-        <table>
-          <thead>
-            <tr>
-              <th>Periode</th>
-              <th>Angka</th>
-              <th>Huruf</th>
-            </tr>
-          </thead>
-          <tbody id="trainTable"></tbody>
-        </table>
-      </div>
-    </div>
+  <div class="title">🚀 TryToWin AI</div>
+
+  <div class="login-box">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">🔐 Login</button>
+    <p id="message"></p>
   </div>
+
   <footer>
-    <marquee behavior="scroll" direction="left">Powered by TryToWin AI • Accurate predictions are built on quality data • Trust your data, trust your model • <span style="margin-left: 2rem;">Made with <span style="color:red;">♥</span> by SalmanSyuh4D4</span></marquee>
+    <p>Made with <span style="color:red;">♥</span> by SalmanSyuh4D4</p>
   </footer>
+
   <script>
-    let trainData = [];
+    const USERS = {
+      "admin": "admin123",
+      "user": "pass123"
+    };
 
-    const SHEET_ID = '1hOoPTHTZO-HUJbyhaVHiIqfuR3hfD0NpfPiATZR6BvI';
-    const API_KEY = 'AIzaSyDhreNC9ikZ3_CvjPxf-TU3wOq7a3HBpcg';
-    const SHEET_NAME = 'DataLatih';
+    function login() {
+      const user = normalize(document.getElementById('username').value);
+      const pass = normalize(document.getElementById('password').value);
 
-    function loadTrainData() {
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          const rows = data.values;
-          trainData = rows.slice(1).map(r => ({
-            periode: r[0], angka: parseInt(r[1]), huruf: r[2]
-          }));
-
-          const trainTable = document.getElementById("trainTable");
-          trainTable.innerHTML = '';
-          trainData.forEach(d => {
-            const row = `<tr><td>${d.periode}</td><td>${d.angka}</td><td>${d.huruf}</td></tr>`;
-            trainTable.innerHTML += row;
-          });
-        })
-        .catch(err => console.error("Failed to load data latih:", err));
-    }
-
-    function toggleDetails(id) {
-      const el = document.getElementById(id);
-      el.style.display = el.style.display === "none" ? "block" : "none";
-    }
-
-    function predictNeuralNet(period) {
-      const angka = Math.ceil(Math.random() * 9);
-      const huruf = Math.random() > 0.5 ? 'B' : 'K';
-      return { algo: 'Neural Net', angka, huruf };
-    }
-
-    function predict() {
-      const period = document.getElementById("period").value.trim();
-      if (!period) {
-        alert("Harap isi period number!");
-        return;
+      if (USERS[user] && USERS[user] === pass) {
+        sessionStorage.setItem("auth", "true");
+        sessionStorage.setItem("username", user); 
+        window.location.href = "dashboard.html"; // atau index.html
+      } else {
+        document.getElementById('message').innerText = "Invalid credentials!";
       }
-
-      const resultText = document.getElementById("predictResult");
-      const resultTable = document.getElementById("resultTable");
-      resultTable.innerHTML = '';
-
-      const predictions = [predictNeuralNet(period)];
-      const date = new Date().toLocaleString();
-
-      predictions.forEach(pred => {
-        const status = Math.random() > 0.2 ? 'Sukses' : 'Error';
-        resultText.innerText = `${pred.angka} ${pred.huruf === 'B' ? 'B BIG' : 'K SMALL'}`;
-
-        const row = `<tr><td>${pred.algo}</td><td>${date}</td><td>${trainData.length}</td><td>${pred.angka}</td><td>${pred.huruf}</td><td>${status}</td></tr>`;
-        resultTable.innerHTML += row;
-
-        updateChart(pred.algo);
-      });
     }
 
-    function updateChart(algo) {
-      const ctx = document.getElementById('algoChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: [algo],
-          datasets: [{
-            label: 'Jumlah Prediksi',
-            data: [1],
-            backgroundColor: '#00f2fe'
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false }
-          }
-        }
-      });
+    function normalize(str) {
+      return str.trim().replace(/\u200B/g, '').normalize();
     }
-
-    window.onload = loadTrainData;
   </script>
 </body>
 </html>
