@@ -228,6 +228,8 @@
       });
     }
 
+    window.onload = loadTrainData;
+
      // Cek apakah sudah login
     const auth = sessionStorage.getItem("auth");
     const username = sessionStorage.getItem("username");
@@ -247,10 +249,10 @@
     function logout() {
       sessionStorage.removeItem("auth");
       sessionStorage.removeItem("username");
-      window.location.href = "login.html";
+      window.location.href = "index.html";
     }
 
-    window.onload = loadTrainData;
+    
   </script>
 </body>
 </html>
