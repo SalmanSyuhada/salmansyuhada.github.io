@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber AI Signature System</title>
+
+<style>
+body{
+    margin:0;
+    background:#050816;
+    font-family:monospace;
+    color:#00ffff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:20px;
+}
+
+.wrapper{
+    display:flex;
+    gap:30px;
+}
+
+.container{
+    position:relative;
+    width:640px;
+    height:480px;
+}
+
+video, canvas{
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:15px;
+}
+
+video{
+    transform: scaleX(-1);
+}
+
+#previewCanvas{
+    background:#000;
+    border-radius:15px;
+    box-shadow:0 0 30px #00ffff;
+}
+
+button{
+    margin-top:10px;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    background:#00ffff;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.panel{
+    margin-top:25px;
+    width:100%;
+    max-width:1000px;
+    background:#0c1022;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 20px #00ffff44;
+}
+
+.status{
+    margin-top:10px;
+    padding:10px;
+    background:#111;
+    border-radius:8px;
+}
+
+.feature-list{
+    margin-top:15px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    font-size:14px;
+}
+
+.highlight{
+    color:#ff00ff;
+}
+</style>
+</head>
+
+<body>
+
+<h2>⚡ CYBER AI SIGNATURE SYSTEM</h2>
+
+<div class="wrapper">
+<div class="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="overlay"></canvas>
+</div>
+
+<div>
+    <canvas id="previewCanvas" width="640" height="480"></canvas>
+</div>
+</div>
+
+<button onclick="clearCanvas()">CLEAR</button>
+<button onclick="generateHash()">GENERATE HASH</button>
+<button onclick="runOCR()">CONVERT TO TEXT</button>
+
+<div class="panel">
+
+<h3>🧠 Cara Menggunakan Sistem</h3>
+
+<div class="feature-list">
+<div>🤏 <span class="highlight">Pinch</span> (Jempol + Telunjuk) → Mulai Menulis</div>
+<div>✊ <span class="highlight">Kepal Tangan</span> → Berhenti Menulis</div>
+<div>✌ <span class="highlight">2 Jari</span> → Ganti Warna Neon</div>
+<div>⚡ Kecepatan Gerak → Mengatur Ketebalan Pena (Pressure Effect)</div>
+<div>🔐 Generate Hash → Buat SHA-256 Tanda Tangan Digital</div>
+<div>📝 Convert to Text → OCR hasil tulisan</div>
+</div>
+
+<div class="status">
+Status Drawing: <span id="drawStatus">OFF</span> |
+Warna Aktif: <span id="colorStatus">CYAN</span>
+</div>
+
+<p style="margin-top:15px;font-size:13px;color:#aaa;">
+Sistem ini menggunakan AI Hand Tracking berbasis browser.  
+Hash SHA-256 digunakan untuk memastikan integritas tanda tangan digital.
+</p>
+
+<div id="ocrResult" style="margin-top:10px;"></div>
+<div id="hashResult" style="margin-top:5px;"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
+<script>
+const video = document.getElementById('video');
+const overlay = document.getElementById('overlay');
+const overlayCtx = overlay.getContext('2d');
+const preview = document.getElementById('previewCanvas');
+const ctx = preview.getContext('2d');
+
+overlay.width=640;
+overlay.height=480;
+
+let prevX=null, prevY=null;
+let drawing=false;
+let currentColor="#00ffff";
+
+function distance(a,b){
+    return Math.hypot(a.x-b.x,a.y-b.y);
+}
+
+function isPinch(lm){ return distance(lm[4],lm[8])<0.05; }
+function isTwoFinger(lm){ return lm[8].y<lm[6].y && lm[12].y<lm[10].y; }
+function isFist(lm){ return lm[8].y>lm[6].y && lm[12].y>lm[10].y; }
+
+function updateStatus(){
+    document.getElementById("drawStatus").innerText = drawing ? "ON" : "OFF";
+    document.getElementById("colorStatus").innerText =
+        currentColor=="#00ffff" ? "CYAN" : "MAGENTA";
+}
+
+const hands = new Hands({
+    locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+});
+
+hands.setOptions({
+    maxNumHands:1,
+    modelComplexity:1,
+    minDetectionConfidence:0.7,
+    minTrackingConfidence:0.7
+});
+
+hands.onResults(results=>{
+    overlayCtx.clearRect(0,0,overlay.width,overlay.height);
+
+    if(results.multiHandLandmarks.length>0){
+        const lm=results.multiHandLandmarks[0];
+
+        drawConnectors(overlayCtx,lm,HAND_CONNECTIONS,
+            {color:'#00ff88',lineWidth:2});
+        drawLandmarks(overlayCtx,lm,
+            {color:'#ff00ff',lineWidth:1});
+
+        const index=lm[8];
+        const x=(1-index.x)*preview.width;
+        const y=index.y*preview.height;
+
+        if(isPinch(lm)) drawing=true;
+        if(isFist(lm)) drawing=false;
+
+        if(isTwoFinger(lm)){
+            currentColor = currentColor=="#00ffff" ? "#ff00ff" : "#00ffff";
+        }
+
+        updateStatus();
+
+        if(drawing){
+            if(prevX!==null){
+                let speed=Math.hypot(x-prevX,y-prevY);
+                let pressure=Math.max(2,10-speed/5);
+
+                ctx.lineWidth=pressure;
+                ctx.lineCap="round";
+                ctx.strokeStyle=currentColor;
+                ctx.shadowColor=currentColor;
+                ctx.shadowBlur=20;
+
+                ctx.beginPath();
+                ctx.moveTo(prevX,prevY);
+                ctx.quadraticCurveTo(prevX,prevY,x,y);
+                ctx.stroke();
+            }
+            prevX=x; prevY=y;
+        } else { prevX=null; prevY=null; }
+    }
+});
+
+const camera=new Camera(video,{
+    onFrame:async()=>{await hands.send({image:video});},
+    width:640,height:480
+});
+camera.start();
+
+function clearCanvas(){
+    ctx.clearRect(0,0,preview.width,preview.height);
+}
+
+async function generateHash(){
+    const dataURL=preview.toDataURL();
+    const msg=new TextEncoder().encode(dataURL);
+    const hashBuffer=await crypto.subtle.digest('SHA-256',msg);
+    const hashArray=Array.from(new Uint8Array(hashBuffer));
+    const hashHex=hashArray.map(b=>b.toString(16).padStart(2,'0')).join('');
+    document.getElementById("hashResult").innerText=
+        "Digital Signature Hash (SHA-256): "+hashHex;
+}
+
+async function runOCR(){
+    document.getElementById("ocrResult").innerText="Processing OCR...";
+    const result=await Tesseract.recognize(preview.toDataURL(),'eng');
+    document.getElementById("ocrResult").innerText=
+        "OCR Result: "+result.data.text;
+}
+</script>
+
+</body>
+</html>

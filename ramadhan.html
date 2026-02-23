@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Ramadhan Mubarak</title>
+
+<style>
+body {
+    margin:0;
+    background:#000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:'Courier New', monospace;
+    overflow:hidden;
+}
+
+.container {
+    position:relative;
+    width:360px;
+    height:640px;
+    background:linear-gradient(to bottom,#050510,#0f2027);
+    border-radius:30px;
+    overflow:hidden;
+    box-shadow:0 0 30px #00ffcc;
+}
+
+canvas {
+    position:absolute;
+    top:0;
+    left:0;
+}
+
+/* MESSAGE TENGAH (bekas shield) */
+.text-top {
+    position:absolute;
+    top:150px;
+    left:50%;
+    transform:translateX(-50%);
+    width:80%;
+    text-align:center;
+    color:#00ffcc;
+    font-size:14px;
+    z-index:3;
+    min-height:120px;
+    text-shadow:0 0 10px #00ffcc;
+}
+
+/* MOSQUE */
+.mosque {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:150px;
+    background:black;
+    clip-path: polygon(
+        0% 100%, 
+        0% 70%, 
+        20% 70%, 
+        25% 60%, 
+        30% 70%, 
+        50% 70%, 
+        55% 60%, 
+        60% 70%, 
+        80% 70%, 
+        100% 70%, 
+        100% 100%
+    );
+    z-index:2;
+}
+
+/* CAMERA */
+video {
+    position:absolute;
+    bottom:190px;
+    left:50%;
+    transform:translateX(-50%);
+    width:170px;
+    border-radius:20px;
+    border:3px solid gold;
+    z-index:3;
+}
+
+/* FORM */
+.form-area {
+    position:absolute;
+    bottom:30px;
+    width:100%;
+    text-align:center;
+    z-index:5;
+}
+
+input, textarea {
+    width:80%;
+    padding:6px;
+    border-radius:8px;
+    border:none;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+textarea {
+    resize:none;
+    height:60px;
+}
+
+button {
+    margin-top:5px;
+    padding:6px 10px;
+    background:#00ffcc;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.signature {
+    margin-top:10px;
+    color:gold;
+    font-size:12px;
+}
+
+.hide-on-capture {
+    position:absolute;
+    top:10px;
+    right:10px;
+    z-index:10;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="captureArea">
+
+<canvas id="canvas"></canvas>
+
+<div class="text-top" id="displayMessage"></div>
+
+<video id="video" autoplay></video>
+
+<div class="mosque"></div>
+
+<div class="form-area" id="formArea">
+    <textarea id="userMessage" placeholder="Tulis pesan Ramadhan..."></textarea>
+    <input type="text" id="fromName" placeholder="Nama Pengirim">
+    <br>
+    <button onclick="generateGreeting()">Generate Ucapan</button>
+</div>
+
+<button class="hide-on-capture" onclick="capture()">Screenshot</button>
+
+<div class="form-area signature" id="signatureArea"></div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+// CANVAS (Moon + Stars)
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = 360;
+canvas.height = 640;
+
+function drawMoon() {
+    let x = canvas.width/2;
+    let y = 100;
+
+    ctx.beginPath();
+    ctx.arc(x, y, 40, 0, Math.PI*2);
+    ctx.fillStyle = "gold";
+    ctx.fill();
+
+    ctx.globalCompositeOperation="destination-out";
+    ctx.beginPath();
+    ctx.arc(x+15, y-10, 40, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.globalCompositeOperation="source-over";
+}
+
+let stars=[];
+for(let i=0;i<60;i++){
+    stars.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*2,
+        a:Math.random()
+    });
+}
+
+function drawStars(){
+    stars.forEach(s=>{
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle="rgba(255,255,255,"+s.a+")";
+        ctx.fill();
+        s.a += (Math.random()-0.5)*0.05;
+        if(s.a<0)s.a=0;
+        if(s.a>1)s.a=1;
+    });
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawMoon();
+    drawStars();
+    requestAnimationFrame(animate);
+}
+animate();
+
+// CAMERA
+navigator.mediaDevices.getUserMedia({video:true})
+.then(stream=>{document.getElementById("video").srcObject=stream;})
+.catch(err=>console.log(err));
+
+// TANGGAL
+function getMasehi(){
+    return new Date().toLocaleDateString('id-ID',{
+        weekday:'long',year:'numeric',month:'long',day:'numeric'
+    });
+}
+
+function getHijriyah(){
+    return new Intl.DateTimeFormat('id-ID-u-ca-islamic',{
+        day:'numeric',month:'long',year:'numeric'
+    }).format(new Date());
+}
+
+// TYPEWRITING
+function typeWriter(text, element){
+    let i=0;
+    element.innerHTML="";
+    function typing(){
+        if(i<text.length){
+            if(text.charAt(i)==="\n"){
+                element.innerHTML+="<br>";
+            } else {
+                element.innerHTML+=text.charAt(i);
+            }
+            i++;
+            setTimeout(typing,40);
+        }
+    }
+    typing();
+}
+
+// GENERATE
+function generateGreeting(){
+    let message=document.getElementById("userMessage").value;
+    let name=document.getElementById("fromName").value;
+    if(!message || !name) return;
+
+    document.getElementById("formArea").style.display="none";
+
+    typeWriter(message, document.getElementById("displayMessage"));
+
+    let signature="\nDari: "+name+
+        "\n"+getMasehi()+
+        "\n"+getHijriyah();
+
+    typeWriter(signature, document.getElementById("signatureArea"));
+}
+
+// SCREENSHOT
+function capture(){
+    document.querySelector(".hide-on-capture").style.display="none";
+    html2canvas(document.querySelector("#captureArea")).then(canvas=>{
+        let link=document.createElement("a");
+        link.download="cyber-ramadhan.png";
+        link.href=canvas.toDataURL();
+        link.click();
+        document.querySelector(".hide-on-capture").style.display="block";
+    });
+}
+</script>
+
+</body>
+</html>
