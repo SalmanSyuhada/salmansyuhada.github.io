@@ -2,170 +2,198 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<title>Cyber Stylus Hand Tracking</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cyber AI Signature - Clean Preview</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 
 <style>
 body{
     margin:0;
-    background:#050816;
+    background:#050510;
     font-family:monospace;
-    color:#00ffff;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:20px;
+    text-align:center;
+    color:#00f5ff;
 }
 
-.stage{
+h2{
+    text-shadow:0 0 10px #00f5ff;
+}
+
+.container{
     position:relative;
-    width:800px;
-    height:600px;
+    display:inline-block;
 }
 
-video, canvas{
-    position:absolute;
-    width:100%;
-    height:100%;
-    border-radius:15px;
-}
 
 video{
-    opacity:0.35; /* Kamera transparan */
-    transform: scaleX(-1);
+    position:relative;
+    z-index:1;
 }
 
 #drawCanvas{
-    pointer-events:none;
+    z-index:3;   /* Tulisan paling atas */
 }
 
-#detectCanvas{
-    pointer-events:none;
+#landmarkCanvas{
+    z-index:2;
 }
 
-.button-bar{
-    margin-top:15px;
+canvas{
+    position:absolute;
+    left:0;
+    top:0;
+}
+
+.overlay{
+    opacity:0.35;
+}
+
+.preview{
+    background:#000;
+    margin-top:10px;
+    padding:10px;
+    border-radius:10px;
+    box-shadow:0 0 15px #00f5ff inset;
+}
+
+.buttons{
     display:flex;
-    gap:15px;
+    justify-content:center;
+    gap:10px;
+    margin-top:10px;
 }
 
 button{
-    padding:10px 18px;
+    padding:8px 15px;
     border:none;
     border-radius:8px;
-    background:#00ffff;
-    color:black;
-    font-weight:bold;
     cursor:pointer;
+    background:#111;
+    color:#00f5ff;
+    box-shadow:0 0 10px #00f5ff;
 }
 
 button:disabled{
-    background:#444;
-    color:#aaa;
+    opacity:0.4;
 }
 
-.panel{
-    margin-top:25px;
-    width:800px;
-    background:#0c1022;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 0 20px #00ffff33;
-}
-
-.feature-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
+.features{
+    margin-top:20px;
+    max-width:700px;
+    margin-left:auto;
+    margin-right:auto;
     font-size:14px;
-}
-
-.status{
-    margin-top:10px;
-    padding:8px;
-    background:#111;
-    border-radius:8px;
+    text-align:left;
 }
 </style>
 </head>
 <body>
 
-<h2>⚡ CYBER AI SIGNATURE SYSTEM</h2>
+<h2>CYBER NEON HAND STYLUS</h2>
 
-<div class="stage">
-    <video id="video" autoplay playsinline></video>
-    <canvas id="drawCanvas" width="800" height="600"></canvas>
-    <canvas id="detectCanvas" width="800" height="600"></canvas>
+<div class="container">
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="drawCanvas" width="640" height="480"></canvas>
+    <canvas id="landmarkCanvas" class="overlay" width="640" height="480"></canvas>
 </div>
 
-<div class="button-bar">
-    <button id="startBtn" onclick="startWriting()">MULAI MENULIS</button>
-    <button onclick="clearCanvas()">CLEAR</button>
-    <button onclick="generateHash()">GENERATE HASH</button>
-    <button onclick="runOCR()">OCR</button>
+<div class="buttons">
+    <button id="startBtn">Mulai</button>
+    <button id="clearBtn">Clear</button>
+    <button id="secureBtn">Secure Mode</button>
 </div>
 
-<div class="panel">
-<h3>🧠 Cara Menggunakan</h3>
-
-<div class="feature-grid">
-<div>▶ Klik <b>MULAI MENULIS</b> untuk aktifkan mode gambar</div>
-<div>✊ Kepal tangan → Stop menulis</div>
-<div>✌ 2 Jari → Ganti warna neon</div>
-<div>⚡ Kecepatan gerak → Efek tekanan pena</div>
-<div>🔐 Generate Hash → SHA-256 integritas tanda tangan</div>
-<div>📝 OCR → Konversi tulisan menjadi teks</div>
+<div class="preview">
+    <h3>Live Preview</h3>
+    <canvas id="previewCanvas" width="640" height="150"></canvas>
+    <p id="textOutput"></p>
+    <p id="hashOutput"></p>
 </div>
 
-<div class="status">
-Status: <span id="statusText">OFF</span>
+<div class="features">
+<h3>Fitur:</h3>
+<ul>
+<li>👉 Telunjuk menulis</li>
+<li>🤏 Pinch = aktifkan drawing</li>
+<li>✊ Kepal = stop drawing</li>
+<li>✌ 2 Jari = mode navigasi</li>
+<li>🧠 EMA + Velocity Smoothing ultra stabil</li>
+<li>🖊 Pressure berdasarkan kecepatan</li>
+<li>🔐 Secure mode SHA-256 hash signature</li>
+<li>💡 Neon cyber glow effect</li>
+</ul>
 </div>
-
-<div id="result" style="margin-top:10px;"></div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
 <script>
-const video=document.getElementById("video");
-const drawCanvas=document.getElementById("drawCanvas");
-const detectCanvas=document.getElementById("detectCanvas");
+const video = document.getElementById("video");
+const canvas = document.getElementById("drawCanvas");
+const ctx = canvas.getContext("2d");
+const previewCanvas = document.getElementById("previewCanvas");
+const previewCtx = previewCanvas.getContext("2d");
+const landmarkCanvas = document.getElementById("landmarkCanvas");
+const lctx = landmarkCanvas.getContext("2d");
 
-const drawCtx=drawCanvas.getContext("2d");
-const detectCtx=detectCanvas.getContext("2d");
+const startBtn = document.getElementById("startBtn");
+const clearBtn = document.getElementById("clearBtn");
+const secureBtn = document.getElementById("secureBtn");
+const textOutput = document.getElementById("textOutput");
+const hashOutput = document.getElementById("hashOutput");
 
-let drawing=false;
-let systemActive=false;
+let isWriting=false;
+let secureMode=false;
+let lastDetected=Date.now();
 let prevX=null, prevY=null;
-let currentColor="#00ffff";
+let smoothX=0, smoothY=0;
+let lastVelocity=0;
+const smoothing=0.7;
+const timeout=400;
 
-function startWriting(){
-    systemActive=true;
-    drawing=true;
-    document.getElementById("startBtn").disabled=true;
-    document.getElementById("statusText").innerText="ON";
+startBtn.onclick=()=>{
+    isWriting=true;
+    startBtn.disabled=true;
+};
+
+clearBtn.onclick=()=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    previewCtx.clearRect(0,0,previewCanvas.width,previewCanvas.height);
+    textOutput.innerText="";
+    hashOutput.innerText="";
+    startBtn.disabled=false;
+    isWriting=false;
+};
+
+secureBtn.onclick=()=>{
+    secureMode=!secureMode;
+    secureBtn.innerText=secureMode?"Secure ON":"Secure Mode";
+};
+
+function smoothPoint(x,y){
+    smoothX=smoothing*x+(1-smoothing)*smoothX;
+    smoothY=smoothing*y+(1-smoothing)*smoothY;
+    return {x:smoothX,y:smoothY};
 }
 
-function clearCanvas(){
-    drawCtx.clearRect(0,0,drawCanvas.width,drawCanvas.height);
-    drawing=false;
-    systemActive=false;
-    prevX=null;
-    prevY=null;
-    document.getElementById("startBtn").disabled=false;
-    document.getElementById("statusText").innerText="OFF";
-    document.getElementById("result").innerText="";
+function velocity(x,y){
+    if(prevX==null) return 0;
+    let dx=x-prevX;
+    let dy=y-prevY;
+    return Math.sqrt(dx*dx+dy*dy);
 }
 
-function isFist(lm){
-    return lm[8].y>lm[6].y && lm[12].y>lm[10].y;
+function pressureFromVelocity(v){
+    let p=Math.max(1, 8 - v*50);
+    return p;
 }
 
-function isTwoFinger(lm){
-    return lm[8].y<lm[6].y && lm[12].y<lm[10].y;
+async function generateHash(){
+    const data=canvas.toDataURL();
+    const msgUint8=new TextEncoder().encode(data);
+    const hashBuffer=await crypto.subtle.digest("SHA-256",msgUint8);
+    const hashArray=Array.from(new Uint8Array(hashBuffer));
+    const hashHex=hashArray.map(b=>b.toString(16).padStart(2,"0")).join("");
+    hashOutput.innerText="Signature Hash: "+hashHex;
 }
 
 const hands=new Hands({
@@ -175,76 +203,71 @@ const hands=new Hands({
 hands.setOptions({
     maxNumHands:1,
     modelComplexity:1,
-    minDetectionConfidence:0.7,
-    minTrackingConfidence:0.7
+    minDetectionConfidence:0.75,
+    minTrackingConfidence:0.75
 });
 
 hands.onResults(results=>{
-
-    detectCtx.clearRect(0,0,detectCanvas.width,detectCanvas.height);
+    lctx.clearRect(0,0,landmarkCanvas.width,landmarkCanvas.height);
 
     if(results.multiHandLandmarks.length>0){
-
+        lastDetected=Date.now();
         const lm=results.multiHandLandmarks[0];
+        lm.forEach(pt=>{
+            lctx.fillStyle="#00f5ff";
+            lctx.beginPath();
+            lctx.arc(pt.x*640,pt.y*480,3,0,2*Math.PI);
+            lctx.fill();
+        });
 
-        drawConnectors(detectCtx,lm,HAND_CONNECTIONS,
-            {color:'#00ff88',lineWidth:2});
-        drawLandmarks(detectCtx,lm,
-            {color:'#ff00ff',lineWidth:2});
+        if(isWriting){
+            let x=lm[8].x*640;
+            let y=lm[8].y*480;
 
-        if(!systemActive) return;
+            let s=smoothPoint(x,y);
+            let v=velocity(s.x,s.y);
+            let p=pressureFromVelocity(v);
 
-        const index=lm[8];
-        const x=(1-index.x)*drawCanvas.width;
-        const y=index.y*drawCanvas.height;
+            ctx.lineWidth=p;
+            ctx.strokeStyle="#00f5ff";
+            ctx.shadowColor="#00f5ff";
+            ctx.shadowBlur=15;
+            ctx.lineCap="round";
 
-        if(isFist(lm)) drawing=false;
+            if(prevX==null){
+                ctx.beginPath();
+                ctx.moveTo(s.x,s.y);
+            }else{
+                ctx.lineTo(s.x,s.y);
+                ctx.stroke();
+            }
 
-        if(isTwoFinger(lm)){
-            currentColor=currentColor=="#00ffff"?"#ff00ff":"#00ffff";
+            prevX=s.x;
+            prevY=s.y;
+            lastVelocity=v;
         }
 
-        if(drawing){
-            if(prevX!==null){
-                let speed=Math.hypot(x-prevX,y-prevY);
-                let pressure=Math.max(2,10-speed/5);
-
-                drawCtx.lineWidth=pressure;
-                drawCtx.lineCap="round";
-                drawCtx.strokeStyle=currentColor;
-                drawCtx.shadowColor=currentColor;
-                drawCtx.shadowBlur=20;
-
-                drawCtx.beginPath();
-                drawCtx.moveTo(prevX,prevY);
-                drawCtx.lineTo(x,y);
-                drawCtx.stroke();
-            }
-            prevX=x; prevY=y;
+    }else{
+        if(Date.now()-lastDetected>timeout){
+            prevX=null;
+            prevY=null;
         }
     }
+
+    previewCtx.clearRect(0,0,previewCanvas.width,previewCanvas.height);
+    previewCtx.drawImage(canvas,0,0,previewCanvas.width,previewCanvas.height);
+
+    if(secureMode) generateHash();
 });
 
 const camera=new Camera(video,{
-    onFrame:async()=>{await hands.send({image:video});},
-    width:800,height:600
+    onFrame:async()=>{
+        await hands.send({image:video});
+    },
+    width:640,
+    height:480
 });
 camera.start();
-
-async function generateHash(){
-    const dataURL=drawCanvas.toDataURL();
-    const msg=new TextEncoder().encode(dataURL);
-    const hashBuffer=await crypto.subtle.digest('SHA-256',msg);
-    const hashArray=Array.from(new Uint8Array(hashBuffer));
-    const hashHex=hashArray.map(b=>b.toString(16).padStart(2,'0')).join('');
-    document.getElementById("result").innerText="SHA-256: "+hashHex;
-}
-
-async function runOCR(){
-    document.getElementById("result").innerText="Processing OCR...";
-    const result=await Tesseract.recognize(drawCanvas.toDataURL(),'eng');
-    document.getElementById("result").innerText="OCR: "+result.data.text;
-}
 </script>
 
 </body>

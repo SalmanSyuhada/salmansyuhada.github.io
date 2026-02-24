@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hand Fire Energy</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    background: radial-gradient(circle at center,#050510,#000);
+    font-family:Arial, sans-serif;
+    color:white;
+}
+
+video{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0.25; /* Kamera transparan */
+    transform: scaleX(-1);
+}
+
+canvas{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+}
+
+.guide{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    text-align:center;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<video id="video" autoplay playsinline></video>
+<canvas id="canvas"></canvas>
+
+<div class="guide">
+🔥 <b>Hand Fire Control Guide</b><br>
+🖐️ Buka tangan kanan → Api Merah menyala<br>
+✊ Tutup tangan kanan → Api Merah redup<br><br>
+🖐️ Buka tangan kiri → Api Biru menyala<br>
+✊ Tutup tangan kiri → Api Biru redup<br><br>
+🤝 Dekatkan kedua tangan → Warna api menyatu (Ungu)
+</div>
+
+<script>
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let rightFire = {x:0,y:0,active:false,intensity:0};
+let leftFire = {x:0,y:0,active:false,intensity:0};
+
+function smooth(current, target, factor=0.2){
+    return current + (target-current)*factor;
+}
+
+function isHandOpen(landmarks){
+    let tip = landmarks[8];
+    let pip = landmarks[6];
+    return tip.y < pip.y;
+}
+
+function drawFire(x,y,color,intensity){
+    if(intensity <= 0.05) return;
+
+    let radius = 80 * intensity;
+    let gradient = ctx.createRadialGradient(x,y,0,x,y,radius);
+    gradient.addColorStop(0,color);
+    gradient.addColorStop(1,"transparent");
+
+    ctx.globalCompositeOperation = "lighter";
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(x,y,radius,0,Math.PI*2);
+    ctx.fill();
+}
+
+function blendEffect(){
+    let dx = rightFire.x - leftFire.x;
+    let dy = rightFire.y - leftFire.y;
+    let dist = Math.sqrt(dx*dx+dy*dy);
+
+    if(dist < 200 && rightFire.active && leftFire.active){
+        let midX = (rightFire.x+leftFire.x)/2;
+        let midY = (rightFire.y+leftFire.y)/2;
+
+        let gradient = ctx.createRadialGradient(midX,midY,0,midX,midY,150);
+        gradient.addColorStop(0,"rgba(255,0,255,0.9)");
+        gradient.addColorStop(1,"transparent");
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(midX,midY,150,0,Math.PI*2);
+        ctx.fill();
+    }
+}
+
+const hands = new Hands({
+    locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+});
+
+hands.setOptions({
+    maxNumHands:2,
+    modelComplexity:1,
+    minDetectionConfidence:0.7,
+    minTrackingConfidence:0.7
+});
+
+hands.onResults(results=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(results.multiHandLandmarks){
+        results.multiHandLandmarks.forEach((landmarks,index)=>{
+            const handedness = results.multiHandedness[index].label;
+
+            let wrist = landmarks[0];
+            let x = canvas.width - (wrist.x * canvas.width);
+            let y = wrist.y * canvas.height;
+
+            let open = isHandOpen(landmarks);
+
+            if(handedness === "Right"){
+                rightFire.x = smooth(rightFire.x,x);
+                rightFire.y = smooth(rightFire.y,y);
+                rightFire.active = open;
+                rightFire.intensity = smooth(rightFire.intensity, open?1:0);
+            } else {
+                leftFire.x = smooth(leftFire.x,x);
+                leftFire.y = smooth(leftFire.y,y);
+                leftFire.active = open;
+                leftFire.intensity = smooth(leftFire.intensity, open?1:0);
+            }
+        });
+    }
+
+    drawFire(rightFire.x,rightFire.y,"rgba(255,50,0,0.9)",rightFire.intensity);
+    drawFire(leftFire.x,leftFire.y,"rgba(0,150,255,0.9)",leftFire.intensity);
+    blendEffect();
+});
+
+const camera = new Camera(video,{
+    onFrame: async()=>{
+        await hands.send({image:video});
+    },
+    width:1280,
+    height:720
+});
+camera.start();
+</script>
+
+</body>
+</html>
