@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hand Fire Energy</title>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
@@ -41,12 +42,96 @@ canvas{
 .guide{
     position:absolute;
     bottom:0;
+    left:0;
     width:100%;
-    background:rgba(0,0,0,0.6);
+    padding:12px 30px;
+    background:rgba(0,0,0,0.45);
     backdrop-filter:blur(10px);
-    padding:20px;
-    text-align:center;
-    font-size:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-sizing:border-box;
+    font-size:13px;
+}
+
+.guide-group{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.guide select{
+    background:rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.4);
+    color:white;
+    padding:6px 12px;
+    border-radius:8px;
+    outline:none;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.guide select:hover{
+    box-shadow:0 0 8px rgba(0,255,255,0.8);
+    border-color:rgba(0,255,255,0.8);
+}
+
+.guide select:focus{
+    box-shadow:0 0 12px rgba(255,0,255,0.9);
+    border-color:rgba(255,0,255,0.9);
+}
+
+.fusion-preview{
+    gap:10px;
+}
+
+#fusionColorBox{
+    width:35px;
+    height:35px;
+    border-radius:8px;
+    background:purple;
+    box-shadow:0 0 15px purple;
+    transition:0.3s;
+}
+
+.fusion-info{
+    opacity:0.85;
+}
+
+.social a{
+    color:white;
+    font-size:18px;
+    margin-left:10px;
+    transition:0.3s;
+    text-decoration:none;
+}
+
+.social a:hover{
+    transform:translateY(-3px);
+}
+
+.social a .fa-github:hover{
+    color:#00ffff;
+    text-shadow:0 0 10px #00ffff;
+}
+
+.social a .fa-instagram:hover{
+    color:#ff00ff;
+    text-shadow:0 0 10px #ff00ff;
+}
+
+.social a .fa-youtube:hover{
+    color:#ff0000;
+    text-shadow:0 0 10px #ff0000;
+}
+
+.donate{
+    color:#ff4d6d;
+}
+
+.donate:hover{
+    text-shadow:0 0 12px #ff4d6d;
+    transform:scale(1.2);
 }
 </style>
 </head>
@@ -57,12 +142,41 @@ canvas{
 <canvas id="canvas"></canvas>
 
 <div class="guide">
-🔥 <b>Hand Fire Control Guide</b><br>
-🖐️ Buka tangan kanan → Api Merah menyala<br>
-✊ Tutup tangan kanan → Api Merah redup<br><br>
-🖐️ Buka tangan kiri → Api Biru menyala<br>
-✊ Tutup tangan kiri → Api Biru redup<br><br>
-🤝 Dekatkan kedua tangan → Warna api menyatu (Ungu)
+
+  <div class="guide-group">
+      <b>🔥 Right</b>
+      <select id="rightColor">
+          <option value="255,50,0">Red</option>
+          <option value="255,140,0">Orange</option>
+          <option value="255,255,0">Yellow</option>
+          <option value="0,255,100">Green</option>
+          <option value="255,0,255">Magenta</option>
+      </select>
+  </div>
+
+  <div class="guide-group">
+      <b>❄ Left</b>
+      <select id="leftColor">
+          <option value="0,150,255">Blue</option>
+          <option value="0,255,255">Cyan</option>
+          <option value="180,0,255">Purple</option>
+          <option value="255,255,255">White</option>
+          <option value="0,255,120">Mint</option>
+      </select>
+  </div>
+
+  <div class="guide-group fusion-preview">
+      <span>Result : </span>
+      <div id="fusionColorBox"></div>
+  </div>
+
+  <div class="guide-group social">
+      <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="donate"><i class="fas fa-heart"></i></a>
+  </div>
+
 </div>
 
 <script>
@@ -86,12 +200,12 @@ function isHandOpen(landmarks){
     return tip.y < pip.y;
 }
 
-function drawFire(x,y,color,intensity){
+function drawFire(x,y,colorRGB,intensity){
     if(intensity <= 0.05) return;
 
     let radius = 80 * intensity;
     let gradient = ctx.createRadialGradient(x,y,0,x,y,radius);
-    gradient.addColorStop(0,color);
+    gradient.addColorStop(0,`rgba(${colorRGB},0.95)`);
     gradient.addColorStop(1,"transparent");
 
     ctx.globalCompositeOperation = "lighter";
@@ -106,18 +220,37 @@ function blendEffect(){
     let dy = rightFire.y - leftFire.y;
     let dist = Math.sqrt(dx*dx+dy*dy);
 
+    let mixed = mixColors(rightColor, leftColor);
+    let fusionColor = `rgba(${mixed[0]},${mixed[1]},${mixed[2]},0.9)`;
+
+    // Fusion glow
     if(dist < 200 && rightFire.active && leftFire.active){
         let midX = (rightFire.x+leftFire.x)/2;
         let midY = (rightFire.y+leftFire.y)/2;
 
         let gradient = ctx.createRadialGradient(midX,midY,0,midX,midY,150);
-        gradient.addColorStop(0,"rgba(255,0,255,0.9)");
+        gradient.addColorStop(0,fusionColor);
         gradient.addColorStop(1,"transparent");
 
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(midX,midY,150,0,Math.PI*2);
         ctx.fill();
+    }
+
+    // ENERGY BEAM MODE 🔥⚡
+    if(dist < 80 && rightFire.active && leftFire.active){
+        ctx.strokeStyle = fusionColor;
+        ctx.lineWidth = 15;
+        ctx.shadowBlur = 30;
+        ctx.shadowColor = fusionColor;
+
+        ctx.beginPath();
+        ctx.moveTo(rightFire.x, rightFire.y);
+        ctx.lineTo(leftFire.x, leftFire.y);
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
     }
 }
 
@@ -131,6 +264,43 @@ hands.setOptions({
     minDetectionConfidence:0.7,
     minTrackingConfidence:0.7
 });
+
+let rightColor = "255,50,0";
+let leftColor = "0,150,255";
+
+document.getElementById("rightColor").addEventListener("change", e=>{
+    rightColor = e.target.value;
+    updateFusionPreview();
+});
+
+document.getElementById("leftColor").addEventListener("change", e=>{
+    leftColor = e.target.value;
+    updateFusionPreview();
+});
+
+updateFusionPreview();
+
+function mixColors(rgb1, rgb2){
+    let c1 = rgb1.split(',').map(Number);
+    let c2 = rgb2.split(',').map(Number);
+
+    let mixed = [
+        Math.floor((c1[0]+c2[0])/2),
+        Math.floor((c1[1]+c2[1])/2),
+        Math.floor((c1[2]+c2[2])/2)
+    ];
+
+    return mixed;
+}
+
+function updateFusionPreview(){
+    let mixed = mixColors(rightColor, leftColor);
+    let color = `rgb(${mixed[0]},${mixed[1]},${mixed[2]})`;
+
+    const box = document.getElementById("fusionColorBox");
+    box.style.background = color;
+    box.style.boxShadow = `0 0 20px ${color}`;
+}
 
 hands.onResults(results=>{
     ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -159,8 +329,8 @@ hands.onResults(results=>{
         });
     }
 
-    drawFire(rightFire.x,rightFire.y,"rgba(255,50,0,0.9)",rightFire.intensity);
-    drawFire(leftFire.x,leftFire.y,"rgba(0,150,255,0.9)",leftFire.intensity);
+    drawFire(rightFire.x,rightFire.y,rightColor,rightFire.intensity);
+    drawFire(leftFire.x,leftFire.y,leftColor,leftFire.intensity);
     blendEffect();
 });
 
