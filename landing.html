@@ -3,274 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Salman Alparisi | Developer & Security Practitioner</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>Salman | Secure Digital Ecosystem</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Poppins',sans-serif;
+    background:#0a0f1c;
+    color:#fff;
     scroll-behavior:smooth;
 }
-
-body{
-    font-family:'Inter', sans-serif;
-    background:#0b1220;
-    color:#e2e8f0;
-    line-height:1.8;
-}
-
-header{
-    padding:30px 8%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-header h1{
-    font-size:18px;
-    font-weight:600;
-}
-
-header a{
-    text-decoration:none;
-    color:#38bdf8;
-    font-weight:600;
-}
-
 section{
-    padding:100px 8%;
-    max-width:1100px;
-    margin:auto;
+    padding:100px 10%;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
 }
-
-.hero h2{
-    font-family:'Playfair Display', serif;
-    font-size:46px;
-    margin-bottom:25px;
-}
-
-.hero p{
-    color:#94a3b8;
-    margin-bottom:20px;
-    font-size:18px;
-}
-
-.quote{
-    font-style:italic;
-    font-size:22px;
-    color:#38bdf8;
-    margin:40px 0;
-}
-
-.section-dark{
-    background:#111827;
-}
-
-.section-title{
-    font-family:'Playfair Display', serif;
-    font-size:32px;
-    margin-bottom:40px;
-}
-
-.service, .portfolio-item{
-    margin-bottom:40px;
-}
-
-.service h4, .portfolio-item h4{
-    color:#38bdf8;
-    margin-bottom:10px;
-}
-
-.service p, .portfolio-item p{
-    color:#cbd5e1;
-}
+h1{font-size:3rem;font-weight:800;margin-bottom:20px}
+h2{font-size:2.2rem;margin-bottom:20px}
+p{color:#cfcfcf;line-height:1.7;margin-bottom:15px}
+.highlight{color:#00f0ff}
 
 .btn{
     display:inline-block;
-    padding:15px 40px;
-    background:linear-gradient(90deg,#38bdf8,#2563eb);
-    color:#fff;
-    text-decoration:none;
+    padding:14px 28px;
+    margin:10px 10px 0 0;
     border-radius:40px;
+    text-decoration:none;
     font-weight:600;
-    transition:0.3s;
+    transition:0.3s ease;
 }
 
-.btn:hover{
-    transform:translateY(-5px);
-    box-shadow:0 10px 30px rgba(56,189,248,0.4);
+.btn-glow{
+    background:linear-gradient(45deg,#00f0ff,#00ff94);
+    color:#000;
+    box-shadow:0 0 20px #00f0ff,0 0 40px #00ff94;
+}
+.btn-glow:hover{
+    box-shadow:0 0 30px #00f0ff,0 0 60px #00ff94;
+    transform:translateY(-3px);
 }
 
-.cta{
-    text-align:center;
+.card-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+    margin-top:40px;
+}
+.card{
+    background:#111827;
+    padding:30px;
+    border-radius:20px;
+    transition:0.4s;
+}
+.card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 0 25px rgba(0,255,255,0.4);
 }
 
-footer{
-    text-align:center;
-    padding:40px;
-    font-size:14px;
-    color:#64748b;
-}
-
-/* Fade-in animation */
 .fade{
     opacity:0;
     transform:translateY(40px);
     transition:all 1s ease;
 }
-
 .fade.show{
     opacity:1;
     transform:translateY(0);
 }
 
-@media(max-width:768px){
-    .hero h2{
-        font-size:32px;
-    }
+footer{
+    text-align:center;
+    padding:40px;
+    background:#050810;
+    color:#888;
 }
 </style>
 </head>
+
 <body>
 
-<header>
-    <h1>Salman Alparisi</h1>
-    <a href="#contact">Diskusi Profesional</a>
-</header>
-
-<section class="hero fade">
-    <h2>Developer yang Fokus pada Keamanan Sejak Baris Pertama Kode</h2>
-    <p>
-        Saya percaya bahwa membangun website bukan hanya tentang desain dan fitur, 
-        tetapi tentang bagaimana sistem tersebut dirancang agar aman sejak awal.
-    </p>
-
-    <div class="quote">
-        “Keamanan bukan tambahan. Ia adalah fondasi.”
-    </div>
-
-    <p>
-        Banyak sistem terlihat berjalan baik di awal, hingga suatu hari terjadi insiden. 
-        Di situlah pentingnya pendekatan secure-by-design.
-    </p>
-</section>
-
-<section class="section-dark fade">
-    <h3 class="section-title">Kenapa Secure by Design Itu Penting?</h3>
-
-    <p>
-        Dalam beberapa pengalaman pengembangan sistem, saya sering melihat satu pola yang sama.
-        Proyek dikejar deadline. Fitur menjadi prioritas utama.
-        Keamanan sering dipikirkan belakangan.
-    </p>
-
-    <p>
-        Awalnya semua terlihat aman. Namun ketika sistem mulai digunakan secara luas,
-        risiko mulai muncul — validasi input yang kurang ketat,
-        kontrol akses yang tidak terstruktur, atau konfigurasi server yang standar.
-    </p>
-
-    <p>
-        Secure by design berarti kita merancang sistem dengan asumsi bahwa
-        risiko itu nyata. Kita mempersiapkan proteksi sejak awal,
-        bukan setelah terjadi insiden.
-    </p>
-
-    <p>
-        Bagi instansi, ini bukan hanya soal teknis —
-        tetapi tentang menjaga kepercayaan masyarakat.
-    </p>
-</section>
-
+<!-- HERO -->
 <section class="fade">
-    <h3 class="section-title">Belajar & Kolaborasi</h3>
+<h1>Halo, Saya <span class="highlight">Salman</span></h1>
+<p>Saya menulis kode, mengamankan sistem, mengeksplorasi AI, dan pulang sebagai seorang ayah. 
+Saya percaya teknologi harus aman, produktif, dan bertanggung jawab untuk generasi berikutnya.</p>
 
-    <div class="service">
-        <h4>👨‍💻 Belajar Membangun Web yang Aman</h4>
-        <p>
-            Saya membuka pendampingan private coding dan pelatihan 
-            untuk memahami clean architecture, secure coding practice,
-            proteksi SQL Injection & XSS, serta kontrol akses berbasis peran.
-        </p>
-        <p>
-            Selain belajar, saya juga menerima kolaborasi pengembangan sistem
-            dengan pendekatan profesional dan bertanggung jawab.
-        </p>
-    </div>
-
-    <div class="service">
-        <h4>🎙️ Narasumber & Workshop</h4>
-        <p>
-            Berbagi pengalaman nyata tentang secure coding,
-            keamanan website instansi, serta strategi membangun sistem yang berkelanjutan.
-        </p>
-    </div>
+<a href="#produk" class="btn btn-glow">Jelajahi Ekosistem Digital</a>
+<a href="#support" class="btn">☕ Dukung Perjalanan Ini</a>
 </section>
 
-<section class="section-dark fade">
-    <h3 class="section-title">Mini Portfolio & Pengalaman</h3>
-
-    <div class="portfolio-item">
-        <h4>🔹 Pengembangan Sistem Informasi Internal</h4>
-        <p>
-            Merancang dashboard dan sistem manajemen data dengan kontrol akses terstruktur,
-            audit log aktivitas, serta validasi keamanan input.
-        </p>
-    </div>
-
-    <div class="portfolio-item">
-        <h4>🔹 Implementasi Secure Login & RBAC</h4>
-        <p>
-            Membangun autentikasi aman dengan hashing password,
-            session management yang benar, dan role-based access control.
-        </p>
-    </div>
-
-    <div class="portfolio-item">
-        <h4>🔹 Workshop & Edukasi Secure Coding</h4>
-        <p>
-            Berbagi praktik terbaik pengembangan web aman untuk developer dan tim IT.
-        </p>
-    </div>
+<!-- PROBLEM -->
+<section class="fade">
+<h2>Masalah Digital Hari Ini</h2>
+<p>Website tidak menghasilkan. AI dipakai tanpa strategi. Coding tanpa mindset security.
+Anak-anak tumbuh dengan gadget tanpa arah.</p>
+<p>Kita tidak kekurangan teknologi. Kita kekurangan fondasi yang benar.</p>
 </section>
 
-<section class="cta fade" id="contact">
-    <h3 class="section-title">Bangun Sistem dengan Fondasi yang Benar</h3>
-    <p>
-        Jika Anda ingin belajar, berkolaborasi dalam pengembangan sistem,
-        atau mengundang sebagai narasumber,
-        saya terbuka untuk diskusi profesional.
-    </p>
-    <a href="mailto:emailanda@email.com" class="btn">Mulai Diskusi</a>
+<!-- FUNNEL SECTION -->
+<section id="produk" class="fade">
+<h2>Mulai dari Sini 🚀</h2>
+<div class="card-container">
+
+<div class="card">
+<h3>🔥 Entry Level</h3>
+<p><b>Produk Digital & PLR</b></p>
+<p>Prompt AI premium, source code testing, worksheet anak.
+Beberapa produk berlisensi PLR → bisa digunakan & dijual kembali.</p>
+<a href="#" class="btn btn-glow">Mulai dari Produk Digital</a>
+</div>
+
+<div class="card">
+<h3>🚀 Growth Level</h3>
+<p><b>Private Mentoring</b></p>
+<p>Belajar Secure Coding, AI Engineering, dan arsitektur sistem secara personal & terstruktur.</p>
+<a href="#" class="btn btn-glow">Upgrade Skill Sekarang</a>
+</div>
+
+<div class="card">
+<h3>💎 High Ticket</h3>
+<p><b>Secure Web Project</b></p>
+<p>Pembuatan sistem & website dengan prinsip Secure by Design untuk bisnis & institusi.</p>
+<a href="#" class="btn btn-glow">Konsultasi Project</a>
+</div>
+
+</div>
+</section>
+
+<!-- BENEFIT -->
+<section class="fade">
+<h2>Apa yang Anda Dapatkan?</h2>
+<p>✔ Website bekerja 24 jam sebagai aset digital</p>
+<p>✔ AI meningkatkan produktivitas Anda</p>
+<p>✔ Coding lebih terstruktur & aman</p>
+<p>✔ Peluang monetisasi dari produk PLR</p>
+<p>✔ Generasi anak yang berpikir logis & kritis</p>
+</section>
+
+<!-- UPSELL STRATEGY -->
+<section class="fade">
+<h2>Strategi Bertumbuh Bersama</h2>
+<p>Mulai dari produk digital terjangkau → lanjut mentoring → 
+bangun sistem profesional bernilai tinggi.</p>
+<p>Setiap tahap dirancang untuk meningkatkan level Anda — bukan hanya pengetahuan, tetapi juga hasil nyata.</p>
+<a href="#" class="btn btn-glow">Lihat Semua Akses</a>
+</section>
+
+<!-- SUPPORT -->
+<section id="support" class="fade">
+<h2>Dukung Perjalanan Ini ☕</h2>
+<p>Jika insight & produk di sini memberi manfaat, Anda bisa ikut mendukung riset AI, 
+pengembangan modul secure coding, dan produksi worksheet anak.</p>
+<a href="#" class="btn btn-glow">Traktir Kopi</a>
+<a href="#" class="btn btn-glow">Sawer & Donasi</a>
 </section>
 
 <footer>
-    © 2026 Salman Alparisi — Developer & Security Practitioner
+© 2026 Salman | Secure Digital Ecosystem
 </footer>
 
 <script>
-const faders = document.querySelectorAll('.fade');
-
-const appearOptions = {
-    threshold: 0.2
-};
-
-const appearOnScroll = new IntersectionObserver(function(entries, observer){
-    entries.forEach(entry => {
-        if(!entry.isIntersecting){
-            return;
-        } else {
-            entry.target.classList.add('show');
-            observer.unobserve(entry.target);
+const fades = document.querySelectorAll('.fade');
+window.addEventListener('scroll', () => {
+    fades.forEach(el => {
+        const rect = el.getBoundingClientRect().top;
+        if(rect < window.innerHeight - 100){
+            el.classList.add('show');
         }
     });
-}, appearOptions);
-
-faders.forEach(fader => {
-    appearOnScroll.observe(fader);
 });
 </script>
 

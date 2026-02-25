@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hand Particle Face Fusion</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+
+<style>
+body{
+    margin:0;
+    background:#000;
+    overflow:hidden;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+video{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform:scaleX(-1);
+    opacity:0.25; /* Kamera transparan */
+}
+
+canvas{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+
+/* ===== GUIDE PANEL ===== */
+
+.guide{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    background:rgba(0,0,0,0.85);
+    color:#fff;
+    padding:15px;
+    box-sizing:border-box;
+    font-size:14px;
+}
+
+.guide-group{
+    display:inline-block;
+    margin-right:20px;
+}
+
+.guide select{
+    background:#111;
+    color:#fff;
+    border:1px solid #444;
+    padding:3px 6px;
+}
+
+.fusion-preview{
+    display:inline-flex;
+    align-items:center;
+}
+
+#fusionColorBox{
+    width:25px;
+    height:25px;
+    margin-left:5px;
+    border-radius:4px;
+    border:1px solid #fff;
+}
+
+.social a{
+    color:white;
+    margin-right:10px;
+    text-decoration:none;
+}
+
+.guide-ticker{
+    margin-top:10px;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.ticker-track{
+    display:inline-block;
+    animation:scroll 18s linear infinite;
+}
+
+@keyframes scroll{
+    from{ transform:translateX(100%); }
+    to{ transform:translateX(-100%); }
+}
+</style>
+</head>
+<body>
+
+<video id="video" autoplay playsinline></video>
+<canvas id="canvas"></canvas>
+
+<div class="guide">
+  <div class="guide-group">
+      <b>🔥 Right</b>
+      <select id="rightColor">
+          <option value="255,50,0">Red</option>
+          <option value="255,140,0">Orange</option>
+          <option value="255,255,0">Yellow</option>
+          <option value="0,255,100">Green</option>
+          <option value="255,0,255">Magenta</option>
+      </select>
+  </div>
+
+  <div class="guide-group fusion-preview">
+      <span>Result : </span>
+      <div id="fusionColorBox"></div>
+  </div>
+
+  <div class="guide-group social">
+      <a href="https://salmansyuhada.github.io" target="_blank">GitHub</a>
+      <a href="https://instagram.com/salmansyuhada" target="_blank">Instagram</a>
+      <a href="#" class="donate">❤️ Kirim Donasi</a>
+  </div>
+
+  <div class="guide-ticker">
+      <div class="ticker-track">
+          Sistem ini menggunakan AI Hand Tracking & Face Mesh berbasis browser.
+          🔥 Buka tangan kanan → Partikel menyebar • 
+          🤏 Jepit ibu jari & telunjuk → Partikel membentuk wajah • 
+          🖐 Skeleton tangan kanan ditampilkan real-time •
+      </div>
+  </div>
+</div>
+
+<script>
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const fusionBox = document.getElementById("fusionColorBox");
+const colorSelect = document.getElementById("rightColor");
+
+let particles = [];
+let facePoints = [];
+let pinch = false;
+
+function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+function getColor(){
+    const val = colorSelect.value.split(",");
+    return `rgb(${val[0]},${val[1]},${val[2]})`;
+}
+
+/* ================= PARTICLE SYSTEM ================= */
+
+class Particle{
+    constructor(){
+        this.x = Math.random()*canvas.width;
+        this.y = Math.random()*canvas.height;
+        this.vx = (Math.random()-0.5)*3;
+        this.vy = (Math.random()-0.5)*3;
+        this.targetX = this.x;
+        this.targetY = this.y;
+    }
+    update(){
+        if(pinch && facePoints.length>0){
+            const t = facePoints[Math.floor(Math.random()*facePoints.length)];
+            this.targetX = t.x;
+            this.targetY = t.y;
+            this.x += (this.targetX - this.x)*0.08;
+            this.y += (this.targetY - this.y)*0.08;
+        }else{
+            this.x += this.vx;
+            this.y += this.vy;
+        }
+    }
+    draw(){
+        ctx.fillStyle = getColor();
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,2,0,Math.PI*2);
+        ctx.fill();
+    }
+}
+
+for(let i=0;i<600;i++){
+    particles.push(new Particle());
+}
+
+/* ================= MEDIAPIPE ================= */
+
+const hands = new Hands({
+    locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+});
+hands.setOptions({
+    maxNumHands:1,
+    modelComplexity:1,
+    minDetectionConfidence:0.7,
+    minTrackingConfidence:0.7
+});
+
+const faceMesh = new FaceMesh({
+    locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+});
+faceMesh.setOptions({
+    maxNumFaces:1,
+    refineLandmarks:true,
+    minDetectionConfidence:0.7,
+    minTrackingConfidence:0.7
+});
+
+hands.onResults(results=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(results.multiHandLandmarks){
+        for(const landmarks of results.multiHandLandmarks){
+
+            // === Skeleton kanan ===
+            drawConnectors(ctx, landmarks, HAND_CONNECTIONS,
+                {color:'#00FFAA', lineWidth:2});
+            drawLandmarks(ctx, landmarks,
+                {color:'#00FFAA', radius:3});
+
+            // === Pinch detection ===
+            const thumb = landmarks[4];
+            const index = landmarks[8];
+
+            const dx = thumb.x - index.x;
+            const dy = thumb.y - index.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+
+            pinch = dist < 0.05;
+        }
+    }
+
+    // Update particles
+    particles.forEach(p=>{
+        p.update();
+        p.draw();
+    });
+
+    fusionBox.style.background = getColor();
+});
+
+faceMesh.onResults(results=>{
+    facePoints = [];
+    if(results.multiFaceLandmarks){
+        const landmarks = results.multiFaceLandmarks[0];
+        for(let i=0;i<landmarks.length;i++){
+            facePoints.push({
+                x: landmarks[i].x * canvas.width,
+                y: landmarks[i].y * canvas.height
+            });
+        }
+    }
+});
+
+const camera = new Camera(video,{
+    onFrame: async ()=>{
+        await hands.send({image:video});
+        await faceMesh.send({image:video});
+    },
+    width:1280,
+    height:720
+});
+camera.start();
+
+/* ================= ANIMATION LOOP ================= */
+
+function animate(){
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>
