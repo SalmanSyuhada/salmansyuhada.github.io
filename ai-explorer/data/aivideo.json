@@ -1,0 +1,23 @@
+[
+{
+"id":1,
+"slug":"belajar-angka",
+"title":"Belajar Angka untuk Anak",
+"image":"https://picsum.photos/600/400?random=201",
+"category":"Edukasi",
+"desc":"Video animasi belajar angka yang menyenangkan.",
+"video":"https://www.youtube.com/embed/tgbNymZ7vqY",
+"url":"video/belajar-angka.html"
+},
+
+{
+"id":2,
+"slug":"belajar-warna",
+"title":"Belajar Warna Ceria",
+"image":"https://picsum.photos/600/400?random=202",
+"category":"Edukasi",
+"desc":"Animasi warna ceria untuk anak-anak.",
+"video":"https://www.youtube.com/embed/tgbNymZ7vqY",
+"url":"video/belajar-warna.html"
+}
+]

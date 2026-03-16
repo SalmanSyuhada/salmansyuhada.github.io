@@ -1,0 +1,31 @@
+[
+{
+"id":1,
+"slug":"kalender-lebaran",
+"title":"Kalender Lebaran",
+"category":"lebaran",
+"image":"assets/images/P01.png",
+"desc":"Poster sinematik creator AI berdiri di kota cyberpunk dengan hologram prompt.",
+"prompt_file":"assets/prompts/P01.txt"
+},
+
+{
+"id":2,
+"slug":"kartu-lebaran",
+"title":"kartu Lebaran",
+"category":"lebaran",
+"image":"assets/images/P02.png",
+"desc":"Poster sinematik creator AI berdiri di kota cyberpunk dengan hologram prompt.",
+"prompt_file":"assets/prompts/P02.txt"
+},
+
+{
+"id":3,
+"slug":"bilik-hitam-lebaran",
+"title":"Bilik Hitam Lebaran",
+"category":"lebaran",
+"image":"assets/images/P03.png",
+"desc":"Poster sinematik creator AI berdiri di kota cyberpunk dengan hologram prompt.",
+"prompt_file":"assets/prompts/P03.txt"
+}
+]

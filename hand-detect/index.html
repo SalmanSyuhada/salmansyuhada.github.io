@@ -18,19 +18,38 @@ body{
 margin:0;
 overflow:hidden;
 background:#000;
-font-family:Inter;
+font-family:'Inter',sans-serif;
 }
 
 canvas{
 display:block;
+position:absolute;
+top:0;
+left:0;
+z-index:2;
 }
 
+/* Kamera transparan */
+#input_video{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+opacity:0.25;
+transform:scaleX(-1);
+z-index:1;
+}
+
+/* UI */
 #ui-layer{
 position:absolute;
 top:20px;
 left:20px;
 color:white;
-z-index:10;
+z-index:5;
+pointer-events:none;
 }
 
 .status-badge{
@@ -41,6 +60,7 @@ border:1px solid rgba(59,130,246,0.3);
 backdrop-filter:blur(8px);
 }
 
+/* Loading */
 #loading-screen{
 position:fixed;
 inset:0;
@@ -53,56 +73,6 @@ z-index:100;
 color:white;
 }
 
-#input_video{
-display:none;
-}
-
-/* INPUT USER */
-
-#input-bar{
-
-position:absolute;
-bottom:20px;
-left:50%;
-transform:translateX(-50%);
-display:flex;
-gap:10px;
-z-index:20;
-
-}
-
-#input-bar input{
-
-width:180px;
-padding:8px;
-border-radius:8px;
-border:none;
-outline:none;
-background:rgba(255,255,255,0.1);
-color:white;
-
-}
-
-#camera-box{
-position:absolute;
-right:20px;
-bottom:100px;
-width:220px;
-height:160px;
-border:2px solid #3b82f6;
-border-radius:10px;
-overflow:hidden;
-z-index:15;
-background:black;
-}
-
-#input_video{
-width:100%;
-height:100%;
-object-fit:cover;
-transform:scaleX(-1);
-}
-
 </style>
 </head>
 
@@ -110,39 +80,22 @@ transform:scaleX(-1);
 
 <div id="loading-screen">
 <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-<p class="text-xl italic">Memuat Sistem 3D...</p>
+<p class="text-xl font-light italic">Memuat Sistem 3D Axtarget...</p>
 </div>
 
 <div id="ui-layer">
-<h1 class="text-3xl font-black mb-2 tracking-tighter text-blue-500">
-AXTARGET
-</h1>
+<h1 class="text-3xl font-black mb-2 tracking-tighter text-blue-500">AXTARGET</h1>
 
 <div class="status-badge inline-block">
 Status :
 <span id="gesture-status" class="font-mono text-blue-400 text-xl">
-Menunggu tangan...
+Menunggu sistem...
 </span>
 </div>
-</div>
-
-<!-- INPUT USER -->
-
-<div id="input-bar">
-
-<input id="msg1" placeholder="Pesan 1">
-<input id="msg2" placeholder="Pesan 2">
-<input id="msg3" placeholder="Pesan 3">
-<input id="msg4" placeholder="Pesan 4">
-<input id="msg5" placeholder="Pesan 5">
 
 </div>
 
-<!-- <video id="input_video"></video> -->
-
-<div id="camera-box">
-<video id="input_video" autoplay muted playsinline></video>
-</div>
+<video id="input_video" autoplay playsinline></video>
 
 <script>
 
@@ -154,27 +107,21 @@ const PARTICLE_COUNT=15000
 let currentTextIndex=-1
 let isFist=false
 
-let handPos={x:0,y:0}
-let prevHandPos={x:0,y:0}
-let handVelocity={x:0,y:0}
+let handPos=new THREE.Vector3(0,0,0)
+let prevHandPos=new THREE.Vector3(0,0,0)
 
 let handSkeletonGroup
 let handJoints=[]
 let handLines=[]
 
-/* PESAN DARI USER */
-
-function getMessages(){
-
-return[
-document.getElementById("msg1").value || "",
-document.getElementById("msg2").value || "",
-document.getElementById("msg3").value || "",
-document.getElementById("msg4").value || "",
-document.getElementById("msg5").value || ""
+/* Pesan */
+const messages=[
+"Mencari Followers?",
+"100 Followers - Rp250",
+"Mencari Like?",
+"100 Like - Rp30",
+"Kunjungi AxtarGet.xyz"
 ]
-
-}
 
 const textCanvas=document.createElement("canvas")
 const tCtx=textCanvas.getContext("2d")
@@ -195,23 +142,35 @@ window.innerWidth/window.innerHeight,
 
 camera.position.z=8
 
-renderer=new THREE.WebGLRenderer({antialias:true,alpha:true})
+renderer=new THREE.WebGLRenderer({
+antialias:true,
+alpha:true
+})
+
 renderer.setSize(window.innerWidth,window.innerHeight)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2))
 
 document.body.appendChild(renderer.domElement)
-
-/* PARTIKEL */
 
 const geometry=new THREE.BufferGeometry()
 
 const positions=new Float32Array(PARTICLE_COUNT*3)
 const colors=new Float32Array(PARTICLE_COUNT*3)
+const initialPos=new Float32Array(PARTICLE_COUNT*3)
 
 for(let i=0;i<PARTICLE_COUNT;i++){
 
-positions[i*3]=(Math.random()-0.5)*20
-positions[i*3+1]=(Math.random()-0.5)*20
-positions[i*3+2]=(Math.random()-0.5)*10
+const x=(Math.random()-0.5)*20
+const y=(Math.random()-0.5)*20
+const z=(Math.random()-0.5)*10
+
+positions[i*3]=x
+positions[i*3+1]=y
+positions[i*3+2]=z
+
+initialPos[i*3]=x
+initialPos[i*3+1]=y
+initialPos[i*3+2]=z
 
 colors[i*3]=0.3
 colors[i*3+1]=0.6
@@ -229,19 +188,74 @@ geometry.setAttribute(
 new THREE.BufferAttribute(colors,3)
 )
 
-const material=new THREE.PointsMaterial({
+geometry.setAttribute(
+"initialPos",
+new THREE.BufferAttribute(initialPos,3)
+)
 
+const material=new THREE.PointsMaterial({
 size:0.035,
 vertexColors:true,
 transparent:true,
 opacity:0.8,
 blending:THREE.AdditiveBlending
-
 })
 
 particleSystem=new THREE.Points(geometry,material)
 
 scene.add(particleSystem)
+
+/* Skeleton tangan */
+
+handSkeletonGroup=new THREE.Group()
+scene.add(handSkeletonGroup)
+
+for(let i=0;i<21;i++){
+
+const sphere=new THREE.Mesh(
+new THREE.SphereGeometry(0.06,8,8),
+new THREE.MeshBasicMaterial({color:0x3b82f6})
+)
+
+sphere.visible=false
+handJoints.push(sphere)
+handSkeletonGroup.add(sphere)
+
+}
+
+const connections=[
+[0,1,2,3,4],
+[0,5,6,7,8],
+[5,9,10,11,12],
+[9,13,14,15,16],
+[13,17,18,19,20],
+[0,17]
+]
+
+connections.forEach(path=>{
+
+const points=[]
+
+for(let i=0;i<path.length;i++)
+points.push(new THREE.Vector3())
+
+const lineGeom=new THREE.BufferGeometry().setFromPoints(points)
+
+const line=new THREE.Line(
+lineGeom,
+new THREE.LineBasicMaterial({
+color:0x60a5fa,
+transparent:true,
+opacity:0.5
+})
+)
+
+line.visible=false
+
+handLines.push({line,path})
+handSkeletonGroup.add(line)
+
+})
 
 window.addEventListener("resize",onWindowResize)
 
@@ -256,15 +270,15 @@ renderer.setSize(window.innerWidth,window.innerHeight)
 
 }
 
-/* MEMBUAT TARGET TEKS */
+/* Membuat target teks dari partikel */
 
 function createTextTarget(text){
 
 tCtx.clearRect(0,0,textCanvas.width,textCanvas.height)
 
 tCtx.fillStyle="white"
-
 tCtx.font="bold 70px sans-serif"
+
 tCtx.textAlign="center"
 tCtx.textBaseline="middle"
 
@@ -283,10 +297,8 @@ for(let x=0;x<textCanvas.width;x+=3){
 if(imageData.data[(y*textCanvas.width+x)*4+3]>120){
 
 points.push({
-
 x:(x-textCanvas.width/2)*0.018,
 y:-(y-textCanvas.height/2)*0.018
-
 })
 
 }
@@ -299,8 +311,6 @@ targetPositions=[]
 
 for(let i=0;i<PARTICLE_COUNT;i++){
 
-if(points.length>0){
-
 const p=points[i%points.length]
 
 targetPositions.push(
@@ -309,48 +319,27 @@ p.y,
 (Math.random()-0.5)*0.1
 )
 
-}else{
-
-targetPositions.push(
-(Math.random()-0.5)*15,
-(Math.random()-0.5)*15,
-0
-)
-
 }
 
 }
 
-}
-
-/* ANIMASI */
+/* Animasi partikel */
 
 function animate(){
 
 requestAnimationFrame(animate)
 
-const positions=
-particleSystem.geometry.attributes.position.array
-
-const colors=
-particleSystem.geometry.attributes.color.array
-
-const time=Date.now()*0.001
+const positions=particleSystem.geometry.attributes.position.array
 
 for(let i=0;i<PARTICLE_COUNT;i++){
 
 const i3=i*3
 
-if(isFist){
+if(targetPositions.length>0){
 
-positions[i3]+=(handPos.x-positions[i3])*0.05
-positions[i3+1]+=(handPos.y-positions[i3+1])*0.05
-
-}else if(targetPositions.length>0){
-
-positions[i3]+=(targetPositions[i3]-positions[i3])*0.12
-positions[i3+1]+=(targetPositions[i3+1]-positions[i3+1])*0.12
-positions[i3+2]+=(targetPositions[i3+2]-positions[i3+2])*0.12
+positions[i3]+=(targetPositions[i3]-positions[i3])*0.1
+positions[i3+1]+=(targetPositions[i3+1]-positions[i3+1])*0.1
+positions[i3+2]+=(targetPositions[i3+2]-positions[i3+2])*0.1
 
 }
 
@@ -362,103 +351,68 @@ renderer.render(scene,camera)
 
 }
 
-/* MEDIAPIPE */
-
 const videoElement=document.getElementById("input_video")
 const statusLabel=document.getElementById("gesture-status")
 
 function onResults(results){
 
 let count=0
-let handDetected=false
 
-if(results.multiHandLandmarks &&
-results.multiHandLandmarks.length>0){
-
-handDetected=true
+if(results.multiHandLandmarks){
 
 const landmarks=results.multiHandLandmarks[0]
-
-handPos.x=-(landmarks[9].x-0.5)*16
-handPos.y=-(landmarks[9].y-0.5)*12
 
 const tipIds=[4,8,12,16,20]
 
 for(let i=1;i<5;i++){
 
 if(landmarks[tipIds[i]].y<
-landmarks[tipIds[i]-2].y){
-
-count++
+landmarks[tipIds[i]-2].y) count++
 
 }
 
 }
-
-}
-
-if(handDetected){
 
 if(count===0){
 
-isFist=true
 statusLabel.innerText="Kepalan Tangan"
 
 }else{
 
-isFist=false
+statusLabel.innerText=count+" Jari Aktif"
 
-const messages=getMessages()
+if(count>=1 && count<=5){
 
-const msgIndex=(count>0&&count<=5)?
-count-1:-1
-
-statusLabel.innerText=count+" jari terdeteksi"
-
-if(msgIndex!==-1){
-
-createTextTarget(messages[msgIndex])
+createTextTarget(messages[count-1])
 
 }
 
 }
 
-}else{
-
-isFist=false
-statusLabel.innerText="Menunggu tangan..."
-
 }
 
-}
+/* MediaPipe */
 
 const hands=new Hands({
-
-locateFile:(file)=>
+locateFile:file=>
 `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-
 })
 
 hands.setOptions({
-
 maxNumHands:1,
 modelComplexity:1,
 minDetectionConfidence:0.7,
 minTrackingConfidence:0.7
-
 })
 
 hands.onResults(onResults)
 
 const cameraFeed=new Camera(videoElement,{
-
 onFrame:async()=>{
 await hands.send({image:videoElement})
 },
-
 width:640,
 height:480
-
 })
 
 window.onload=()=>{
@@ -475,5 +429,6 @@ document.getElementById("loading-screen").style.display="none"
 }
 
 </script>
+
 </body>
 </html>

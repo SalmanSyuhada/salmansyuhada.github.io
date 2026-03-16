@@ -1,0 +1,44 @@
+Create an ultra-detailed chibi character based on the uploaded reference photo, keeping the same facial identity, hairstyle, and overall appearance, but transformed into a cute chibi style with an oversized head and tiny body.
+The mini chibi character sits adorably on an open human palm, creating a sense of realistic scale between the tiny character and the hand.
+A second hand gently pokes the chibi’s cheek with an index finger, causing the cheek to squish slightly. The chibi reacts with a playful grumpy expression: puffed cheeks, slightly narrowed eyes, and a cute annoyed face.
+
+Lebaran Outfit
+The chibi character is dressed in traditional Eid clothing, such as:
+
+baju koko or baju melayu
+sarong or samping
+black peci (kopiah)
+Optional variations for family references:
+
+mother wearing elegant hijab and gamis
+children wearing cute matching Eid outfits
+Scene & Decorations
+The scene has a warm Eid celebration atmosphere with soft decorative elements:
+
+glowing golden Ramadan lanterns
+floating ketupat decorations
+subtle Islamic geometric ornaments
+soft sparkling festive particles
+Text Layout (Elegant Eid Greeting)
+Add elegant festive typography in the composition:
+Main Text (large, elegant, festive):
+
+“SELAMAT HARI RAYA AIDILFITRI”
+Sub-text (smaller, elegant below):
+
+“Mohon Maaf Lahir & Bathin”
+The typography should appear golden, soft glowing, festive, and elegant, matching the Eid celebration theme.
+
+Visual Style
+ultra-detailed 3D chibi style
+soft pastel Eid color palette
+smooth textures
+clean studio lighting
+shallow depth of field
+strong focus on facial expression and hand interaction
+cinematic composition
+cute emotional storytelling
+8K ultra detailed
+vertical 9:16
+Negative Prompt
+blurry, distorted hands, extra fingers, bad anatomy, duplicate face, low detail, messy background, incorrect text, cropped text

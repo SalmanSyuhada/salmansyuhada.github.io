@@ -1,0 +1,31 @@
+[
+{
+"id":1,
+"slug":"chatgpt",
+"title":"ChatGPT",
+"image":"https://picsum.photos/600/400?random=101",
+"category":"AI Assistant",
+"desc":"AI chatbot untuk menulis, coding, dan brainstorming ide.",
+"url":"web/chatgpt.html"
+},
+
+{
+"id":2,
+"slug":"midjourney",
+"title":"Midjourney",
+"image":"https://picsum.photos/600/400?random=102",
+"category":"AI Image",
+"desc":"AI generator gambar berkualitas tinggi untuk kreator.",
+"url":"web/midjourney.html"
+},
+
+{
+"id":3,
+"slug":"runway",
+"title":"Runway ML",
+"image":"https://picsum.photos/600/400?random=103",
+"category":"AI Video",
+"desc":"Platform AI untuk membuat dan mengedit video.",
+"url":"web/runway.html"
+}
+]
