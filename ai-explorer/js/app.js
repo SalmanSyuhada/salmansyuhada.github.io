@@ -293,14 +293,28 @@ renderPrompts(filtered);
 async function openModal(prompt){
 
 const modal=document.getElementById("promptModal");
-
-document.getElementById("modalTitle").innerText=prompt.title;
-
-document.getElementById("modalImage").src=prompt.image;
-
+const modalTitle=document.getElementById("modalTitle");
+const modalImage=document.getElementById("modalImage");
 const promptBox=document.getElementById("modalPrompt");
 
+/* cek apakah elemen ada */
+
+if(!modal || !modalTitle || !modalImage || !promptBox){
+
+console.error("Modal element tidak ditemukan");
+
+return;
+
+}
+
+/* isi data */
+
+modalTitle.innerText=prompt.title;
+modalImage.src=prompt.image;
+
 promptBox.innerText="Loading prompt...";
+
+/* ambil prompt txt */
 
 try{
 
@@ -323,6 +337,8 @@ promptBox.innerText="Prompt gagal dimuat.";
 console.error(error);
 
 }
+
+/* tampilkan modal */
 
 modal.style.display="flex";
 
