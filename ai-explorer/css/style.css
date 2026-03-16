@@ -70,6 +70,24 @@ object-fit:cover;
 border-radius:12px;
 }
 
+.card-image{
+display:block;
+overflow:hidden;
+border-radius:12px;
+}
+
+.card-image img{
+width:100%;
+aspect-ratio:9/16;
+object-fit:cover;
+transition:0.3s;
+cursor:pointer;
+}
+
+.card-image:hover img{
+transform:scale(1.05);
+}
+
 .card-prompt{
 background:#1e293b;
 border-radius:12px;

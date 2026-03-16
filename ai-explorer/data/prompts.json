@@ -5,7 +5,7 @@
 "title":"Kalender Lebaran",
 "category":"lebaran",
 "image":"assets/images/P01.png",
-"desc":"Poster sinematik creator AI berdiri di kota cyberpunk dengan hologram prompt.",
+"desc":"Sebuah ilustrasi ultra-realistik bertema Idul Fitri menampilkan buku catatan spiral yang berdiri di atas meja kayu seperti kartu ucapan, dengan tulisan elegan “Selamat Hari Raya Idul Fitri, Mohon Maaf Lahir dan Batin” yang dihiasi motif Islami bernuansa emas.✨",
 "prompt_file":"assets/prompts/P01.txt"
 },
 
@@ -15,7 +15,7 @@
 "title":"kartu Lebaran",
 "category":"lebaran",
 "image":"assets/images/P02.png",
-"desc":"Poster sinematik creator AI berdiri di kota cyberpunk dengan hologram prompt.",
+"desc":"Sebuah kartu ucapan Idul Fitri yang elegan dengan desain 3D pop-up paper craft, menampilkan seorang pria Muslim tersenyum dengan tangan terlipat mengenakan pakaian tradisional dan peci hitam.✨",
 "prompt_file":"assets/prompts/P02.txt"
 },
 
@@ -25,7 +25,67 @@
 "title":"Bilik Hitam Lebaran",
 "category":"lebaran",
 "image":"assets/images/P03.png",
-"desc":"Poster sinematik creator AI berdiri di kota cyberpunk dengan hologram prompt.",
+"desc":"Potret keluarga Idul Fitri ultra-realistik bergaya editorial mewah menampilkan ayah, ibu, dan anak perempuan Indonesia yang mengintip dari balik panel dinding hitam elegan dengan senyum hangat.✨",
 "prompt_file":"assets/prompts/P03.txt"
+},
+
+{
+"id":4,
+"slug":"bilik-putih-lebaran",
+"title":"Bilik Putih Lebaran",
+"category":"lebaran",
+"image":"assets/images/P04.png",
+"desc":"Potret keluarga Idul Fitri ultra-hiperrealistik bergaya editorial mewah dengan komposisi vertikal 9:16 menampilkan ayah, ibu, dan anak perempuan Indonesia yang mengintip dari balik panel dinding putih elegan bermotif arabesque halus di sisi kanan frame.✨",
+"prompt_file":"assets/prompts/P04.txt"
+},
+
+{
+"id":5,
+"slug":"manga-lebaran",
+"title":"Manga Lebaran",
+"category":"lebaran",
+"image":"assets/images/P05.png",
+"desc":"Potret keluarga Muslim Indonesia bertema Idul Fitri bergaya hiper-realistis menampilkan ayah, ibu, dan dua anak dengan wajah yang sama persis seperti foto referensi, mengenakan busana Lebaran bernuansa biru navy dan berpose hangat penuh kebersamaan, sementara di belakang mereka terlihat kolase komik manga.✨",
+"prompt_file":"assets/prompts/P05.txt"
+},
+
+{
+"id":6,
+"slug":"buku-lebaran",
+"title":"Buku Lebaran",
+"category":"lebaran",
+"image":"assets/images/P06.png",
+"desc":"Ilustrasi ilusi 3D super-realistis menampilkan sebuah keluarga Muslim yang tampak melangkah keluar dari halaman buku catatan spiral di atas meja kayu, dengan wajah setiap anggota keluarga sama persis seperti foto referensi.✨",
+"prompt_file":"assets/prompts/P06.txt"
+},
+
+{
+"id":7,
+"slug":"karakter-lebaran",
+"title":"Karakter Lebaran",
+"category":"lebaran",
+"image":"assets/images/P07.png",
+"desc":"Sebuah adegan Lebaran sinematik yang hangat menampilkan keluarga Muslim Indonesia ultra-realistis yang berdiri bersama versi ilustrasi kartun 2D dari diri mereka sendiri, dengan wajah setiap anggota keluarga sama persis seperti foto referensi, mengenakan pakaian Lebaran elegan seperti baju koko atau baju melayu dengan peci, gamis atau baju kurung berhijab, serta anak-anak dengan busana serasi.✨",
+"prompt_file":"assets/prompts/P07.txt"
+},
+
+{
+"id":8,
+"slug":"chibi-lebaran",
+"title":"Chibi Lebaran",
+"category":"lebaran",
+"image":"assets/images/P08.png",
+"desc":"Ilustrasi chibi ultra-detail menampilkan karakter mini yang dibuat berdasarkan foto referensi dengan wajah, gaya rambut, dan identitas yang sama, namun diubah menjadi gaya chibi dengan kepala besar dan tubuh kecil yang lucu, duduk di atas telapak tangan manusia yang terbuka sehingga terlihat perbandingan skala yang realistis.✨",
+"prompt_file":"assets/prompts/P08.txt"
+},
+
+{
+"id":9,
+"slug":"lapangan-lebaran",
+"title":"Lapangan Lebaran",
+"category":"lebaran",
+"image":"assets/images/P09.png",
+"desc":"Potret keluarga Muslim yang hangat dan fotorealistis menampilkan beberapa anggota keluarga yang digabungkan dari foto referensi menjadi satu komposisi harmonis dengan wajah dan identitas yang tetap sama persis, berdiri berdampingan mengenakan pakaian Lebaran serasi seperti Baju Kurung, Baju Melayu, Baju Koko, hijab elegan, serta peci atau songkok dalam warna festif, berlatar taman hijau yang rindang.✨",
+"prompt_file":"assets/prompts/P09.txt"
 }
 ]

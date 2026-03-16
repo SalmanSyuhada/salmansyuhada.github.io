@@ -73,7 +73,7 @@ container.innerHTML+=`
 
 <span class="category">${p.category}</span>
 
-<p>${p.desc}</p>
+<p>${limitWords(p.desc,20)}</p>
 
 <div class="buttons">
 
@@ -386,6 +386,20 @@ function openPromptBySlug(slug){
     openModal(selected);
 
     }
+
+}
+
+function limitWords(text,limit){
+
+const words=text.split(" ");
+
+if(words.length>limit){
+
+return words.slice(0,limit).join(" ")+"...";
+
+}
+
+return text;
 
 }
 
