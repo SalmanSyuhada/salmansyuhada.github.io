@@ -292,7 +292,7 @@ renderPrompts(filtered);
 
 async function openModal(prompt){
 
-const modal=document.getElementById("modal");
+const modal=document.getElementById("promptModal");
 
 document.getElementById("modalTitle").innerText=prompt.title;
 
@@ -330,7 +330,7 @@ modal.style.display="flex";
 
 function closeModal(){
 
-document.getElementById("modal").style.display="none";
+document.getElementById("promptModal").style.display="none";
 
 history.pushState(null,null,"index.html");
 
@@ -356,3 +356,16 @@ const urlParams=new URLSearchParams(window.location.search);
 return urlParams.get(param);
 
 }
+
+function openPromptBySlug(slug){
+
+    const selected=prompts.find(p=>p.slug===slug);
+
+    if(selected){
+
+    openModal(selected);
+
+    }
+
+}
+
