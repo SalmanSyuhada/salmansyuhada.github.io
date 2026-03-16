@@ -1,0 +1,34 @@
+Compose the provided reference subjects into a joyful standing family portrait, combining multiple uploaded photos into one harmonious Muslim family scene while preserving the exact facial identity, body features, and natural appearance of each person.
+The family is wearing matching traditional Muslim Eid outfits, such as Baju Kurung, Baju Melayu, Baju Koko, elegant hijabs, and songkok or peci, styled in coordinated festive colors suitable for Eid al-Fitr celebration.
+They stand closely together in a beautiful lush green park or open garden, creating a warm and peaceful atmosphere of family togetherness after the Eid prayer.
+
+Scene & Atmosphere
+Soft morning sunlight illuminates the family, creating a calm and joyful Eid mood. The environment includes:
+
+green trees and soft garden scenery
+subtle Eid decorations such as lanterns or ketupat ornaments
+warm natural lighting that enhances the festive feeling
+Greeting Text
+Add elegant festive typography in the upper area of the image that blends naturally with the environment.
+Main Text (large elegant calligraphy style):
+
+“SELAMAT HARI RAYA AIDILFITRI”
+Sub-text (smaller elegant script below):
+
+“Mohon Maaf Lahir & Bathin”
+The text should appear soft, elegant, and festive, using gold or warm white lettering, with subtle Islamic ornamental accents so it looks like a luxury Eid greeting poster.
+
+Visual Style
+photorealistic family portrait
+cinematic Eid atmosphere
+natural morning lighting
+85mm lens look
+f/2.8 depth of field
+soft background bokeh
+realistic skin texture
+detailed fabric texture
+balanced composition
+4K ultra detailed image
+vertical or 4:5 ratio
+Negative Prompt
+blurry faces, distorted hands, extra fingers, duplicate faces, incorrect clothing, low resolution, messy composition, cropped text, spelling errors
