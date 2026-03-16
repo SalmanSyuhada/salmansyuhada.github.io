@@ -61,7 +61,11 @@ container.innerHTML+=`
 
 <div class="card">
 
-<img src="${p.image}">
+<a href="?prompt=${p.slug}" class="card-image">
+
+<img src="${p.image}" alt="${p.title}">
+
+</a>
 
 <div class="card-content">
 
