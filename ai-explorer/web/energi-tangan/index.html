@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hand Fire Energy</title>
+<title>AI Explorer - Energi Tangan</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
@@ -63,11 +63,21 @@ canvas{
     padding-top:6px;
 }
 
+#watermark{
+position:fixed;
+bottom:10px;
+right:15px;
+font-size:12px;
+color:rgba(255,255,255,0.25);
+pointer-events:none;
+z-index:999;
+letter-spacing:1px;
+}
+
 /* Track bergerak */
 .ticker-track{
     display:inline-block;
     white-space:nowrap;
-    animation:scrollText 20s linear infinite;
     font-size:12px;
     opacity:0.8;
     letter-spacing:0.5px;
@@ -243,10 +253,9 @@ canvas{
   </div>
 
   <div class="guide-group social">
-      <a href="https://salmansyuhada.github.io" target="_blank"><i class="fab fa-github"></i></a>
       <a href="https://instagram.com/salmansyuhada" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="#" class="donate">
-        <i class="fas fa-heart"></i>
+      <a href="https://lynk.id/salmansyuhada/s/vw878ed10nyz" target="_blank" class="donate">
+        <i class="fas fa-heart"></i> Kirim Donasi
         <span class="donate-text">Kirim Donasi</span>
       </a>
   </div>
@@ -263,7 +272,19 @@ canvas{
 
 </div>
 
+<div id="watermark">
+AI-Explorer © 2026 • Built by SalmanSyuhada
+</div>
+
 <script>
+/*
+========================================
+ AI-Explorer Engine
+ Created by SalmanSyuhada
+ © 2026 All Rights Reserved
+ Unauthorized use is prohibited
+========================================
+*/
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -364,6 +385,11 @@ document.getElementById("leftColor").addEventListener("change", e=>{
 
 updateFusionPreview();
 
+setInterval(()=>{
+  document.getElementById("watermark").style.opacity =
+    0.2 + Math.random()*0.2
+},2000)
+
 function mixColors(rgb1, rgb2){
     let c1 = rgb1.split(',').map(Number);
     let c2 = rgb2.split(',').map(Number);
@@ -417,6 +443,9 @@ hands.onResults(results=>{
     drawFire(leftFire.x,leftFire.y,leftColor,leftFire.intensity);
     blendEffect();
 });
+
+console.log("%cAI-Explorer © SalmanSyuhada",
+"color:#3b82f6;font-size:14px;font-weight:bold")
 
 const camera = new Camera(video,{
     onFrame: async()=>{
