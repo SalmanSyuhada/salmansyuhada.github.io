@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Axtarget - Gesture Partikel 3D</title>
+<title>AI-Explorer - Gesture Partikel 3D</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
@@ -54,7 +54,11 @@ color:white;
 }
 
 #input_video{
-display:none;
+width:100%;
+height:100%;
+object-fit:cover;
+transform:scaleX(-1);
+display:block;
 }
 
 /* INPUT USER */
@@ -103,6 +107,65 @@ object-fit:cover;
 transform:scaleX(-1);
 }
 
+#info-bar{
+position:absolute;
+bottom:70px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:20px;
+align-items:center;
+z-index:20;
+color:white;
+font-size:13px;
+}
+
+.guide{
+background:rgba(0,0,0,0.5);
+padding:10px;
+border-radius:10px;
+backdrop-filter:blur(6px);
+}
+
+.actions{
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.donate-btn{
+background:#3b82f6;
+padding:8px 14px;
+border-radius:8px;
+font-weight:bold;
+transition:0.3s;
+}
+
+.donate-btn:hover{
+background:#2563eb;
+transform:scale(1.05);
+}
+
+.ig-icon{
+font-size:22px;
+animation:float 2s ease-in-out infinite;
+}
+
+@keyframes float{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+}
+
+#watermark{
+position:fixed;
+bottom:10px;
+right:15px;
+font-size:12px;
+color:rgba(255,255,255,0.25);
+pointer-events:none;
+z-index:999;
+letter-spacing:1px;
+}
 </style>
 </head>
 
@@ -115,7 +178,7 @@ transform:scaleX(-1);
 
 <div id="ui-layer">
 <h1 class="text-3xl font-black mb-2 tracking-tighter text-blue-500">
-AXTARGET
+AI-EXPLORER
 </h1>
 
 <div class="status-badge inline-block">
@@ -130,26 +193,54 @@ Menunggu tangan...
 
 <div id="input-bar">
 
-<input id="msg1" placeholder="Pesan 1">
-<input id="msg2" placeholder="Pesan 2">
-<input id="msg3" placeholder="Pesan 3">
-<input id="msg4" placeholder="Pesan 4">
-<input id="msg5" placeholder="Pesan 5">
+<input id="msg1" value="Di hari yang suci ini...">
+<input id="msg2" value="Kita kembali hati yang bersih">
+<input id="msg3" value="Menghapus luka...">
+<input id="msg4" value="Membuka maaf...">
+<input id="msg5" value="Mohon maaf lahir dan batin">
 
 </div>
 
-<!-- <video id="input_video"></video> -->
+
+ <div id="info-bar">
+    <div class="guide">
+    Gunakan tangan 👋 :
+    ✊ Kepal = tarik partikel ✨
+    ☝️ 1-5 jari = tampilkan pesan ✨
+    📝 Pesan dapat diganti pada input di bawah
+    </div>
+    <div class="actions">
+        <a href="https://lynk.id/salmansyuhada/s/vw878ed10nyz" target="_blank" class="donate-btn">💙 Donasi </a>
+        <a href="https://instagram.com/salmansyuhada" target="_blank" class="ig-icon">
+        📸
+        </a>
+    </div>
+</div>
 
 <div id="camera-box">
 <video id="input_video" autoplay muted playsinline></video>
 </div>
 
+<div id="watermark">
+AI-Explorer © 2026 • Built by SalmanSyuhada
+</div>
+
 <script>
+/*
+========================================
+ AI-Explorer Engine
+ Created by SalmanSyuhada
+ © 2026 All Rights Reserved
+ Unauthorized use is prohibited
+========================================
+*/
 
 let scene,camera,renderer,particleSystem
 let targetPositions=[]
 
-const PARTICLE_COUNT=15000
+let lastTime = 0
+
+const PARTICLE_COUNT=5000
 
 let currentTextIndex=-1
 let isFist=false
@@ -321,7 +412,16 @@ targetPositions.push(
 
 }
 
+tCtx.fillStyle="rgba(255,255,255,0.15)"
+tCtx.font="bold 20px sans-serif"
+tCtx.fillText("AI-Explorer", textCanvas.width-120, textCanvas.height-20)
+
 }
+
+setInterval(()=>{
+  document.getElementById("watermark").style.opacity =
+    0.2 + Math.random()*0.2
+},2000)
 
 /* ANIMASI */
 
@@ -369,68 +469,121 @@ const statusLabel=document.getElementById("gesture-status")
 
 function onResults(results){
 
-let count=0
-let handDetected=false
+let count = 0
+let handDetected = false
 
-if(results.multiHandLandmarks &&
-results.multiHandLandmarks.length>0){
+if(results.multiHandLandmarks && results.multiHandLandmarks.length > 0){
 
-handDetected=true
+  const landmarks = results.multiHandLandmarks[0]
 
-const landmarks=results.multiHandLandmarks[0]
+  // ✅ DETEKSI TANGAN KANAN (pakai bawaan MediaPipe jika ada)
+  let isRightHand = true
 
-handPos.x=-(landmarks[9].x-0.5)*16
-handPos.y=-(landmarks[9].y-0.5)*12
+  if(results.multiHandedness && results.multiHandedness.length > 0){
+    isRightHand = results.multiHandedness[0].label === "Right"
+  }else{
+    // fallback jika tidak ada handedness
+    isRightHand = landmarks[17].x < landmarks[5].x
+  }
 
-const tipIds=[4,8,12,16,20]
+  // ❌ ABAIKAN JIKA BUKAN TANGAN KANAN
+  if(!isRightHand){
+    isFist = false
+    currentTextIndex = -1
+    statusLabel.innerText = "Gunakan tangan kiri"
+    return
+  }
 
-for(let i=1;i<5;i++){
+  handDetected = true
 
-if(landmarks[tipIds[i]].y<
-landmarks[tipIds[i]-2].y){
+  // ✅ SMOOTH HAND POSITION
+  const targetX = -(landmarks[9].x - 0.5) * 16
+  const targetY = -(landmarks[9].y - 0.5) * 12
 
-count++
+  handPos.x += (targetX - handPos.x) * 0.2
+  handPos.y += (targetY - handPos.y) * 0.2
 
-}
+  const threshold = 0.02
 
-}
+  // =========================
+  // 👍 IBU JARI (FIX STABIL)
+  // =========================
+
+  const thumbTip = landmarks[4]
+  const thumbIP  = landmarks[3]
+  const indexMCP = landmarks[5]
+
+  const distTip = Math.hypot(
+    thumbTip.x - indexMCP.x,
+    thumbTip.y - indexMCP.y
+  )
+
+  const distIP = Math.hypot(
+    thumbIP.x - indexMCP.x,
+    thumbIP.y - indexMCP.y
+  )
+
+  // 👉 hanya dianggap terbuka jika benar-benar menjauh dari telapak
+  if(distTip > distIP + threshold){
+    count++
+  }
+
+  // =========================
+  // ☝️ 4 JARI LAIN (VERTIKAL)
+  // =========================
+
+  const fingers = [8,12,16,20]
+
+  for(let i=0;i<fingers.length;i++){
+    const tip = fingers[i]
+    const pip = fingers[i] - 2
+
+    if(landmarks[tip].y < landmarks[pip].y - threshold){
+      count++
+    }
+  }
 
 }
 
 if(handDetected){
 
-if(count===0){
+  if(count === 0){
 
-isFist=true
-statusLabel.innerText="Kepalan Tangan"
+    isFist = true
+    statusLabel.innerText = "Kepalan Tangan"
+
+  }else{
+
+    isFist = false
+
+    const messages = getMessages()
+    const msgIndex = (count > 0 && count <= 5) ? count - 1 : -1
+
+    statusLabel.innerText = count + " jari terdeteksi"
+
+    // ✅ ANTI FLICKER (tidak render berulang)
+    if(msgIndex !== -1 && msgIndex !== currentTextIndex){
+
+      currentTextIndex = msgIndex
+      createTextTarget(messages[msgIndex])
+
+    }
+
+  }
 
 }else{
 
-isFist=false
-
-const messages=getMessages()
-
-const msgIndex=(count>0&&count<=5)?
-count-1:-1
-
-statusLabel.innerText=count+" jari terdeteksi"
-
-if(msgIndex!==-1){
-
-createTextTarget(messages[msgIndex])
+  isFist = false
+  currentTextIndex = -1
+  statusLabel.innerText = "Menunggu tangan..."
 
 }
 
 }
 
-}else{
+console.log("%cAI-Explorer © SalmanSyuhada",
+"color:#3b82f6;font-size:14px;font-weight:bold")
 
-isFist=false
-statusLabel.innerText="Menunggu tangan..."
-
-}
-
-}
 
 const hands=new Hands({
 
@@ -450,10 +603,18 @@ minTrackingConfidence:0.7
 
 hands.onResults(onResults)
 
+if(!window.__AI_EXPLORER){
+  window.__AI_EXPLORER = true
+}
+
 const cameraFeed=new Camera(videoElement,{
 
-onFrame:async()=>{
-await hands.send({image:videoElement})
+onFrame: async () => {
+  const now = Date.now()
+  if (now - lastTime > 50) { // 20 FPS saja cukup
+    await hands.send({ image: videoElement })
+    lastTime = now
+  }
 },
 
 width:640,
@@ -465,13 +626,15 @@ window.onload=()=>{
 
 initThree()
 animate()
-
-cameraFeed.start().then(()=>{
-
-document.getElementById("loading-screen").style.display="none"
-
-})
-
+    cameraFeed.start()
+    .then(()=>{
+    document.getElementById("loading-screen").style.display="none"
+    console.log("Camera started ✅")
+    })
+    .catch(err=>{
+    console.error("Camera error:", err)
+    alert("Kamera tidak bisa diakses. Izinkan kamera di browser.")
+    })
 }
 
 </script>
