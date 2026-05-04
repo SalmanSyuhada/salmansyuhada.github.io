@@ -1,1747 +1,857 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Salman | Portfolio OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; font-family: 'JetBrains Mono', monospace; }
 
-	<!-- Basic -->
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    /* ═══════════════════════════════════════
+       BOOT SCREEN
+    ═══════════════════════════════════════ */
+    #boot {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 24px;
+    }
+    #boot.hide { animation: bootOut 0.6s ease forwards; }
+    @keyframes bootOut { to { opacity: 0; pointer-events: none; } }
+    .boot-logo { font-size: 2rem; font-weight: 700; color: #58a6ff; letter-spacing: 2px; }
+    .boot-sub { font-size: 0.75rem; color: #3fb950; letter-spacing: 4px; text-transform: uppercase; }
+    .boot-bar-wrap { width: 240px; height: 3px; background: #111; border-radius: 2px; overflow: hidden; }
+    .boot-bar { height: 100%; width: 0; background: linear-gradient(90deg, #388bfd, #58a6ff); border-radius: 2px; animation: bootLoad 1.8s ease forwards; }
+    @keyframes bootLoad { 0%{width:0} 60%{width:70%} 85%{width:90%} 100%{width:100%} }
+    .boot-msgs { font-size: 0.65rem; color: #3fb950; text-align: left; width: 240px; height: 60px; overflow: hidden; }
+    .boot-msg { opacity: 0; animation: fadeIn 0.3s forwards; line-height: 1.8; }
+    @keyframes fadeIn { to { opacity: 1; } }
 
-	<title>Salman Syuhada | Portofolio | Junior Programmer </title>
+    /* ═══════════════════════════════════════
+       OS SHELL
+    ═══════════════════════════════════════ */
+    #os {
+      height: 100vh; width: 100vw;
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+      opacity: 0; transition: opacity 0.5s;
+    }
+    #os.ready { opacity: 1; }
 
-	<meta name="keywords" content="Salman Alparisi - Portofolio" />
-	<meta name="description" content="Portofolio Salman Alparisi">
-	<meta name="author" content="salmansyuhada.github.io">
+    /* wallpaper */
+    #wallpaper {
+      position: absolute; inset: 0; z-index: 0;
+      transition: background 0.5s;
+    }
+    #os.dark #wallpaper {
+      background: radial-gradient(ellipse at 20% 50%, #0d2137 0%, #060d18 55%, #0a0f1e 100%);
+    }
+    #os.light #wallpaper {
+      background: radial-gradient(ellipse at 30% 40%, #c5e0ff 0%, #ddeeff 45%, #eef5ff 100%);
+    }
+    .star { position: absolute; border-radius: 50%; pointer-events: none; animation: twinkle 3s infinite alternate; }
+    @keyframes twinkle { from{opacity:0.15} to{opacity:0.9} }
 
-	<!-- Favicon -->
-	<link rel="shortcut icon" href="assets/img/Logo_syu4D4.ico" type="image/x-icon" />
-	<link rel="apple-touch-icon" href="assets/img/Logo_syu4D4.ico">
+    /* ── TOP BAR ── */
+    #topbar {
+      position: relative; z-index: 200;
+      display: flex; align-items: center;
+      padding: 5px 18px; font-size: 12px;
+      backdrop-filter: blur(14px) saturate(1.4);
+      border-bottom: 1px solid;
+      transition: background 0.4s, border-color 0.4s;
+      flex-shrink: 0;
+    }
+    #os.dark #topbar { background: rgba(10,16,26,0.8); border-color: rgba(88,166,255,0.15); color: #8b949e; }
+    #os.light #topbar { background: rgba(255,255,255,0.82); border-color: rgba(0,80,180,0.14); color: #57606a; }
+    .tb-left { display: flex; align-items: center; gap: 14px; }
+    .tb-logo { font-weight: 700; font-size: 13px; letter-spacing: 0.4px; cursor: default; }
+    #os.dark .tb-logo { color: #58a6ff; }
+    #os.light .tb-logo { color: #0969da; }
+    .tb-menu { display: flex; gap: 2px; }
+    .tb-menu span {
+      padding: 3px 10px; border-radius: 5px;
+      cursor: pointer; transition: background 0.15s;
+      font-size: 11px;
+    }
+    #os.dark .tb-menu span:hover { background: rgba(255,255,255,0.09); color: #e6edf3; }
+    #os.light .tb-menu span:hover { background: rgba(0,0,0,0.06); color: #24292f; }
+    .tb-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+    .tb-sys { font-size: 11px; display: flex; gap: 8px; }
+    #os.dark .tb-sys { color: #58a6ff; }
+    #os.light .tb-sys { color: #0969da; }
+    .theme-toggle {
+      display: flex; align-items: center; gap: 7px;
+      padding: 3px 11px; border-radius: 20px;
+      cursor: pointer; font-size: 11px; border: 1px solid;
+      transition: all 0.3s;
+    }
+    #os.dark .theme-toggle { background: rgba(88,166,255,0.08); border-color: rgba(88,166,255,0.28); color: #58a6ff; }
+    #os.light .theme-toggle { background: rgba(9,105,218,0.07); border-color: rgba(9,105,218,0.28); color: #0969da; }
+    .tog-track { width: 30px; height: 15px; border-radius: 8px; position: relative; transition: background 0.3s; flex-shrink: 0; }
+    #os.dark .tog-track { background: #388bfd; }
+    #os.light .tog-track { background: #d0d7de; }
+    .tog-thumb { position: absolute; top: 2.5px; width: 10px; height: 10px; border-radius: 50%; transition: all 0.3s; }
+    #os.dark .tog-thumb { left: 17px; background: #fff; }
+    #os.light .tog-thumb { left: 3px; background: #57606a; }
+    #clock { font-size: 12px; font-weight: 500; min-width: 52px; text-align: right; }
+    #os.dark #clock { color: #c9d1d9; }
+    #os.light #clock { color: #24292f; }
 
-	<!-- Mobile Metas -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+    /* ── DESKTOP AREA ── */
+    #desktop-area {
+      flex: 1; position: relative; z-index: 1;
+      display: flex; padding: 14px;
+      overflow: hidden;
+    }
 
-	<!-- Web Fonts  -->
-	<!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light"
-		rel="stylesheet" type="text/css"> -->
+    /* ── DESKTOP ICONS ── */
+    #desktop-icons {
+      display: grid;
+      grid-template-columns: repeat(2, 76px);
+      grid-auto-rows: 90px;
+      gap: 6px;
+      align-content: start;
+      flex-shrink: 0;
+    }
+    .d-icon {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 6px; cursor: pointer;
+      padding: 8px 4px; border-radius: 10px;
+      border: 1px solid transparent;
+      transition: all 0.18s;
+    }
+    #os.dark .d-icon:hover  { background: rgba(88,166,255,0.12); border-color: rgba(88,166,255,0.22); }
+    #os.light .d-icon:hover { background: rgba(9,105,218,0.09);  border-color: rgba(9,105,218,0.22); }
+    #os.dark .d-icon.sel    { background: rgba(88,166,255,0.2);  border-color: rgba(88,166,255,0.5); }
+    #os.light .d-icon.sel   { background: rgba(9,105,218,0.16);  border-color: rgba(9,105,218,0.5); }
+    .d-icon-img {
+      width: 46px; height: 46px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    }
+    .d-icon-lbl {
+      font-size: 10px; text-align: center; line-height: 1.25;
+      max-width: 72px; word-break: break-word;
+    }
+    #os.dark  .d-icon-lbl { color: #e6edf3; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+    #os.light .d-icon-lbl { color: #24292f; text-shadow: 0 1px 3px rgba(255,255,255,0.7); }
 
-	<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    /* ── WINDOWS ── */
+    .win {
+      position: absolute;
+      display: none; flex-direction: column;
+      border-radius: 11px; border: 1px solid;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      min-width: 280px; min-height: 200px;
+      resize: both;
+    }
+    .win.open { display: flex; }
+    .win.focused { box-shadow: 0 28px 80px rgba(0,0,0,0.65); }
+    #os.dark  .win { background: rgba(22,27,34,0.97); border-color: #30363d; }
+    #os.light .win { background: rgba(255,255,255,0.98); border-color: #d0d7de; }
 
-	<!-- Vendor CSS -->
-	<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="assets/vendor/font-awesome/css/fontawesome-all.min.css">
-	<link rel="stylesheet" href="assets/vendor/animate/animate.min.css">
-	<link rel="stylesheet" href="assets/vendor/simple-line-icons/css/simple-line-icons.min.css">
-	<link rel="stylesheet" href="assets/vendor/owl.carousel/assets/owl.carousel.min.css">
-	<link rel="stylesheet" href="assets/vendor/owl.carousel/assets/owl.theme.default.min.css">
-	<link rel="stylesheet" href="assets/vendor/magnific-popup/magnific-popup.min.css">
+    /* default positions & sizes */
+    #win-about    { width: 540px; height: 420px; top: 30px;  left: 170px; }
+    #win-skills   { width: 510px; height: 410px; top: 50px;  left: 190px; }
+    #win-projects { width: 520px; height: 430px; top: 40px;  left: 180px; }
+    #win-contact  { width: 430px; height: 370px; top: 60px;  left: 200px; }
+    #win-terminal { width: 560px; height: 390px; top: 70px;  left: 170px; }
 
-	<!-- Theme CSS -->
-	<link rel="stylesheet" href="assets/css/theme.css">
-	<link rel="stylesheet" href="assets/css/theme-elements.css">
-	<link rel="stylesheet" href="assets/css/theme-blog.css">
+    .win-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 13px; border-bottom: 1px solid;
+      cursor: move; flex-shrink: 0;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    #os.dark  .win-bar { background: #21262d; border-color: #30363d; }
+    #os.light .win-bar { background: #f6f8fa; border-color: #d0d7de; }
+    .wb { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; flex-shrink: 0; transition: filter 0.15s; }
+    .wb:hover { filter: brightness(1.25); }
+    .wb-r { background: #ff5f57; }
+    .wb-y { background: #ffbd2e; }
+    .wb-g { background: #28c840; }
+    .win-ttl { font-size: 11px; margin-left: 4px; }
+    #os.dark  .win-ttl { color: #8b949e; }
+    #os.light .win-ttl { color: #57606a; }
+    .win-pth { font-size: 10px; margin-left: auto; }
+    #os.dark  .win-pth { color: #388bfd; }
+    #os.light .win-pth { color: #0969da; }
+    .win-body {
+      flex: 1; overflow-y: auto; padding: 16px;
+      scrollbar-width: thin;
+    }
+    #os.dark  .win-body { scrollbar-color: #30363d transparent; }
+    #os.light .win-body { scrollbar-color: #d0d7de transparent; }
 
-	<!-- Current Page CSS -->
-	<link rel="stylesheet" href="assets/vendor/rs-plugin/css/settings.css">
-	<link rel="stylesheet" href="assets/vendor/rs-plugin/css/layers.css">
-	<link rel="stylesheet" href="assets/vendor/rs-plugin/css/navigation.css">
+    /* ── CONTENT TYPOGRAPHY ── */
+    .tl { font-size: 12px; line-height: 1.75; }
+    #os.dark  .prompt { color: #3fb950; } #os.light .prompt { color: #1a7f37; }
+    #os.dark  .cmd    { color: #c9d1d9; } #os.light .cmd    { color: #24292f; }
+    #os.dark  .c-out  { color: #8b949e; } #os.light .c-out  { color: #57606a; }
+    #os.dark  .c-grn  { color: #3fb950; } #os.light .c-grn  { color: #1a7f37; }
+    #os.dark  .c-blu  { color: #58a6ff; } #os.light .c-blu  { color: #0969da; }
+    #os.dark  .c-yel  { color: #d29922; } #os.light .c-yel  { color: #9a6700; }
+    #os.dark  .c-pnk  { color: #f778ba; } #os.light .c-pnk  { color: #bf3989; }
+    #os.dark  .c-err  { color: #ff5f57; } #os.light .c-err  { color: #cf222e; }
 
-	<!-- Demo CSS -->
-	<link rel="stylesheet" href="assets/css/resume.css">
+    .sec-ttl {
+      font-size: 12px; font-weight: 700;
+      margin: 14px 0 7px; border-bottom: 1px solid;
+      padding-bottom: 4px;
+    }
+    #os.dark  .sec-ttl { color: #58a6ff; border-color: #21262d; }
+    #os.light .sec-ttl { color: #0969da; border-color: #eaeef2; }
 
-	<!-- Skin CSS -->
-	<link rel="stylesheet" href="assets/css/skin-resume.css">
+    .stag {
+      font-size: 10px; padding: 2px 9px; border-radius: 20px;
+      border: 1px solid; display: inline-block; margin: 2px;
+      transition: all 0.2s;
+    }
+    #os.dark  .stag   { background: #21262d; color: #c9d1d9; border-color: #30363d; }
+    #os.light .stag   { background: #f6f8fa; color: #24292f; border-color: #d0d7de; }
+    #os.dark  .stag.w { border-color: #388bfd; color: #58a6ff; background: rgba(56,139,253,0.1); }
+    #os.light .stag.w { border-color: #0969da; color: #0969da; background: rgba(9,105,218,0.07); }
+    #os.dark  .stag.a { border-color: #3fb950; color: #3fb950; background: rgba(63,185,80,0.1); }
+    #os.light .stag.a { border-color: #1a7f37; color: #1a7f37; background: rgba(26,127,55,0.07); }
+    #os.dark  .stag.s { border-color: #f778ba; color: #f778ba; background: rgba(247,120,186,0.1); }
+    #os.light .stag.s { border-color: #bf3989; color: #bf3989; background: rgba(191,57,137,0.07); }
 
-	<!-- Theme Custom CSS -->
-	<link rel="stylesheet" href="assets/css/custom.css">
+    .pcard { border: 1px solid; border-radius: 8px; padding: 12px; margin-bottom: 10px; transition: all 0.3s; }
+    #os.dark  .pcard { background: #0d1117; border-color: #30363d; }
+    #os.light .pcard { background: #f6f8fa; border-color: #d0d7de; }
+    .pcard:hover { transform: translateY(-1px); }
+    .pcard-name { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+    #os.dark  .pcard-name { color: #58a6ff; } #os.light .pcard-name { color: #0969da; }
+    .pcard-desc { font-size: 11px; line-height: 1.55; margin-bottom: 7px; }
+    #os.dark  .pcard-desc { color: #8b949e; } #os.light .pcard-desc { color: #57606a; }
+    .ptag { font-size: 10px; padding: 2px 7px; border-radius: 10px; display: inline-block; margin: 1px; }
+    #os.dark  .ptag { background: #21262d; color: #8b949e; }
+    #os.light .ptag { background: #eaeef2; color: #57606a; }
+    .pcard-links { margin-top: 7px; display: flex; gap: 8px; }
+    .pcard-link { font-size: 10px; padding: 2px 10px; border-radius: 6px; border: 1px solid; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+    #os.dark  .pcard-link { color: #58a6ff; border-color: rgba(88,166,255,0.3); }
+    #os.light .pcard-link { color: #0969da; border-color: rgba(9,105,218,0.3); }
+    #os.dark  .pcard-link:hover { background: rgba(88,166,255,0.12); }
+    #os.light .pcard-link:hover { background: rgba(9,105,218,0.08); }
 
-	<!-- Head Libs -->
-	<script src="assets/vendor/modernizr/modernizr.min.js"></script>
+    .crow { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+    .cicon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    #os.dark  .cicon { background: #21262d; }
+    #os.light .cicon { background: #eaeef2; }
+    .ctxt  { font-size: 12px; }
+    .csub  { font-size: 10px; }
+    #os.dark  .ctxt { color: #c9d1d9; } #os.light .ctxt { color: #24292f; }
+    #os.dark  .csub { color: #8b949e; } #os.light .csub { color: #57606a; }
+    .cavail { border: 1px solid; border-radius: 9px; padding: 13px; margin-top: 16px; transition: all 0.3s; }
+    #os.dark  .cavail { background: #0d1117; border-color: #30363d; }
+    #os.light .cavail { background: #f6f8fa; border-color: #d0d7de; }
 
+    .neofetch { display: grid; grid-template-columns: auto 1fr; gap: 18px; }
+    .ascii { font-size: 9.5px; line-height: 1.35; white-space: pre; }
+    #os.dark  .ascii  { color: #58a6ff; } #os.light .ascii  { color: #0969da; }
+    .neo-k {} #os.dark .neo-k { color: #58a6ff; } #os.light .neo-k { color: #0969da; }
+    .neo-v {} #os.dark .neo-v { color: #c9d1d9; } #os.light .neo-v { color: #24292f; }
+
+    /* ── DOCK ── */
+    #dock {
+      position: relative; z-index: 200;
+      display: flex; align-items: center;
+      padding: 7px 18px; gap: 4px;
+      backdrop-filter: blur(14px) saturate(1.4);
+      border-top: 1px solid;
+      transition: background 0.4s, border-color 0.4s;
+      flex-shrink: 0; flex-wrap: wrap;
+    }
+    #os.dark  #dock { background: rgba(10,16,26,0.82); border-color: rgba(88,166,255,0.12); }
+    #os.light #dock { background: rgba(255,255,255,0.87); border-color: rgba(0,80,180,0.12); }
+    .dock-app {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      cursor: pointer; padding: 5px 11px; border-radius: 10px;
+      border: 1px solid transparent; transition: all 0.16s;
+      font-family: 'JetBrains Mono', monospace;
+      position: relative;
+    }
+    #os.dark  .dock-app:hover { background: rgba(88,166,255,0.11); border-color: rgba(88,166,255,0.2); }
+    #os.light .dock-app:hover { background: rgba(9,105,218,0.08);  border-color: rgba(9,105,218,0.2); }
+    #os.dark  .dock-app.running { border-color: rgba(88,166,255,0.38); background: rgba(88,166,255,0.09); }
+    #os.light .dock-app.running { border-color: rgba(9,105,218,0.38);  background: rgba(9,105,218,0.07); }
+    .dock-ic { font-size: 22px; line-height: 1; }
+    .dock-lb { font-size: 9px; }
+    #os.dark  .dock-lb { color: #8b949e; } #os.light .dock-lb { color: #57606a; }
+    .dock-dot {
+      position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    #os.dark  .dock-dot { background: #58a6ff; }
+    #os.light .dock-dot { background: #0969da; }
+    .dock-app.running .dock-dot { opacity: 1; }
+    .dock-sep { width: 1px; height: 42px; border-radius: 1px; margin: 0 5px; flex-shrink: 0; }
+    #os.dark  .dock-sep { background: rgba(255,255,255,0.09); }
+    #os.light .dock-sep { background: rgba(0,0,0,0.09); }
+    .dock-r { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .s-pill { font-size: 10px; padding: 3px 11px; border-radius: 20px; border: 1px solid; }
+    #os.dark  .s-pill { background: rgba(63,185,80,0.09); border-color: #3fb950; color: #3fb950; }
+    #os.light .s-pill { background: rgba(26,127,55,0.08); border-color: #1a7f37; color: #1a7f37; }
+
+    /* ── CONTEXT MENU ── */
+    #ctx-menu {
+      position: fixed; z-index: 9990;
+      border: 1px solid; border-radius: 8px;
+      padding: 5px 0; min-width: 160px;
+      display: none; backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      font-size: 11px;
+    }
+    #os.dark  #ctx-menu { background: rgba(22,27,34,0.97); border-color: #30363d; }
+    #os.light #ctx-menu { background: rgba(255,255,255,0.97); border-color: #d0d7de; }
+    .ctx-item { padding: 6px 16px; cursor: pointer; transition: background 0.12s; }
+    #os.dark  .ctx-item { color: #c9d1d9; }
+    #os.light .ctx-item { color: #24292f; }
+    #os.dark  .ctx-item:hover { background: rgba(88,166,255,0.12); color: #58a6ff; }
+    #os.light .ctx-item:hover { background: rgba(9,105,218,0.09);  color: #0969da; }
+    .ctx-sep { height: 1px; margin: 4px 8px; }
+    #os.dark  .ctx-sep { background: #30363d; }
+    #os.light .ctx-sep { background: #d0d7de; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    #os.dark  ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+    #os.light ::-webkit-scrollbar-thumb { background: #d0d7de; border-radius: 3px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      #desktop-icons { grid-template-columns: repeat(2, 68px); }
+      .win { min-width: 90vw !important; width: 95vw !important; left: 2vw !important; }
+      #win-about,#win-skills,#win-projects,#win-contact,#win-terminal { width: 95vw; left: 2vw; top: 20px; }
+      .tb-menu { display: none; }
+    }
+  </style>
 </head>
-<!--
-		                                          `-/++/-`                                              
-                                       -odNNmddmNNdo.                                           
-                                     -yNNh+.``yy:+hNNy-                                         
-                                   `sNNs.`    ./ho.-yMNo`                                       
-                                  -dMd:       ss:+ho.:mMd.                                      
-                                 :NMy`        ./ys:+ho-hMm:                                     
-                                /NMs`         sy:/ys:+hohMN:                                    
-                               :NMo           -:yy:/ys:+hNMN:                                   
-                              -NMs`           oy/:yy:/ho:omMN-                                  
-                             .mMh``..--:/++ooooyNh+yNy:odo:hMm.                                 
-                            `dMNsydmNNMMMMMMMMMMMMMMMMNmNMmyMMh`                                
-                            yMMMMMMMMyoooooooooooooooohMMMMMMMMs                                
-                           :MMMMMMMMM+        +       oMMMMMMMMM-                               
-                           .mMMMMMMMMm`       h+     .NMMMMMMMMm.                               
-                            .yNMMMMMMMs       ..     yMMMMMMMNy.                                
-                              :dMMMMMMM+`          `oMMMMMMMd:                                  
-                            .+hNMMMMMMMMdo:``````:omMMMMMMMMNh/.                                
-                         `/hNMMMMMMMMMMMMMMNmddmNMMMMMMMMMMMMMMNy/`                             
-                       `sNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNs`                           
-                      .mMMMMNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNMMMMd`                          
-                     `dMMMM+                                    oMMMMh                          
-                     sMMMMM+               `.--.                oMMMMMo                         
-                    /MMMMMMo            `odMMMMMNy:             sMMMMMM:                        
-                   .NMMMMMMo           :NMMMMMMMMMMh`           sMMMMMMN.                       
-                  `dMMMMMMMs          .NMMMMMMMMMMMMy           yMMMMMMMd`                      
-                  sMMMMMMMMy          :MmoyhdMNdyssMm           hMMMMMMMMo                      
-                  mMMMMMMMMh          `mN-`.+Mm-`.oMs           dMMMMMMMMd                      
-                  hMMMMMMMMd           -NNNNddymNNMh`           mMMMMMMMMy                      
-                  -NMMMMMMMm           .mNMMhmhmMNNy            NMMMMMMMm.                      
-                   -dMMMMMMN            ..oMMMMMN..`            NMMMMMMh.                       
-             :/://://hMMMMMN              `::::::              `MMMMMMy///::/:.                 
-            .dmmmmmmmmmmNMMM:----------------------------------:MMMNmmmmmmmmmmo                 
-             `..........-hMMmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmNMMh-..........`                 
-                         /MMo++++++++++++++++++++++++++++++++++sMM:                             
-                         -mNmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmNm.                             
-                          .---.--.--.--.--.--.--.--.---.--.--.--..                              
-                                                                                                
-                                                                                                
-     ``    `           ``      `      ``                                                        
- `/.`so /+`o.+++ //.+/-o+.:/::-++--+./s--o`                                                     
- `:-`++ +o +`///`++`:/.//`os-/::-::+-//-/o...`                                                  
-                          -`                                                                    
-                                                                                                
- `o.--.  ---..`.  -+.`: /- -.  + `:``:.   `+.+-``-`--`.-  :.`-.  -.`.: -.                       
- `s./-+  o:-+///  o+.+o-+.:/o  +.o/-o/-.   o`o-:+/.+.`o:  -:/+/  o+.o+`oo`                      
-  ``     `  ``/-  `` ``` ` ``     ` ./..   ` ` ` ` `  ``   ` `   -/``` ``                       
-
-  >SalmanSyuhada_
-  In my data log, there is you
-	-->
-
-<body data-spy="scroll" data-target=".wrapper-spy">
-	<div class="body">
-		<header id="header" class="header-floating"
-			data-plugin-options="{'stickyEnabled': false, 'stickyEnableOnBoxed': false, 'stickyEnableOnMobile': false, 'stickyStartAt': 0, 'stickySetTop': '60px', 'stickyChangeLogo': false}">
-			<div class="header-body">
-				<div class="header-container container">
-					<div class="header-row">
-						<div class="header-column">
-							<div class="header-row">
-								<div class="header-nav pt-1">
-									<div class="header-nav-main">
-										<nav class="wrapper-spy collapse">
-											<ul class="nav" id="mainNav">
-												<li>
-													<a data-hash href="#about-me"
-														class="nav-link text-color-dark background-color-primary">
-														<i class="icon-home icons"></i>
-														<span class="custom-tooltip">About Me</span>
-													</a>
-												</li>
-												<li>
-													<a data-hash href="#experience"
-														class="nav-link text-color-dark background-color-primary">
-														<i class="icon-eye icons"></i>
-														<span class="custom-tooltip">Experience</span>
-													</a>
-												</li>
-												<li>
-													<a data-hash href="#education"
-														class="nav-link text-color-dark background-color-primary">
-														<i class="icon-briefcase icons"></i>
-														<span class="custom-tooltip">Education</span>
-													</a>
-												</li>
-												<li>
-													<a data-hash href="#skills"
-														class="nav-link text-color-dark background-color-primary">
-														<i class="icon-graduation icons"></i>
-														<span class="custom-tooltip">Skills</span>
-													</a>
-												</li>
-												<li>
-													<a data-hash href="#portfolio"
-														class="nav-link text-color-dark background-color-primary">
-														<i class="icon-diamond icons"></i>
-														<span class="custom-tooltip">Portfolio</span>
-													</a>
-												</li>
-												<li>
-													<a data-hash href="#recommendations"
-														class="nav-link text-color-dark background-color-primary">
-														<i class="icon-pencil icons"></i>
-														<span class="custom-tooltip">Recommendations</span>
-													</a>
-												</li>
-												<li>
-													<a data-hash href="#blog"
-														class="nav-link text-color-dark background-color-primary">
-														<i class="icon-bubbles icons"></i>
-														<span class="custom-tooltip">Blog</span>
-													</a>
-												</li>
-												<li>
-													<a data-hash href="#say-hello"
-														class="nav-link text-color-dark background-color-primary">
-														<i class="icon-envelope-open icons"></i>
-														<span class="custom-tooltip">Say Hello</span>
-													</a>
-												</li>
-											</ul>
-										</nav>
-									</div>
-									<button class="btn header-btn-collapse-nav" data-toggle="collapse"
-										data-target=".header-nav-main nav">
-										<i class="fas fa-bars"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</header>
-
-		<div role="main" class="main">
-
-			<section id="about-me"
-				class="section section-no-border section-parallax custom-section-padding-1 custom-position-1 custom-xs-bg-size-cover parallax-no-overflow m-0"
-				data-plugin-parallax data-plugin-options="{'speed': 1.5}"
-				data-image-src="assets/img/about-me/background.png">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-4 custom-sm-margin-bottom-1">
-							<img src="assets/img/about-me/PP Github.png"
-								class="img-fluid custom-border custom-image-position-2 custom-box-shadow-4" alt />
-						</div>
-						<div class="col-lg-6 col-xl-5">
-							<h1 class="text-color-primary custom-font-size-1">Salman Alparisi</h1>
-							<p class="text-color-light font-weight-normal custom-font-size-2 custom-margin-bottom-1">
-								Analis Sistem Informasi dan Jaringan</p>
-							<span class="custom-about-me-infos">
-								<span class="custom-text-color-1 text-uppercase">Dinas Komunikasi dan Informatika
-									Kabupaten Siak </span>
-								<span class="custom-text-color-1 text-uppercase mb-3">Bidang Teknologi Informasi
-									Komunikasi &amp; Persandian</span>
-								<span class="custom-text-color-1 text-uppercase">
-									<strong class="text-color-light">Previous: </strong>
-									Tenaga Ahli Programmer
-									<a data-hash href="#experience"
-										class="btn btn-tertiary text-uppercase custom-btn-style-1 text-1 ml-2">View
-										More</a>
-								</span>
-								<span class="custom-text-color-1 text-uppercase">
-									<strong class="text-color-light">Education: </strong>
-									Teknik Informatika
-									<a data-hash href="#education"
-										class="btn btn-tertiary text-uppercase custom-btn-style-1 text-1 ml-2">View
-										More</a>
-								</span>
-								<span class="custom-text-color-1 text-uppercase">
-									<strong class="text-color-light">CodeWars: </strong>
-									<a href="https://www.codewars.com/users/SalmanSyuhada" target="_blank"><img alt="Codewars SalmanSyuhada" src="https://www.codewars.com/users/SalmanSyuhada/badges/small?theme=light"></a>
-								</span>
-							</span>
-						</div>
-						<div class="col-lg-2 col-xl-3 d-none d-lg-block">
-							<img src="assets/img/about-me/mouse.png" custom-anim class="img-fluid custom-image-pos-1"
-								alt />
-						</div>
-					</div>
-				</div>
-				<ul class="social-icons custom-social-icons">
-					<li class="social-icons-facebook">
-						<a href="https://facebook.com/salman.syuhada" target="_blank" title="Facebook">
-							<i class="fab fa-facebook-f"></i>
-						</a>
-					</li>
-					<li class="social-icons-twitter">
-						<a href="https://twitter.com/salmansyuhada_" target="_blank" title="Twitter">
-							<i class="fab fa-twitter"></i>
-						</a>
-					</li>
-					<li class="social-icons-instagram">
-						<a href="https://www.instagram.com/salmansyuhada/" target="_blank" title="Instagram">
-							<i class="fab fa-instagram"></i>
-						</a>
-					</li>
-					<li class="social-icons-linkedin">
-						<a href="https://www.linkedin.com/in/salman-syuhada-8513a1182" target="_blank" title="Linkedin">
-							<i class="fab fa-linkedin"></i>
-						</a>
-					</li>
-				</ul>
-			</section>
-
-			<div class="custom-about-me-links background-color-light">
-				<div class="container">
-					<div class="row justify-content-end">
-						<div class="col-lg-3 text-center custom-xs-border-bottom p-0">
-							<a data-hash href="#say-hello" class="text-decoration-none">
-								<span class="custom-nav-button text-color-dark">
-									<i class="icon-earphones-alt icons text-color-primary"></i>
-									Contact Information
-								</span>
-							</a>
-						</div>
-						<div class="col-lg-2 text-center custom-xs-border-bottom p-0">
-							<a data-hash href="#say-hello" class="text-decoration-none">
-								<span class="custom-nav-button custom-divisors text-color-dark">
-									<i class="icon-envelope-open icons text-color-primary"></i>
-									Send Message
-								</span>
-							</a>
-						</div>
-						<div class="col-lg-3 text-center p-0">
-							<a href="https://drive.google.com/file/d/1JlaXEU2AQWTdi42hQa6iEcwSur8B6SMr/view?usp=sharing"
-								class="text-decoration-none" target="_blank">
-								<span class="custom-nav-button text-color-dark">
-									<i class="icon-cloud-download icons text-color-primary"></i>
-									Download Resume
-								</span>
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<section class="section section-no-border background-color-light m-0">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<div class="custom-box-details background-color-light custom-box-shadow-1 col-lg-7 ml-2 mb-2 mb-lg-2 float-right clearfix">
-								<h4>Personal Details</h4>
-								<div class="row">
-									<div class="col-md-5">
-										<ul class="custom-list-style-1 p-0 mb-0">
-											<li>
-												<span class="text-color-dark">Birthday:</span>
-												<span class="custom-text-color-2">October 22</span>
-											</li>
-											<li>
-												<span class="text-color-dark">Marital:</span>
-												<span class="custom-text-color-2">Mariage</span>
-											</li>
-											<li>
-												<span class="text-color-dark">Nationality:</span>
-												<span class="custom-text-color-2">Indonesian</span>
-											</li>
-										</ul>
-									</div>
-									<div class="col-md-7">
-										<ul class="custom-list-style-1 p-0 mb-0">
-											<li>
-												<span class="text-color-dark">Whatsapp:</span>
-												<span class="custom-text-color-2"><a class="custom-text-color-2"
-														href="https://wa.me/+6281266883949?text=Halo,%20Salman,%20Kami%20mau%20tanya%20tentang%20website...">0812-6688-3949</a></span>
-											</li>
-											<li>
-												<span class="text-color-dark">PHONE:</span>
-												<span class="custom-text-color-2"><a class="custom-text-color-2"
-														href="tel:6281266883949">+62812-6688-3949</a></span>
-											</li>
-											<li>
-												<span class="text-color-dark">EMAIL:</span>
-												<span class="custom-text-color-2"><a class="custom-text-color-2"
-														href="mailto:syuhadasalman@gmail.com">syuhadasalman@gmail.com</a></span>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-
-							<h2 class="text-color-quaternary font-weight-extra-bold text-uppercase">About Me</h2>
-
-							<p class="custom-text-color-2" align="justify">Halo! Saya Salman, seorang web programmer berpengalaman yang berdedikasi untuk menciptakan web yang inovatif dan efisien. 
-								Dengan lebih dari 7 tahun pengalaman, saya telah bekerja pada berbagai proyek yang mencakup pengembangan front-end dan back-end.
-							</p>
-
-							<div class="about-me-more" id="aboutMeMore">
-								<p align="justify"> Keahlian saya meliputi penggunaan teknologi modern seperti HTML, CSS, JavaScript, CMS, Wordpress dan berbagai framework seperti Laravel, Yii2, dan CI.
-									Di sisi back-end, saya mahir menggunakan PHP, serta database seperti MySQL dan PostgreSQL.</p>
-
-								<p align="justify">Proyek-proyek saya mencakup dari situs web sederhana hingga aplikasi web yang kompleks dan dinamis. 
-									Saya selalu bersemangat untuk mempelajari teknologi terbaru dan menerapkan praktik terbaik dalam 
-									setiap proyek yang saya kerjakan.</p>
-
-								<p align="justify">Saya percaya bahwa setiap proyek adalah kesempatan untuk belajar dan berkembang. Oleh karena itu, 
-									saya selalu berusaha untuk tetap up-to-date dengan tren terbaru di industri teknologi dan menerapkan praktik terbaik 
-									dalam setiap proyek yang saya tangani. Keahlian saya dalam memecahkan masalah dan kemampuan saya untuk bekerja dengan tim lintas disiplin 
-									telah membantu saya menyelesaikan proyek dengan kualitas tinggi dan tepat waktu.</p>
-
-								<p align="justify">Jangan ragu untuk menghubungi saya jika Anda membutuhkan bantuan dalam pengembangan web atau ingin berdiskusi tentang proyek Anda selanjutnya. 
-									Saya selalu siap untuk tantangan baru!.</p>
-							</div>
-
-							<a id="aboutMeMoreBtn" class="btn btn-tertiary text-uppercase custom-btn-style-1 text-1"
-								href="#">View More</a>
-
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section id="experience" class="section section-secondary section-no-border m-0">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<h2 class="text-color-quaternary text-uppercase font-weight-extra-bold">Experience</h2>
-							<section class="timeline custom-timeline" id="timeline">
-								<div class="timeline-body">
-									<article class="timeline-box right custom-box-shadow-2">
-										<div class="row">
-											<div class="experience-info col-lg-3 col-sm-5 background-color-primary">
-												<span class="from text-color-dark text-uppercase">
-													From
-													<span class="font-weight-semibold">Jan 2021</span>
-												</span>
-												<span class="to text-color-dark text-uppercase">
-													To
-													<span class="font-weight-semibold">Present</span>
-												</span>
-												<p id="result1" class="text-color-dark"></p>
-												<span class="company text-color-dark font-weight-semibold">
-													Dinas Komunikasi dan Informatika
-													<span
-														class="company-location text-color-dark font-weight-normal text-uppercase">Kabupaten Siak</span>
-												</span>
-											</div>
-											<div
-												class="experience-description col-lg-9 col-sm-7 background-color-light">
-												<h4 class="text-color-dark font-weight-semibold">Analis Sistem Informasi dan Jaringan
-												</h4>
-												<p class="custom-text-color-2" align="justify">Sebagai Analis Sistem Informasi dan Jaringan di Dinas Komunikasi dan Informatika, 
-													bertanggung jawab untuk mengidentifikasi kebutuhan teknologi informasi, merancang arsitektur sistem yang efisien, 
-													dan memastikan jaringan komputer berjalan dengan lancar serta aman. 
-												</p>
-											</div>
-										</div>
-									</article>
-									<article class="timeline-box right custom-box-shadow-2">
-										<div class="row">
-											<div class="experience-info col-lg-3 col-sm-5 background-color-primary">
-												<span class="from text-color-dark text-uppercase">
-													From
-													<span class="font-weight-semibold">Jan 2018</span>
-												</span>
-												<span class="to text-color-dark text-uppercase">
-													To
-													<span class="font-weight-semibold">Des 2020</span>
-												</span>
-												<p id="result2" class="text-color-dark"></p>
-												<span class="company text-color-dark font-weight-semibold">
-													RSUD ARIFIN ACHMAD Prov. Riau
-													<span
-														class="company-location text-color-dark font-weight-normal text-uppercase">Kota Pekanbaru</span>
-												</span>
-											</div>
-											<div
-												class="experience-description col-lg-9 col-sm-7 background-color-light">
-												<h4 class="text-color-dark font-weight-semibold">Tenaga Ahli Programmer 
-												</h4>
-												<p class="custom-text-color-2" align="justify">Sebagai Tenaga Ahli Programmer di RSUD Arifin Achmad,  bertanggung jawab untuk merancang, mengembangkan, dan memelihara sistem informasi rumah sakit 
-													yang mendukung operasional dan pelayanan medis, termasuk manajemen pasien, rekam medis elektronik, penjadwalan, dan manajemen inventaris. 
-													Selain itu juga mengintegrasikan berbagai sistem informasi serta mengelola basis data yang andal dan aman. 
-											    </p>
-											</div>
-										</div>
-									</article>
-									<article class="timeline-box right custom-box-shadow-2">
-										<div class="row">
-											<div class="experience-info col-lg-3 col-sm-5 background-color-primary">
-												<span class="from text-color-dark text-uppercase">
-													From
-													<span class="font-weight-semibold">Mei 2015</span>
-												</span>
-												<span class="to text-color-dark text-uppercase">
-													To
-													<span class="font-weight-semibold">Des 2017</span>
-												</span>
-												<p id="result3" class="text-color-dark"></p>
-												<span class="company text-color-dark font-weight-semibold">
-													Dinas Perpustakaan dan Kearsipan
-													<span
-														class="company-location text-color-dark font-weight-normal text-uppercase">Kota Pekanbaru</span>
-												</span>
-											</div>
-											<div
-												class="experience-description col-lg-9 col-sm-7 background-color-light">
-												<h4 class="text-color-dark font-weight-semibold">Tenaga IT
-												</h4>
-												<p class="custom-text-color-2" align="justify">Sebagai Tenaga IT di Dinas Perpustakaan dan Kearsipan Kota Pekanbaru, bertanggung jawab untuk mengelola dan memelihara infrastruktur teknologi informasi 
-													yang mendukung operasional perpustakaan dan kearsipan. Tugas utama meliputi pengembangan dan pemeliharaan sistem manajemen perpustakaan digital, memastikan akses yang mudah dan cepat ke koleksi digital 
-													serta data arsip, dan mengimplementasikan langkah-langkah keamanan untuk melindungi data sensitif.</p>
-											</div>
-										</div>
-									</article>
-									<div class="timeline-bar"></div>
-								</div>
-							</section>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section id="education" class="section section-no-border custom-background-color-1 m-0">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<h2 class="text-color-quaternary text-uppercase font-weight-extra-bold m-0">Education</h2>
-							<div class="owl-carousel nav-bottom custom-dots-style-1 mb-0"
-								data-plugin-options="{'items': 1, 'loop': true, 'dots': true, 'nav': false}">
-								<div class="row">
-									<div class="col-lg-6 col-sm-6 pb-4">
-										<div class="custom-box-details-2 background-color-light custom-box-shadow-3">
-											<i class="icon-graduation icons text-color-primary"></i>
-											<h4 class="font-weight-semibold text-color-dark m-0">UIN SUSKA RIAU</h4>
-											<p class="custom-text-color-2 mb-1">Informatic Engineering</p>
-											<strong class="text-color-primary">2011-2015</strong>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-lg-6 col-sm-6 pb-4">
-										<div class="custom-box-details-2 background-color-light custom-box-shadow-3">
-											<i class="icon-graduation icons text-color-primary"></i>
-											<h4 class="font-weight-semibold text-color-dark m-0">SMAN 1 Tualang</h4>
-											<p class="custom-text-color-2 mb-1">Student</p>
-											<strong class="text-color-primary">2009-2011</strong>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-lg-6 col-sm-6 pb-4">
-										<div class="custom-box-details-2 background-color-light custom-box-shadow-3">
-											<i class="icon-graduation icons text-color-primary"></i>
-											<h4 class="font-weight-semibold text-color-dark m-0">SMPN 1 Tualang</h4>
-											<p class="custom-text-color-2 mb-1">Student</p>
-											<strong class="text-color-primary">2005-2009</strong>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-lg-6 col-sm-6 pb-4">
-										<div class="custom-box-details-2 background-color-light custom-box-shadow-3">
-											<i class="icon-graduation icons text-color-primary"></i>
-											<h4 class="font-weight-semibold text-color-dark m-0">SDN 005 Tualang</h4>
-											<p class="custom-text-color-2 mb-1">Student</p>
-											<strong class="text-color-primary">1999-2005</strong>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section id="skills" class="section section-no-border background-color-light m-0">
-				<div class="container">
-					<div class="row align-items-center">
-						<div class="col-md-6 col-lg-8 mb-4 mb-md-0">
-							<div class="row">
-								<div class="col-lg-6">
-									<h2 class="text-color-quaternary text-uppercase font-weight-extra-bold">Skills &
-										Language</h2>
-									<div class="progress-bars custom-progress-bars">
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>Start Up</span>
-										</div>
-
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="60%"></div>
-										</div>
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>Innovation</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="80%"
-												data-appear-animation-delay="300"></div>
-										</div>
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>Products</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="70%"
-												data-appear-animation-delay="600"></div>
-										</div>
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>Business</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="80%"
-												data-appear-animation-delay="300"></div>
-										</div>
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>E-commerce</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="70%"
-												data-appear-animation-delay="600"></div>
-										</div>
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>Creative</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="90%"
-												data-appear-animation-delay="900"></div>
-										</div>
-									</div>
-								</div>
-								<div class="col-lg-6">
-									<div class="progress-bars custom-progress-bars custom-md-margin-top-1">
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>PHP</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="95%"
-												data-appear-animation-delay="900"></div>
-										</div>
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>Javascript</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="60%"></div>
-										</div>
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>CSS</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="90%"
-												data-appear-animation-delay="900"></div>
-										</div>
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>CMS</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="90%"
-												data-appear-animation-delay="900"></div>
-										</div>
-
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>Laravel</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="95%"
-												data-appear-animation-delay="900"></div>
-										</div>
-
-										<div
-											class="progress-label text-color-dark font-weight-semibold text-uppercase text-2">
-											<span>YII2</span>
-										</div>
-										<div class="progress mb-2">
-											<div class="progress-bar" data-appear-progress-animation="90%"
-												data-appear-animation-delay="900"></div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-lg-4">
-							<div class="row">
-								<div class="col">
-									<div class="custom-box-details background-color-light custom-box-shadow-1">
-										<h4 class="text-color-dark">Languages</h4>
-										<ul class="custom-list-style-1 p-0">
-											<li>
-												<span
-													class="font-weight-semibold custom-max-width-1 text-color-dark"><img
-														src="assets/img/blank.gif" class="flag flag-id mr-1"
-														alt="Indonesia">Indonesia:</span>
-												<span class="custom-text-color-2">Advanced</span>
-											</li>
-											<li>
-												<span
-													class="font-weight-semibold custom-max-width-1 text-color-dark"><img
-														src="assets/img/blank.gif" class="flag flag-us mr-1"
-														alt="English">English:</span>
-												<span class="custom-text-color-2">Basic</span>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section id="portfolio" class="section section-no-border background-color-secondary m-0">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<h2 class="text-color-quaternary font-weight-extra-bold text-uppercase">Portfolio</h2>
-							<ul class="nav nav-pills sort-source custom-nav-sort mb-4" data-sort-id="portfolio"
-								data-option-key="filter">
-								<li class="nav-item active" data-option-value="*"><a class="nav-link text-dark active"
-										href="#">Show All</a></li>
-								<li class="nav-item" data-option-value=".websites"><a class="nav-link text-dark"
-										href="#">Websites</a></li>
-								<li class="nav-item" data-option-value=".apps"><a class="nav-link text-dark"
-										href="#">Apps</a></li>
-								<li class="nav-item" data-option-value=".certificates"><a class="nav-link text-dark"
-										href="#">certificates</a></li>
-								<li class="nav-item" data-option-value=".archievements"><a class="nav-link text-dark"
-											href="#">archievements</a></li>
-							</ul>
-							<div class="sort-destination-loader sort-destination-loader-showing">
-								<div class="row image-gallery sort-destination lightbox" data-sort-id="portfolio"
-									data-plugin-options="{'delegate': 'a.lightbox-portfolio', 'type': 'image', 'gallery': {'enabled': true}}">
-									
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item websites">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Web_PendopoTransJogja.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Web_PendopoTransJogja.png"
-															class="img-fluid" alt="Web PendopoTransJogja">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item websites">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Web_Faktanusantararaya.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Web_Faktanusantararaya.png"
-															class="img-fluid" alt="Web FaktaNusantaraRaya.com">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item websites">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Web_SMP4Pekaitan.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Web_SMP4Pekaitan.png"
-															class="img-fluid" alt="Web SMP4Pekaitan">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item websites">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Web_KelanaRiau.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Web_KelanaRiau.png"
-															class="img-fluid" alt="Web Kelana Riau">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item websites">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Web_Covid19.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Web_Covid19.png"
-															class="img-fluid" alt="Web Covid19">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item websites">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Web_Pusatherbal.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Web_Pusatherbal.png"
-															class="img-fluid" alt="Web Pusat Herbal">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item websites">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Web_Undangan.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Web_Undangan.png"
-															class="img-fluid" alt="Web Undangan">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-									
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_ServerMon.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_ServerMon.png"
-															class="img-fluid" alt="App Server Monitoring">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_ESS.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_ESS.png"
-															class="img-fluid" alt="App E-Support System">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_LoginPenunjang.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_LoginPenunjang.png"
-															class="img-fluid" alt="App Penunjang">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_BerandaPenunjang.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_BerandaPenunjang.png"
-															class="img-fluid" alt="App Beranda Penunjang">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_ValidasiIntegrasiPenunjang.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_ValidasiIntegrasiPenunjang.png"
-															class="img-fluid" alt="App Validasi Integrasi Penunjang">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_Kasbank.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_Kasbank.png"
-															class="img-fluid" alt="App Kasbank">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_MonitoringPembayaran.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_MonitoringPembayaran.png"
-															class="img-fluid" alt="App Monitoring Pembayaran">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_PembayaranObat.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_PembayaranObat.png"
-															class="img-fluid" alt="App Monitoring Pembayaran">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_ESSLogin.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_ESSLogin.png"
-															class="img-fluid" alt="App ESS Login">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_ESSTindakan.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_ESSTindakan.png"
-															class="img-fluid" alt="App ESS Tindakan">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_ECSLogin.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_ECSLogin.png"
-															class="img-fluid" alt="App ECS Login">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_ECS_Loket.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_ECS_Loket.png"
-															class="img-fluid" alt="App ECS Loket">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_ECS_Beranda.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_ECS_Beranda.png"
-															class="img-fluid" alt="App Kasbank Beranda">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_ECS_Dashboard.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_ECS_Dashboard.png"
-															class="img-fluid" alt="App ECS Dashboard">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-									
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Apps_SIKIMED.jpeg" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Apps_SIKIMED.jpeg"
-															class="img-fluid" alt="Aplikasi Sistem Informasi Kinerja Medis RSUD Arifin Achmad Prov. Riau">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item apps">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/App_M_Akses.png" class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/App_M_Akses.png"
-															class="img-fluid" alt="Aplikasi Mobile Akses">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/sertifikat_course_dicoding.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/sertifikat_course_dicoding.png"
-															class="img-fluid" alt="Sertifikat Dicoding">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_PDP.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_PDP.png"
-															class="img-fluid" alt="Sertifikat Pelindungan Data Pribadi">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_MTCNA.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_MTCNA.png"
-															class="img-fluid" alt="Sertifikat MTCNA">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_MTCRE.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_MTCRE.png"
-															class="img-fluid" alt="Sertifikat MTCRE">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_SMLTI.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_SMLTI.png"
-															class="img-fluid" alt="Sertifikat Sistem Manajemen Layanan Teknologi Informasi">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_SMKI.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_SMKI.png"
-															class="img-fluid" alt="Sertifikat Sistem Manajemen Keamanan Informasi">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_AISMKI.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_AISMKI.png"
-															class="img-fluid" alt="Sertifikat Audit Internal Sistem Manajemen Keamanan Informasi">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_BPE.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_BPE.png"
-															class="img-fluid" alt="Sertifikat Bussiness Process Engineering">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_ITE.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_ITE.png"
-															class="img-fluid" alt="Sertifikat IT Essential">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_Pelatihan_HTML.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_Pelatihan_HTML.png"
-															class="img-fluid" alt="Sertifikat Pelatihan HTML">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_Progate.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_Progate.png"
-															class="img-fluid" alt="Sertifikat Path Pengembangan Web Node.JS">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_ITEssentials.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_ITEssentials.png"
-															class="img-fluid" alt="Sertifikat IT Essential">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_Sepakat.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_Sepakat.png"
-															class="img-fluid" alt="Sertifikat Sepakat">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_Manajemen Risiko Keamanan SPBE.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_Manajemen Risiko Keamanan SPBE.png"
-															class="img-fluid" alt="Sertifikat Manajemen Risiko Keamanan SPBE">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_Network_Security.jpg"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_Network_Security.jpg"
-															class="img-fluid" alt="Sertifikat Network Security">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item certificates">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Sertifikat_Microsoft.png"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Sertifikat_Microsoft.png"
-															class="img-fluid" alt="Sertifikat BSSN - Microsoft">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item archievements">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Archievements_PemuncakJurusan.jpeg"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Archievements_PemuncakJurusan.jpeg"
-															class="img-fluid" alt="Penghargaan Pemuncak Jurusan">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-									<div class="col-12 col-sm-6 col-lg-3 isotope-item archievements">
-										<div class="image-gallery-item mb-4 pb-3">
-											<a href="assets/img/portfolio/Archievements_PemuncakFakultas.jpeg"
-												class="lightbox-portfolio">
-												<span class="thumb-info custom-thumb-info-1">
-													<span class="thumb-info-wrapper">
-														<span class="thumb-info-plus"></span>
-														<img src="assets/img/portfolio/Archievements_PemuncakFakultas.jpeg"
-															class="img-fluid" alt="Penghargaan Pemuncak Fakultas">
-													</span>
-												</span>
-											</a>
-										</div>
-									</div>
-
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section id="recommendations" class="section section-no-border background-color-primary m-0">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<h2 class="text-color-quaternary font-weight-extra-bold text-uppercase">Recommendations</h2>
-						</div>
-						<div class="col-lg-12 p-0">
-							<div class="owl-carousel custom-dots-style-1 custom-dots-color-1 custom-dots-position-1 mb-0"
-								data-plugin-options="{'items': 1, 'autoHeight': true, 'loop': false, 'nav': false, 'dots': true}">
-								<div>
-									<div class="col">
-										<div
-											class="testimonial custom-testimonial-style-1 testimonial-with-quotes mb-0">
-											<blockquote class="pb-2">
-												<p class="custom-text-color-3">Baik, jujur, ramah, dan responsif. Mungkin beberapa kata itu yang bisa saya simpulkan terkait rekan saya salman syuhada yang sudah mendisain dan membantu dalam proses pengembangan web pengembara imajinasi. 
-													Dan untuk kawan-kawan yang ingin mengenal atau bekerja sama dengan Salman, jangan ragu, karena ragu hanya menjadikan kita tak mau tahu.</p>
-											</blockquote>
-											<div class="testimonial-author float-left">
-												<p><strong class="text-uppercase">Admin Utama Pengembara Imajinasi</strong><span
-														class="custom-text-color-3">IG : @pengembara.imajinasi</span></p>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div>
-									<div class="col">
-										<div
-											class="testimonial custom-testimonial-style-1 testimonial-with-quotes mb-0">
-											<blockquote class="pb-2">
-												<p class="custom-text-color-3">Recommended banget nih buat kamu yang pengen punya blog atau website kece, 
-													Salman Syuhada siap banget ngebantuin. Fast response dan bisa bantu via remote juga. Grab it fast, guys! </p>
-											</blockquote>
-											<div class="testimonial-author float-left">
-												<p><strong class="text-uppercase">Dinni Ramayani</strong><span
-														class="custom-text-color-3">Delegation of JENESYS 2.0 Japan & Penulis buku 'Sakura with You'</span></p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section id="blog" class="section section-no-border background-color-light m-0">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<h2 class="text-color-quaternary font-weight-extra-bold text-uppercase">Services</h2>
-
-							<div class="row">
-								<div class="col-lg-4 mb-5 mb-lg-0">
-									<article class="thumb-info custom-thumb-info-2 custom-box-shadow-1 appear-animation"
-										data-appear-animation="fadeIn" data-appear-animation-delay="0"
-										data-appear-animation-duration="1s">
-										<div class="thumb-info-wrapper">
-											<a href="#">
-												<img src="assets/img/blog/Service_Seo.gif" alt class="img-fluid" />
-											</a>
-										</div>
-										<div class="thumb-info-caption">
-											<div class="thumb-info-caption-text">
-												<h4 class="mb-2">
-													<a href="#"
-														class="text-decoration-none text-color-dark font-weight-semibold">
-														SEO (Search Engine Optimization)
-													</a>
-												</h4>
-												<p class="custom-text-color-2">Meletakkan website anda pada nomor 1 pada hasil pencarian di Search Engine.</p>
-											</div>
-											<hr class="solid m-0 mt-4 mb-2">
-											<div class="row justify-content-between">
-												<div
-													class="col-auto custom-blog-post-date text-uppercase font-weight-semibold text-color-dark text-2">
-													-
-												</div>
-												<div
-													class="col-auto custom-blog-post-share text-uppercase font-weight-semibold text-color-dark text-2">
-													Share:
-													<ul class="mb-0">
-														<li>
-															<a class="item-facebook text-decoration-none text-uppercase"
-																href="#" title="Share on Facebook">Facebook</a>
-														</li>
-														<li>
-															<a class="item-twitter text-decoration-none text-uppercase"
-																href="#" title="Share on Twitter">Twitter</a>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</article>
-								</div>
-								<div class="col-lg-4">
-									<article class="thumb-info custom-thumb-info-2 custom-box-shadow-1 appear-animation"
-										data-appear-animation="fadeIn" data-appear-animation-delay="0"
-										data-appear-animation-duration="1s">
-										<div class="thumb-info-wrapper">
-											<a href="#">
-												<img src="assets/img/blog/Service_WebResponsive.gif" alt class="img-fluid" />
-											</a>
-										</div>
-										<div class="thumb-info-caption">
-											<div class="thumb-info-caption-text">
-												<h4 class="mb-2">
-													<a href="#" class="text-decoration-none text-color-dark font-weight-semibold">
-														Responsive Web Development
-													</a>
-												</h4>
-												<p class="custom-text-color-2">Kembangkan ide bisnis dan bangun branding karyamu dengan sebuah website yang profesional dan elegan.</p>
-											</div>
-											<hr class="solid m-0 mt-4 mb-2">
-											<div class="row justify-content-between">
-												<div
-													class="col-auto custom-blog-post-date text-uppercase font-weight-semibold text-color-dark text-2">
-													-
-												</div>
-												<div
-													class="col-auto custom-blog-post-share text-uppercase font-weight-semibold text-color-dark text-2">
-													Share:
-													<ul class="mb-0">
-														<li>
-															<a class="item-facebook text-decoration-none text-uppercase"
-																href="#" title="Share on Facebook">Facebook</a>
-														</li>
-														<li>
-															<a class="item-twitter text-decoration-none text-uppercase"
-																href="#" title="Share on Twitter">Twitter</a>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</article>
-								</div>
-								<div class="col-lg-4">
-									<article class="thumb-info custom-thumb-info-2 custom-box-shadow-1 appear-animation"
-										data-appear-animation="fadeIn" data-appear-animation-delay="0"
-										data-appear-animation-duration="1s">
-										<div class="thumb-info-wrapper">
-											<a href="#">
-												<img src="assets/img/blog/Service_CustomerSupport.gif" alt class="img-fluid" />
-											</a>
-										</div>
-										<div class="thumb-info-caption">
-											<div class="thumb-info-caption-text">
-												<h4 class="mb-2">
-													<a href="#" class="text-decoration-none text-color-dark font-weight-semibold">
-														SUPPORT 24/7
-													</a>
-												</h4>
-												<p class="custom-text-color-2">Bantuan 24 jam via telepon dan live chat serta remote access. Memberikan solusi terhadap permasalahan website anda!</p>
-											</div>
-											<hr class="solid m-0 mt-4 mb-2">
-											<div class="row justify-content-between">
-												<div
-													class="col-auto custom-blog-post-date text-uppercase font-weight-semibold text-color-dark text-2">
-													-
-												</div>
-												<div
-													class="col-auto custom-blog-post-share text-uppercase font-weight-semibold text-color-dark text-2">
-													Share:
-													<ul class="mb-0">
-														<li>
-															<a class="item-facebook text-decoration-none text-uppercase"
-																href="#" title="Share on Facebook">Facebook</a>
-														</li>
-														<li>
-															<a class="item-twitter text-decoration-none text-uppercase"
-																href="#" title="Share on Twitter">Twitter</a>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</article>
-								</div>
-							</div>
-						</div>
-						<!-- <div class="col-lg-12 col-sm-12 pt-4 mt-4 text-center">
-							<a
-								class="btn btn-primary btn-outline text-color-dark custom-btn-style-2 font-weight-bold custom-border-radius-1 text-uppercase">View
-								All</a>
-						</div> -->
-					</div>
-				</div>
-			</section>
-
-			<div id="say-hello" class="container-fluid">
-				<div class="row">
-					<div class="col-lg-6 p-0">
-						<section class="section section-no-border background-color-primary h-100 m-0">
-							<div class="row justify-content-end m-0">
-								<div class="col-half-section col-half-section-right mr-3">
-									<h2 class="text-color-quaternary text-uppercase font-weight-extra-bold">Say Hello
-									</h2>
-									<div class="alert alert-form alert-success alert-dismissible d-none" role="alert">
-										<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										<strong><i class="far fa-thumbs-up"></i>  Success!</strong> Pesan berhasil terkirim.
-									</div>
-									<form name="contact-form" class="custom-form-style"  method="POST">
-										<div class="form-content">
-											<div class="form-control-custom">
-												<input type="text" class="form-control" name="nama_pengirim"
-													placeholder="Name *"
-													data-msg-required="This field is required." id="callName"
-													required="" />
-											</div>
-											<div class="form-control-custom">
-												<input type="text" class="form-control" name="no_hp"
-													placeholder="HandPhone Number *"
-													data-msg-required="This field is required." id="callHp"
-													required="" />
-											</div>
-											<div class="form-control-custom">
-												<input type="text" class="form-control" name="email"
-													placeholder="Email *" data-msg-required="This field is required."
-													id="callEmail" required="" />
-											</div>
-											<div class="form-control-custom">
-												<textarea maxlength="5000"
-													data-msg-required="Please enter your message." rows="10"
-													class="form-control" name="pesan" placeholder="Message*"
-													id="message" required="" aria-required="true"></textarea>
-											</div>
-											<div class="loader btn-loading d-none"> Loading...</div>
-											<button class="btn btn-kirim btn-quaternary text-color-light text-uppercase font-weight-semibold outline-none custom-btn-style-2 custom-border-radius-1" type="submit">
-												Submit
-											</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</section>
-					</div>
-					<div class="col-lg-6 p-0">
-						<section class="section section-no-border h-100 m-0"
-							style="background: url(assets/img/about-me/background.png); background-size: cover;">
-							<div class="row m-0">
-								<div class="col-half-section col-half-section-left ml-3">
-									<a href="mailto:syuhadasalman@gmail.com" class="text-decoration-none">
-										<span class="feature-box custom-feature-box align-items-center mb-4">
-											<span class="custom-feature-box-icon">
-												<i class="icon-envelope icons text-color-light"></i>
-											</span>
-											<span class="feature-box-info">
-												<span
-													class="custom-label font-weight-semibold text-uppercase custom-text-color-1">Email</span>
-												<strong
-													class="font-weight-light text-color-light custom-opacity-effect-1">syuhadasalman@gmail.com</strong>
-											</span>
-										</span>
-									</a>
-									<a href="tel:+6281266883949" class="text-decoration-none">
-										<span class="feature-box custom-feature-box align-items-center mb-4">
-											<span class="custom-feature-box-icon">
-												<i class="icon-phone icons text-color-light"></i>
-											</span>
-											<span class="feature-box-info">
-												<span
-													class="custom-label font-weight-semibold text-uppercase custom-text-color-1">Phone</span>
-												<strong
-													class="font-weight-light text-color-light custom-opacity-effect-1">(+62)812-6688-3949</strong>
-											</span>
-										</span>
-									</a>
-									<a href="https://wa.me/+6281266883949?text=Halo,%20Salman,%20Kami%20mau%20tanya%20tentang%20website..."
-										class="text-decoration-none">
-										<span class="feature-box custom-feature-box align-items-center mb-4">
-											<span class="custom-feature-box-icon">
-												<i class="icon-screen-smartphone icons text-color-light"></i>
-											</span>
-											<span class="feature-box-info">
-												<span
-													class="custom-label font-weight-semibold text-uppercase custom-text-color-1">Whatsapp</span>
-												<strong
-													class="font-weight-light text-color-light custom-opacity-effect-1">0812-6688-3949</strong>
-											</span>
-										</span>
-									</a>
-									<span class="feature-box custom-feature-box align-items-center">
-										<span class="custom-feature-box-icon">
-											<i class="icon-share icons text-color-light"></i>
-										</span>
-										<a href="https://www.facebook.com/salman.syuhada" class="d-flex text-decoration-none">
-											<span class="feature-box-info">
-												<span
-													class="custom-label font-weight-semibold text-uppercase custom-text-color-1">Follow
-													me</span>
-												<strong
-													class="font-weight-light text-color-light custom-opacity-effect-1">Facebook</strong>
-											</span>
-										</a>
-										<a href="https://x.com/salmansyuhada_" class="d-flex text-decoration-none">
-											<span class="feature-box-info custom-both-side-border mt-2">
-												<strong
-													class="font-weight-light text-color-light custom-opacity-effect-1">Twitter</strong>
-											</span>
-										</a>
-										<a href="https://www.linkedin.com/in/salman-syuhada-8513a1182/" class="d-flex text-decoration-none">
-											<span class="feature-box-info p-0 mt-2">
-												<strong
-													class="font-weight-light text-color-light custom-opacity-effect-1">Linkedin</strong>
-											</span>
-										</a>
-									</span>
-								</div>
-							</div>
-						</section>
-					</div>
-				</div>
-			</div>
-
-			<footer id="footer" class="m-0 p-0">
-				<div class="footer-copyright background-color-light m-0">
-					<div class="container">
-						<div class="row">
-							<div class="col-lg-12 m-0">
-								<p class="custom-text-color-2">© Copyright 2024 >>Syuh4D4_. All Rights Reserved.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</footer>
-		</div>
-
-		<script>
-			const scriptURL = 'https://script.google.com/macros/s/AKfycbwAW1ZhQw7dEa7okFXnMTqh5Uv9yE_MUyncOb7mQAicRe9BNzTjAEcGzGZqXvelMjsD/exec'
-			const form = document.forms['contact-form'];
-			const btnKirim = document.querySelector('.btn-kirim');
-			const btnLoading = document.querySelector('.btn-loading');
-			const alertForm = document.querySelector('.alert-form');
-		  
-			form.addEventListener('submit', e => {
-			  e.preventDefault();
-			  // ketika tombol submit diklik
-			  btnLoading.classList.toggle('d-none');
-			  btnKirim.classList.toggle('d-none');
-			  fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-				.then(response => {
-					btnLoading.classList.toggle('d-none');
-			  		btnKirim.classList.toggle('d-none');
-					alertForm.classList.toggle('d-none');
-					form.reset();
-					  
-					console.log('Success!', response)
-				})
-				.catch(error => console.error('Error!', error.message))
-			})
-		</script>
-
-		<script>
-			function calculateDifference(startDateStr, endDateStr) {
-				const startDate = new Date(startDateStr);
-				const endDate = new Date(endDateStr);
-	
-				const diffInTime = endDate.getTime() - startDate.getTime();
-				const diffInDays = diffInTime / (1000 * 3600 * 24);
-	
-				let years = endDate.getFullYear() - startDate.getFullYear();
-				let months = endDate.getMonth() - startDate.getMonth();
-				let days = endDate.getDate() - startDate.getDate();
-	
-				if (days < 0) {
-					months--;
-					days += new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
-				}
-	
-				if (months < 0) {
-					years--;
-					months += 12;
-				}
-	
-				return ` ( ${years} tahun, ${months} bulan, ${days} hari )`;
-			}
-	
-			function displayDifferences() {
-				const date1 = '2020-12-31';
-				const today = new Date().toISOString().split('T')[0]; // Tanggal Hari Ini
-				
-				const date2 = '2017-12-31';
-				const refDate2 = '2020-12-31'; // Referensi Tanggal 2
-
-				const date3 = '2015-05-18';
-				const refDate3 = '2017-12-31'; // Referensi Tanggal 1
-				
-	
-				document.getElementById('result1').innerHTML = ` ${calculateDifference(date1, today)}`;
-				document.getElementById('result2').innerHTML = ` ${calculateDifference(date2, refDate2)}`;
-				document.getElementById('result3').innerHTML = ` ${calculateDifference(date3, refDate3)}`;
-			}
-	
-			window.onload = displayDifferences;
-		</script>
-
-		<!-- Vendor -->
-		<script src="assets/vendor/jquery/jquery.min.js"></script>
-		<script src="assets/vendor/jquery.appear/jquery.appear.min.js"></script>
-		<script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
-		<script src="assets/vendor/jquery-cookie/jquery-cookie.min.js"></script>
-		<script src="assets/vendor/popper/umd/popper.min.js"></script>
-		<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-		<script src="assets/vendor/common/common.min.js"></script>
-		<script src="assets/vendor/jquery.validation/jquery.validation.min.js"></script>
-		<script src="assets/vendor/jquery.easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
-		<script src="assets/vendor/jquery.gmap/jquery.gmap.min.js"></script>
-		<script src="assets/vendor/jquery.lazyload/jquery.lazyload.min.js"></script>
-		<script src="assets/vendor/isotope/jquery.isotope.min.js"></script>
-		<script src="assets/vendor/owl.carousel/owl.carousel.min.js"></script>
-		<script src="assets/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
-		<script src="assets/vendor/vide/vide.min.js"></script>
-
-		<!-- Theme Base, Components and Settings -->
-		<script src="assets/js/theme.js"></script>
-
-		<!-- Current Page Vendor and Views -->
-		<script src="assets/vendor/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
-		<script src="assets/vendor/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
-
-		<!-- Current Page Vendor and Views -->
-		<script src="assets/js/views/view.contact.js"></script>
-
-		<!-- Demo -->
-		<script src="assets/js/resume.js"></script>
-
-		<!-- Theme Custom -->
-		<script src="assets/js/custom.js"></script>
-
-		<!-- Theme Initialization Files -->
-		<script src="assets/js/theme.init.js"></script>
-
-
-		<!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information.
-		<script>
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-			ga('create', 'UA-12345678-1', 'auto');
-			ga('send', 'pageview');
-		</script>
-		 -->
-
-
+<body>
+
+<!-- ═══════ BOOT SCREEN ═══════ -->
+<div id="boot">
+  <div class="boot-logo">SALMAN OS</div>
+  <div class="boot-sub">Portfolio Edition v3.0</div>
+  <div class="boot-bar-wrap"><div class="boot-bar"></div></div>
+  <div class="boot-msgs" id="boot-msgs"></div>
+</div>
+
+<!-- ═══════ OS ═══════ -->
+<div id="os" class="dark">
+  <div id="wallpaper"></div>
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="tb-left">
+      <span class="tb-logo">⌘ salman@portfolio</span>
+      <div class="tb-menu">
+        <span onclick="openWin('about')">About</span>
+        <span onclick="openWin('skills')">Skills</span>
+        <span onclick="openWin('projects')">Projects</span>
+        <span onclick="openWin('contact')">Contact</span>
+        <span onclick="openWin('terminal')">Terminal</span>
+      </div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-sys"><span>▣</span><span>🔊</span><span>📶</span></div>
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span id="theme-lbl">🌙 Dark</span>
+        <div class="tog-track"><div class="tog-thumb"></div></div>
+      </div>
+      <span id="clock">--:--</span>
+    </div>
+  </div>
+
+  <!-- DESKTOP -->
+  <div id="desktop-area" onclick="desktopClick(event)" oncontextmenu="showCtx(event)">
+
+    <!-- Desktop Icons -->
+    <div id="desktop-icons">
+      <div class="d-icon" ondblclick="openWin('about')"    onclick="selIcon(this)">
+        <div class="d-icon-img" style="background:linear-gradient(135deg,#1c3a5e,#0d1f33)">👤</div>
+        <span class="d-icon-lbl">about.sh</span>
+      </div>
+      <div class="d-icon" ondblclick="openWin('skills')"   onclick="selIcon(this)">
+        <div class="d-icon-img" style="background:linear-gradient(135deg,#1a3d1a,#0a200a)">⚡</div>
+        <span class="d-icon-lbl">skills/</span>
+      </div>
+      <div class="d-icon" ondblclick="openWin('projects')" onclick="selIcon(this)">
+        <div class="d-icon-img" style="background:linear-gradient(135deg,#3d1a3d,#200a20)">🗂️</div>
+        <span class="d-icon-lbl">projects/</span>
+      </div>
+      <div class="d-icon" ondblclick="openWin('contact')"  onclick="selIcon(this)">
+        <div class="d-icon-img" style="background:linear-gradient(135deg,#3d3a1a,#20200a)">✉️</div>
+        <span class="d-icon-lbl">contact.txt</span>
+      </div>
+      <div class="d-icon" ondblclick="openWin('terminal')" onclick="selIcon(this)">
+        <div class="d-icon-img" style="background:linear-gradient(135deg,#1e2d1e,#0a160a)">💻</div>
+        <span class="d-icon-lbl">terminal</span>
+      </div>
+      <div class="d-icon" onclick="selIcon(this)">
+        <div class="d-icon-img" style="background:linear-gradient(135deg,#1a2d3d,#0a1020)">📄</div>
+        <span class="d-icon-lbl">resume.pdf</span>
+      </div>
+    </div>
+
+    <!-- ── ABOUT ── -->
+    <div class="win open" id="win-about">
+      <div class="win-bar" onmousedown="dragStart(event,'win-about')">
+        <div class="wb wb-r" onclick="closeWin('about')"></div>
+        <div class="wb wb-y" onclick="minWin('about')"></div>
+        <div class="wb wb-g" onclick="maxWin('win-about')"></div>
+        <span class="win-ttl">about.sh — bash</span>
+        <span class="win-pth">~/portfolio/about</span>
+      </div>
+      <div class="win-body">
+        <div class="neofetch">
+          <div class="ascii">   .---.
+  /     \
+ | () () |
+  \  ^  /
+   |||||
+   |||||</div>
+          <div style="font-size:11px;line-height:1.95;">
+            <div><span class="neo-k">user</span><span class="neo-v">    @ salman</span></div>
+            <div><span class="neo-k">------</span></div>
+            <div><span class="neo-k">role</span><span class="neo-v">    Web Developer</span></div>
+            <div><span class="neo-k">focus</span><span class="neo-v">   AI Explorer</span></div>
+            <div><span class="neo-k">hobby</span><span class="neo-v">   Cyber Security</span></div>
+            <div><span class="neo-k">os</span><span class="neo-v">      Arch Linux btw</span></div>
+            <div><span class="neo-k">shell</span><span class="neo-v">   zsh + oh-my-zsh</span></div>
+            <div><span class="neo-k">editor</span><span class="neo-v">  VS Code / Vim</span></div>
+            <div><span class="neo-k">uptime</span><span class="neo-v">  always learning</span></div>
+          </div>
+        </div>
+        <div style="margin-top:16px;">
+          <div class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~ $ </span><span class="c-blu">cat bio.txt</span></div>
+          <div class="tl c-out" style="margin-top:8px;line-height:1.85;">
+            Hi! I'm <span class="c-grn">Salman</span> — a passionate Web Developer who loves exploring<br>
+            the intersection of <span class="c-blu">AI</span> and technology. I'm also deeply interested in<br>
+            <span class="c-pnk">Cyber Security</span>, always looking to understand systems from inside out.<br><br>
+            I build things, break things (ethically), and learn constantly.<br>
+            <span class="c-yel">▶ Currently open to new opportunities &amp; collaborations.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SKILLS ── -->
+    <div class="win" id="win-skills">
+      <div class="win-bar" onmousedown="dragStart(event,'win-skills')">
+        <div class="wb wb-r" onclick="closeWin('skills')"></div>
+        <div class="wb wb-y" onclick="minWin('skills')"></div>
+        <div class="wb wb-g" onclick="maxWin('win-skills')"></div>
+        <span class="win-ttl">skills/ — explorer</span>
+        <span class="win-pth">~/portfolio/skills</span>
+      </div>
+      <div class="win-body">
+        <div class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~/skills $ </span><span class="c-blu">ls -la</span></div>
+        <div class="sec-ttl">🌐 Web Development</div>
+        <div>
+          <span class="stag w">HTML5</span><span class="stag w">CSS3</span><span class="stag w">JavaScript</span>
+          <span class="stag w">React</span><span class="stag w">Node.js</span><span class="stag w">REST API</span><span class="stag w">Git</span>
+        </div>
+        <div class="sec-ttl">🤖 AI &amp; Machine Learning</div>
+        <div>
+          <span class="stag a">Python</span><span class="stag a">Prompt Engineering</span>
+          <span class="stag a">LLM Integration</span><span class="stag a">Automation</span><span class="stag a">AI Tools</span>
+        </div>
+        <div class="sec-ttl">🔐 Cyber Security</div>
+        <div>
+          <span class="stag s">Linux</span><span class="stag s">Networking</span><span class="stag s">CTF</span>
+          <span class="stag s">OSINT</span><span class="stag s">Kali Linux</span><span class="stag s">Ethical Hacking</span>
+        </div>
+        <div class="sec-ttl">🛠 Tools &amp; Environment</div>
+        <div>
+          <span class="stag">VS Code</span><span class="stag">Vim</span><span class="stag">Docker</span>
+          <span class="stag">GitHub</span><span class="stag">Bash</span><span class="stag">Zsh</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROJECTS ── -->
+    <div class="win" id="win-projects">
+      <div class="win-bar" onmousedown="dragStart(event,'win-projects')">
+        <div class="wb wb-r" onclick="closeWin('projects')"></div>
+        <div class="wb wb-y" onclick="minWin('projects')"></div>
+        <div class="wb wb-g" onclick="maxWin('win-projects')"></div>
+        <span class="win-ttl">projects/ — explorer</span>
+        <span class="win-pth">~/portfolio/projects</span>
+      </div>
+      <div class="win-body">
+        <div class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~/projects $ </span><span class="c-blu">ls --sort=date</span></div>
+        <div style="margin-top:12px;">
+          <div class="pcard">
+            <div class="pcard-name">▶ AI Chat Interface</div>
+            <div class="pcard-desc">Custom AI-powered chat application with multi-model support and prompt engineering capabilities.</div>
+            <div><span class="ptag">React</span><span class="ptag">Node.js</span><span class="ptag">OpenAI API</span><span class="ptag">LLM</span></div>
+            <div class="pcard-links">
+              <a class="pcard-link" href="#" target="_blank">GitHub →</a>
+              <a class="pcard-link" href="#" target="_blank">Live Demo →</a>
+            </div>
+          </div>
+          <div class="pcard">
+            <div class="pcard-name">▶ Security Dashboard</div>
+            <div class="pcard-desc">Real-time network monitoring tool to visualize traffic and detect anomalies for home lab use.</div>
+            <div><span class="ptag">Python</span><span class="ptag">Bash</span><span class="ptag">Linux</span><span class="ptag">Networking</span></div>
+            <div class="pcard-links">
+              <a class="pcard-link" href="#" target="_blank">GitHub →</a>
+            </div>
+          </div>
+          <div class="pcard">
+            <div class="pcard-name">▶ Portfolio OS</div>
+            <div class="pcard-desc">This portfolio — a Linux desktop-themed interactive site built entirely with web technologies.</div>
+            <div><span class="ptag">HTML</span><span class="ptag">CSS</span><span class="ptag">JavaScript</span></div>
+            <div class="pcard-links">
+              <a class="pcard-link" href="#" target="_blank">GitHub →</a>
+              <a class="pcard-link" href="#" target="_blank">Live →</a>
+            </div>
+          </div>
+        </div>
+        <div class="tl c-yel" style="font-size:10px;margin-top:6px;">// Edit file ini untuk menambah project aslimu!</div>
+      </div>
+    </div>
+
+    <!-- ── CONTACT ── -->
+    <div class="win" id="win-contact">
+      <div class="win-bar" onmousedown="dragStart(event,'win-contact')">
+        <div class="wb wb-r" onclick="closeWin('contact')"></div>
+        <div class="wb wb-y" onclick="minWin('contact')"></div>
+        <div class="wb wb-g" onclick="maxWin('win-contact')"></div>
+        <span class="win-ttl">contact.txt — viewer</span>
+        <span class="win-pth">~/portfolio/contact</span>
+      </div>
+      <div class="win-body">
+        <div class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~ $ </span><span class="c-blu">cat contact.txt</span></div>
+        <div style="margin-top:14px;">
+          <div class="crow">
+            <div class="cicon">✉️</div>
+            <div><div class="ctxt">salman@email.com</div><div class="csub">Email — preferred method</div></div>
+          </div>
+          <div class="crow">
+            <div class="cicon">💻</div>
+            <div><div class="ctxt">github.com/salman</div><div class="csub">GitHub — code &amp; projects</div></div>
+          </div>
+          <div class="crow">
+            <div class="cicon">🔗</div>
+            <div><div class="ctxt">linkedin.com/in/salman</div><div class="csub">LinkedIn — professional network</div></div>
+          </div>
+          <div class="crow">
+            <div class="cicon">🐦</div>
+            <div><div class="ctxt">@salman_dev</div><div class="csub">Twitter/X — tech thoughts</div></div>
+          </div>
+        </div>
+        <div class="cavail">
+          <div class="tl c-out" style="font-size:11px;line-height:2;">
+            <span class="c-grn">✔</span>&nbsp; Open to freelance &amp; collaboration<br>
+            <span class="c-grn">✔</span>&nbsp; Available for security consulting<br>
+            <span class="c-grn">✔</span>&nbsp; Interested in AI/ML projects<br>
+            <span class="c-yel">●</span>&nbsp; Response time: &lt; 24 hours
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TERMINAL ── -->
+    <div class="win" id="win-terminal">
+      <div class="win-bar" onmousedown="dragStart(event,'win-terminal')">
+        <div class="wb wb-r" onclick="closeWin('terminal')"></div>
+        <div class="wb wb-y" onclick="minWin('terminal')"></div>
+        <div class="wb wb-g" onclick="maxWin('win-terminal')"></div>
+        <span class="win-ttl">Terminal — zsh</span>
+        <span class="win-pth">~/</span>
+      </div>
+      <div class="win-body" id="term-body">
+        <div class="tl c-grn">SalmanOS Terminal v3.0 — Portfolio Edition</div>
+        <div class="tl c-out" style="font-size:11px;">Type <span class="c-blu">help</span> for available commands.</div>
+        <div id="term-lines"></div>
+        <div style="display:flex;align-items:center;gap:4px;margin-top:8px;">
+          <span class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~ $ </span></span>
+          <input id="term-in" autocomplete="off" autocorrect="off" spellcheck="false"
+            type="text"
+            style="background:transparent;border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:12px;flex:1;color:inherit;"
+            placeholder="type a command..."
+            onkeydown="runCmd(event)" />
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /desktop-area -->
+
+  <!-- DOCK -->
+  <div id="dock">
+    <div class="dock-app" id="da-about" onclick="toggleWin('about')">
+      <div class="dock-ic">👤</div>
+      <div class="dock-lb">About</div>
+      <div class="dock-dot"></div>
+    </div>
+    <div class="dock-app" id="da-skills" onclick="toggleWin('skills')">
+      <div class="dock-ic">⚡</div>
+      <div class="dock-lb">Skills</div>
+      <div class="dock-dot"></div>
+    </div>
+    <div class="dock-app" id="da-projects" onclick="toggleWin('projects')">
+      <div class="dock-ic">🗂️</div>
+      <div class="dock-lb">Projects</div>
+      <div class="dock-dot"></div>
+    </div>
+    <div class="dock-app" id="da-contact" onclick="toggleWin('contact')">
+      <div class="dock-ic">✉️</div>
+      <div class="dock-lb">Contact</div>
+      <div class="dock-dot"></div>
+    </div>
+    <div class="dock-app" id="da-terminal" onclick="toggleWin('terminal')">
+      <div class="dock-ic">💻</div>
+      <div class="dock-lb">Terminal</div>
+      <div class="dock-dot"></div>
+    </div>
+    <div class="dock-sep"></div>
+    <div class="dock-r">
+      <span class="s-pill">● available</span>
+    </div>
+  </div>
+
+  <!-- CONTEXT MENU -->
+  <div id="ctx-menu">
+    <div class="ctx-item" onclick="openAllWins()">Open All Windows</div>
+    <div class="ctx-item" onclick="closeAllWins()">Close All Windows</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" onclick="toggleTheme()">Toggle Theme</div>
+    <div class="ctx-item" onclick="openWin('terminal')">Open Terminal</div>
+  </div>
+</div><!-- /os -->
+
+<script>
+/* ═══════════════════════════════════
+   BOOT SEQUENCE
+═══════════════════════════════════ */
+const bootMsgs = [
+  '[ OK ] Loading kernel modules...',
+  '[ OK ] Starting network manager...',
+  '[ OK ] Mounting portfolio filesystem...',
+  '[ OK ] Initializing desktop environment...',
+  '[ OK ] SalmanOS ready.',
+];
+let mi = 0;
+const bm = document.getElementById('boot-msgs');
+function showBootMsg() {
+  if(mi >= bootMsgs.length) return;
+  const d = document.createElement('div');
+  d.className = 'boot-msg';
+  d.style.animationDelay = '0s';
+  d.textContent = bootMsgs[mi++];
+  bm.appendChild(d);
+  if(mi < bootMsgs.length) setTimeout(showBootMsg, 340);
+}
+setTimeout(showBootMsg, 300);
+setTimeout(() => {
+  document.getElementById('boot').classList.add('hide');
+  document.getElementById('os').classList.add('ready');
+  spawnStars();
+}, 2200);
+
+/* ═══════════════════════════════════
+   THEME
+═══════════════════════════════════ */
+let isDark = true;
+function toggleTheme() {
+  isDark = !isDark;
+  const os = document.getElementById('os');
+  os.className = 'ready ' + (isDark ? 'dark' : 'light');
+  document.getElementById('theme-lbl').textContent = isDark ? '🌙 Dark' : '☀️ Light';
+  spawnStars();
+  hideCtx();
+}
+
+function spawnStars() {
+  const wp = document.getElementById('wallpaper');
+  wp.querySelectorAll('.star').forEach(s => s.remove());
+  if (!isDark) return;
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2.2 + 0.8;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;background:#fff;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s`;
+    wp.appendChild(s);
+  }
+}
+
+/* ═══════════════════════════════════
+   CLOCK
+═══════════════════════════════════ */
+function tick() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+}
+tick(); setInterval(tick, 1000);
+
+/* ═══════════════════════════════════
+   WINDOWS
+═══════════════════════════════════ */
+let zTop = 20;
+const wins = ['about','skills','projects','contact','terminal'];
+const maxed = {};
+
+function openWin(id) {
+  const el = document.getElementById('win-' + id);
+  el.classList.add('open', 'focused');
+  el.style.zIndex = ++zTop;
+  document.getElementById('da-' + id).classList.add('running');
+  if (id === 'terminal') setTimeout(() => document.getElementById('term-in').focus(), 80);
+}
+function closeWin(id) {
+  document.getElementById('win-' + id).classList.remove('open', 'focused');
+  document.getElementById('da-' + id).classList.remove('running');
+}
+function minWin(id) { closeWin(id); }
+function toggleWin(id) {
+  const el = document.getElementById('win-' + id);
+  if (el.classList.contains('open')) closeWin(id); else openWin(id);
+}
+function openAllWins()  { wins.forEach(openWin); }
+function closeAllWins() { wins.forEach(closeWin); }
+
+function maxWin(winId) {
+  const el = document.getElementById(winId);
+  const da = document.getElementById('desktop-area');
+  if (!maxed[winId]) {
+    maxed[winId] = { w: el.style.width, h: el.style.height, t: el.style.top, l: el.style.left };
+    const rect = da.getBoundingClientRect();
+    el.style.width  = (da.offsetWidth  - 24) + 'px';
+    el.style.height = (da.offsetHeight - 16) + 'px';
+    el.style.top    = '4px';
+    el.style.left   = '170px';
+  } else {
+    const s = maxed[winId];
+    el.style.width = s.w; el.style.height = s.h;
+    el.style.top = s.t;   el.style.left = s.l;
+    delete maxed[winId];
+  }
+}
+
+/* ═══════════════════════════════════
+   ICON SELECTION
+═══════════════════════════════════ */
+function selIcon(el) {
+  document.querySelectorAll('.d-icon').forEach(i => i.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function desktopClick(e) {
+  if (e.target === document.getElementById('desktop-area') ||
+      e.target === document.getElementById('wallpaper')) {
+    document.querySelectorAll('.d-icon').forEach(i => i.classList.remove('sel'));
+  }
+  hideCtx();
+}
+
+/* ═══════════════════════════════════
+   DRAG
+═══════════════════════════════════ */
+let drag = { active: false, win: null, ox: 0, oy: 0 };
+function dragStart(e, id) {
+  if (e.target.classList.contains('wb')) return;
+  const el = document.getElementById(id);
+  const rect = el.getBoundingClientRect();
+  drag = { active: true, win: el, ox: e.clientX - rect.left, oy: e.clientY - rect.top };
+  el.style.zIndex = ++zTop;
+  document.querySelectorAll('.win').forEach(w => w.classList.remove('focused'));
+  el.classList.add('focused');
+}
+document.addEventListener('mousemove', e => {
+  if (!drag.active) return;
+  drag.win.style.left = (e.clientX - drag.ox) + 'px';
+  drag.win.style.top  = (e.clientY - drag.oy) + 'px';
+});
+document.addEventListener('mouseup', () => drag.active = false);
+
+/* ═══════════════════════════════════
+   CONTEXT MENU
+═══════════════════════════════════ */
+const ctxMenu = document.getElementById('ctx-menu');
+function showCtx(e) {
+  e.preventDefault();
+  ctxMenu.style.display = 'block';
+  ctxMenu.style.left = e.clientX + 'px';
+  ctxMenu.style.top  = e.clientY + 'px';
+}
+function hideCtx() { ctxMenu.style.display = 'none'; }
+document.addEventListener('click', hideCtx);
+document.addEventListener('keydown', e => { if(e.key==='Escape') hideCtx(); });
+
+/* ═══════════════════════════════════
+   TERMINAL
+═══════════════════════════════════ */
+const history = [];
+let histIdx = -1;
+
+const cmds = {
+  help:     () => 'Commands: <span class="c-blu">about</span>  <span class="c-blu">skills</span>  <span class="c-blu">projects</span>  <span class="c-blu">contact</span>  <span class="c-blu">whoami</span>  <span class="c-blu">uname</span>  <span class="c-blu">ls</span>  <span class="c-blu">theme</span>  <span class="c-blu">date</span>  <span class="c-blu">clear</span>',
+  whoami:   () => '<span class="c-grn">salman</span> — Web Developer | AI Explorer | Security Enthusiast',
+  about:    () => { openWin('about');    return '<span class="c-grn">Opening about.sh...</span>'; },
+  skills:   () => { openWin('skills');   return '<span class="c-grn">Opening skills/...</span>'; },
+  projects: () => { openWin('projects'); return '<span class="c-grn">Opening projects/...</span>'; },
+  contact:  () => { openWin('contact');  return '<span class="c-grn">Opening contact.txt...</span>'; },
+  uname:    () => '<span class="c-yel">SalmanOS 3.0 x86_64 GNU/Linux — Portfolio Edition</span>',
+  ls:       () => '<span class="c-blu">about.sh</span>  <span class="c-blu">skills/</span>  <span class="c-blu">projects/</span>  <span class="c-blu">contact.txt</span>  <span class="c-blu">terminal</span>  <span class="c-yel">resume.pdf</span>',
+  theme:    () => { toggleTheme(); return '<span class="c-grn">Switched to ' + (isDark ? 'Dark' : 'Light') + ' mode.</span>'; },
+  date:     () => '<span class="c-grn">' + new Date().toLocaleString() + '</span>',
+  clear:    () => { document.getElementById('term-lines').innerHTML = ''; return null; },
+};
+
+function runCmd(e) {
+  if (e.key === 'ArrowUp') {
+    if (histIdx < history.length - 1) histIdx++;
+    document.getElementById('term-in').value = history[history.length - 1 - histIdx] || '';
+    return;
+  }
+  if (e.key === 'ArrowDown') {
+    if (histIdx > 0) histIdx--;
+    document.getElementById('term-in').value = history[history.length - 1 - histIdx] || '';
+    return;
+  }
+  if (e.key !== 'Enter') return;
+  const inp = document.getElementById('term-in');
+  const val = inp.value.trim(); inp.value = '';
+  histIdx = -1;
+  if (!val) return;
+  history.push(val);
+
+  const lines = document.getElementById('term-lines');
+  const row = document.createElement('div');
+  row.className = 'tl';
+  row.innerHTML = '<span class="prompt">salman@portfolio</span><span class="cmd"> ~ $ </span><span class="c-blu">' + val + '</span>';
+  lines.appendChild(row);
+
+  const fn = cmds[val.toLowerCase()];
+  if (fn !== undefined) {
+    const res = fn();
+    if (res !== null) {
+      const o = document.createElement('div');
+      o.className = 'tl c-out';
+      o.style.marginBottom = '3px';
+      o.innerHTML = res;
+      lines.appendChild(o);
+    }
+  } else {
+    const o = document.createElement('div');
+    o.className = 'tl c-err';
+    o.textContent = 'bash: ' + val + ': command not found';
+    lines.appendChild(o);
+  }
+  document.getElementById('term-body').scrollTop = 99999;
+}
+</script>
 </body>
-
 </html>

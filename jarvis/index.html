@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>JARVIS Mode</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background: radial-gradient(circle, #020024, #000);
+    color: #00f7ff;
+    overflow: hidden;
+}
+.container {
+    text-align: center;
+    margin-top: 10%;
+}
+h1 {
+    font-size: 50px;
+    text-shadow: 0 0 20px #00f7ff;
+}
+.card {
+    border: 1px solid #00f7ff;
+    padding: 20px;
+    margin: 10px;
+    display: inline-block;
+    width: 250px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00f7ff;
+}
+.status {
+    margin-top: 20px;
+    font-size: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>JARVIS MODE</h1>
+
+    <div class="card" id="weather">Loading Weather...</div>
+    <div class="card" id="stocks">Loading Stocks...</div>
+    <div class="card" id="news">Loading News...</div>
+
+    <div class="status" id="status">Status: OFF</div>
+</div>
+
+<script>
+let jarvisActive = false;
+
+// ================= VOICE =================
+function speak(text){
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "id-ID";
+    speech.rate = 1;
+    window.speechSynthesis.speak(speech);
+}
+
+// ================= SNAP DETECTION =================
+async function initMic(){
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const audioContext = new AudioContext();
+    const mic = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    mic.connect(analyser);
+
+    const data = new Uint8Array(analyser.frequencyBinCount);
+
+    function detect(){
+        analyser.getByteFrequencyData(data);
+        let volume = data.reduce((a,b)=>a+b,0);
+
+        // threshold snap (bisa disesuaikan)
+        if(volume > 2500){
+            toggleJarvis();
+        }
+
+        requestAnimationFrame(detect);
+    }
+    detect();
+}
+
+// ================= TOGGLE =================
+function toggleJarvis(){
+    jarvisActive = !jarvisActive;
+    document.getElementById("status").innerText = 
+        "Status: " + (jarvisActive ? "ON" : "OFF");
+
+    speak(jarvisActive ? "Jarvis aktif" : "Jarvis dimatikan");
+
+    if(jarvisActive){
+        loadAll();
+    }
+}
+
+// ================= WEATHER =================
+async function getWeather(){
+    const apiKey = "YOUR_OPENWEATHER_API";
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Jakarta&appid=${apiKey}&units=metric`);
+    const data = await res.json();
+
+    document.getElementById("weather").innerHTML = `
+        ?? Cuaca<br>
+        ${data.main.temp}°C<br>
+        ${data.weather[0].description}
+    `;
+}
+
+// ================= STOCK =================
+async function getStocks(){
+    const apiKey = "YOUR_ALPHA_API";
+    const res = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=${apiKey}`);
+    const data = await res.json();
+
+    document.getElementById("stocks").innerHTML = `
+        ?? Saham AAPL<br>
+        ${data["Global Quote"]["05. price"]}
+    `;
+}
+
+// ================= NEWS =================
+async function getNews(){
+    const apiKey = "YOUR_NEWS_API";
+    const res = await fetch(`https://newsapi.org/v2/top-headlines?country=id&apiKey=${apiKey}`);
+    const data = await res.json();
+
+    document.getElementById("news").innerHTML = `
+        ?? Berita<br>
+        ${data.articles[0].title}
+    `;
+}
+
+// ================= LOAD =================
+function loadAll(){
+    getWeather();
+    getStocks();
+    getNews();
+}
+
+// init
+initMic();
+</script>
+
+</body>
+</html>
