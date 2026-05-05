@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Papan Portofolio — Sari Dewi Rahayu</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Schoolbell&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & ROOT ── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --cw: #edeade;          /* chalk white */
+  --cy: #f7e84e;          /* chalk yellow */
+  --cb: #74d7f5;          /* chalk blue */
+  --cp: #ffaec9;          /* chalk pink */
+  --cg: #7fff8a;          /* chalk green */
+  --co: #ffb347;          /* chalk orange */
+  --cr: #ff8080;          /* chalk red */
+  --board: #1b3020;
+  --board2: #162819;
+  --wood: #6b3d1a;
+  --woodl: #8b5e3c;
+}
+
+html, body {
+  width:100%; height:100%;
+  overflow:hidden;
+  background:#0d1208;
+  font-family:'Caveat', cursive;
+}
+
+/* ── OUTER WOODEN FRAME ── */
+#frame {
+  position:fixed; inset:0;
+  display:flex; flex-direction:column;
+  padding:14px;
+  background:
+    linear-gradient(135deg,#4a2a0e 0%,#7a4a22 18%,#5c3510 35%,#7a4a22 55%,#5c3510 72%,#7a4a22 88%,#4a2a0e 100%);
+  box-shadow:inset 0 0 40px rgba(0,0,0,0.6), 0 0 60px rgba(0,0,0,0.9);
+}
+
+/* Wood grain */
+#frame::after {
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(88deg,transparent,transparent 60px,rgba(0,0,0,0.04) 60px,rgba(0,0,0,0.04) 62px);
+}
+
+/* ── BOARD SURFACE ── */
+#board {
+  flex:1; position:relative;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 25%, rgba(40,80,45,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 75%, rgba(25,55,30,0.3) 0%, transparent 55%),
+    linear-gradient(155deg,#1e3822 0%,#182e1c 40%,#1b3420 70%,#182e1c 100%);
+  border-radius:3px;
+  overflow:hidden;
+}
+
+/* Chalk dust overlay */
+#board::before {
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+  opacity:.35;
+}
+
+/* Erased smudges */
+#board::after {
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 280px 70px at 18% 12%, rgba(237,234,222,.03) 0%,transparent 100%),
+    radial-gradient(ellipse 200px 50px at 75% 40%, rgba(237,234,222,.02) 0%,transparent 100%),
+    radial-gradient(ellipse 160px 90px at 55% 88%, rgba(237,234,222,.025) 0%,transparent 100%);
+}
+
+/* ── CHALK TRAY ── */
+#tray {
+  height:18px;
+  background:linear-gradient(180deg,#5c3510,#3d2008);
+  border-radius:0 0 3px 3px;
+  display:flex; align-items:center; gap:10px; padding:0 18px;
+  position:relative; z-index:10;
+}
+.chalk-stick { height:9px; border-radius:3px; opacity:.9; }
+
+/* ── CHALK TEXT UTILITY ── */
+.ct {
+  text-shadow:
+    0 0 3px rgba(237,234,222,.35),
+    1px 1px 0 rgba(0,0,0,.35),
+    -0.4px -0.4px 0 rgba(237,234,222,.08);
+  letter-spacing:.04em;
+}
+
+/* ── HEADER BAR ── */
+#header {
+  position:absolute; top:0; left:0; right:0;
+  height:60px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 28px;
+  border-bottom:1.5px solid rgba(237,234,222,.1);
+  z-index:5;
+}
+
+.h-name {
+  font-family:'Schoolbell',cursive;
+  font-size:1.55rem;
+  color:var(--cw);
+}
+.h-sub {
+  font-family:'Patrick Hand',cursive;
+  font-size:.82rem;
+  color:var(--cy);
+  opacity:.8;
+  margin-top:1px;
+}
+
+/* Clock */
+#clock {
+  font-family:'Schoolbell',cursive;
+  font-size:1.2rem;
+  color:rgba(237,234,222,.55);
+  letter-spacing:2px;
+}
+
+/* ── DESKTOP ICON GRID ── */
+#desktop {
+  position:absolute;
+  inset:60px 0 0 0;
+  z-index:2;
+  display:grid;
+  /* 2 columns on left, rest empty */
+  grid-template-columns: 110px 110px;
+  grid-template-rows: repeat(4, 110px);
+  gap:6px;
+  padding:18px 20px;
+  align-content:start;
+}
+
+.icon-btn {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:6px; cursor:pointer;
+  border-radius:10px;
+  border:none; background:transparent;
+  transition:background .2s, transform .15s;
+  padding:8px 4px;
+  position:relative;
+}
+.icon-btn:hover { background:rgba(237,234,222,.07); transform:scale(1.06); }
+.icon-btn.active { background:rgba(237,234,222,.13); }
+
+.icon-emoji {
+  font-size:2.8rem;
+  filter:drop-shadow(0 0 4px rgba(237,234,222,.2));
+  line-height:1;
+  transition:transform .2s;
+}
+.icon-btn:hover .icon-emoji { transform:translateY(-3px); }
+
+.icon-label {
+  font-family:'Patrick Hand',cursive;
+  font-size:.78rem;
+  color:var(--cw);
+  text-align:center;
+  text-shadow:1px 1px 3px rgba(0,0,0,.8);
+  line-height:1.2;
+  max-width:95px;
+}
+
+/* ── CHALK DOODLES fixed ── */
+.doodle {
+  position:absolute; pointer-events:none; z-index:1;
+  font-size:3.5rem; opacity:.08;
+}
+
+/* ── WINDOW PANEL ── */
+#window-area {
+  position:absolute;
+  top:65px; left:240px; right:18px; bottom:12px;
+  z-index:6;
+  display:none;
+}
+#window-area.open { display:block; }
+
+.panel {
+  display:none;
+  width:100%; height:100%;
+  background:rgba(20,38,24,.85);
+  backdrop-filter:blur(2px);
+  border:2px solid rgba(237,234,222,.18);
+  border-radius:6px;
+  overflow:hidden;
+  position:relative;
+  animation:panelIn .25s ease;
+}
+.panel.active { display:flex; flex-direction:column; }
+
+@keyframes panelIn {
+  from { opacity:0; transform:scale(.97) translateY(6px); }
+  to   { opacity:1; transform:none; }
+}
+
+/* Panel title bar */
+.panel-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 16px;
+  border-bottom:1.5px dashed rgba(237,234,222,.2);
+  flex-shrink:0;
+}
+.panel-bar-left { display:flex; align-items:center; gap:10px; }
+.panel-title {
+  font-family:'Schoolbell',cursive;
+  font-size:1.4rem;
+}
+.panel-icon { font-size:1.6rem; }
+.close-btn {
+  width:24px; height:24px; border-radius:50%;
+  background:rgba(237,234,222,.15);
+  border:1.5px solid rgba(237,234,222,.3);
+  color:var(--cw); font-size:1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s;
+  font-family:monospace;
+}
+.close-btn:hover { background:rgba(255,128,128,.4); }
+
+/* Panel body */
+.panel-body {
+  flex:1; overflow-y:auto; padding:18px 22px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(237,234,222,.2) transparent;
+}
+.panel-body::-webkit-scrollbar { width:5px; }
+.panel-body::-webkit-scrollbar-thumb { background:rgba(237,234,222,.2); border-radius:4px; }
+
+/* ── PANEL CONTENT STYLES ── */
+
+/* PROFIL */
+.profil-grid {
+  display:grid; grid-template-columns:auto 1fr; gap:22px; align-items:center;
+  margin-bottom:18px;
+}
+.avatar-big {
+  width:110px; height:110px; border-radius:50%;
+  background:radial-gradient(circle,rgba(237,234,222,.08),rgba(237,234,222,.02));
+  border:2.5px solid rgba(237,234,222,.35);
+  display:flex; align-items:center; justify-content:center;
+  font-size:4rem;
+  box-shadow:0 0 20px rgba(237,234,222,.1);
+  animation:glowp 4s ease-in-out infinite;
+}
+@keyframes glowp {
+  0%,100%{box-shadow:0 0 15px rgba(237,234,222,.1);}
+  50%{box-shadow:0 0 30px rgba(237,234,222,.2);}
+}
+.bio-name { font-family:'Schoolbell',cursive; font-size:1.7rem; color:var(--cy); }
+.bio-role { font-family:'Patrick Hand',cursive; font-size:.95rem; color:var(--cb); margin:3px 0 8px; }
+.bio-text { font-family:'Patrick Hand',cursive; font-size:.92rem; color:rgba(237,234,222,.7); line-height:1.65; }
+.tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.ctag {
+  font-family:'Patrick Hand',cursive; font-size:.78rem;
+  padding:3px 12px; border-radius:20px; border:1.5px solid; opacity:.85;
+}
+.stat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.stat-box { text-align:center; padding:12px 8px; border:1.5px dashed rgba(237,234,222,.15); border-radius:6px; }
+.stat-n { font-family:'Schoolbell',cursive; font-size:2.2rem; line-height:1; }
+.stat-l { font-family:'Patrick Hand',cursive; font-size:.78rem; color:rgba(237,234,222,.55); margin-top:3px; }
+
+/* PENDIDIKAN */
+.timeline { position:relative; padding-left:32px; }
+.timeline::before {
+  content:''; position:absolute; left:8px; top:0; bottom:0; width:1.5px;
+  background:linear-gradient(180deg,rgba(237,234,222,.4) 0%,transparent 100%);
+}
+.tl-item { position:relative; margin-bottom:22px; }
+.tl-dot {
+  position:absolute; left:-28px; top:5px;
+  width:11px; height:11px; border-radius:50%;
+  border:2px solid currentColor; background:var(--board);
+}
+.tl-year { font-family:'Patrick Hand',cursive; font-size:.78rem; opacity:.6; }
+.tl-title { font-family:'Schoolbell',cursive; font-size:1.25rem; margin:2px 0; }
+.tl-desc { font-family:'Patrick Hand',cursive; font-size:.88rem; color:rgba(237,234,222,.55); }
+
+/* KEAHLIAN */
+.skill-list { display:flex; flex-direction:column; gap:13px; }
+.sk-row { display:flex; align-items:center; gap:12px; }
+.sk-icon { font-size:1.5rem; flex-shrink:0; width:28px; text-align:center; }
+.sk-info { flex:1; }
+.sk-name { font-family:'Schoolbell',cursive; font-size:1.1rem; margin-bottom:4px; }
+.sk-bar { height:6px; background:rgba(237,234,222,.1); border-radius:3px; overflow:hidden; }
+.sk-fill { height:100%; border-radius:3px; transition:width 1.4s cubic-bezier(.4,0,.2,1); }
+
+/* PENGALAMAN */
+.exp-list { display:flex; flex-direction:column; gap:14px; }
+.exp-card {
+  padding:14px 16px; border-radius:5px;
+  background:rgba(237,234,222,.03);
+  border-left:3px solid;
+  position:relative;
+}
+.exp-card::after {
+  content:''; position:absolute; top:10px; right:10px;
+  width:14px; height:14px;
+  border-top:2px solid rgba(237,234,222,.25);
+  border-right:2px solid rgba(237,234,222,.25);
+}
+.exp-year { font-family:'Patrick Hand',cursive; font-size:.75rem; opacity:.5; }
+.exp-role { font-family:'Schoolbell',cursive; font-size:1.25rem; margin:2px 0; }
+.exp-place { font-family:'Patrick Hand',cursive; font-size:.85rem; color:rgba(237,234,222,.55); margin-bottom:6px; }
+.exp-desc { font-family:'Patrick Hand',cursive; font-size:.85rem; color:rgba(237,234,222,.4); line-height:1.55; }
+
+/* PRESTASI */
+.ach-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.ach-item {
+  display:flex; gap:10px; align-items:flex-start;
+  padding:12px; background:rgba(237,234,222,.03);
+  border-radius:5px; border-left:3px solid;
+}
+.ach-ico { font-size:1.4rem; flex-shrink:0; }
+.ach-t { font-family:'Schoolbell',cursive; font-size:1.05rem; margin-bottom:2px; }
+.ach-d { font-family:'Patrick Hand',cursive; font-size:.8rem; color:rgba(237,234,222,.5); line-height:1.4; }
+
+/* MATA PELAJARAN */
+.subj-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.subj-card {
+  text-align:center; padding:20px 10px;
+  border:2px dashed rgba(237,234,222,.18); border-radius:8px;
+  background:rgba(237,234,222,.03);
+  transition:all .25s;
+}
+.subj-card:hover { background:rgba(237,234,222,.07); transform:scale(1.04) rotate(-1deg); }
+.subj-em { font-size:2.5rem; margin-bottom:8px; display:block; }
+.subj-n { font-family:'Schoolbell',cursive; font-size:1.1rem; margin-bottom:4px; }
+.subj-d { font-family:'Patrick Hand',cursive; font-size:.78rem; color:rgba(237,234,222,.45); }
+
+/* KONTAK */
+.kontak-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.kontak-card {
+  display:flex; gap:14px; align-items:center;
+  padding:16px; border:1.5px dashed rgba(237,234,222,.2);
+  border-radius:8px; background:rgba(237,234,222,.03);
+  text-decoration:none; color:inherit;
+  transition:all .2s;
+}
+.kontak-card:hover { background:rgba(237,234,222,.07); transform:translateY(-2px); }
+.kontak-ico { font-size:2rem; flex-shrink:0; }
+.kontak-lbl { font-family:'Schoolbell',cursive; font-size:1.1rem; margin-bottom:2px; }
+.kontak-val { font-family:'Patrick Hand',cursive; font-size:.82rem; color:rgba(237,234,222,.5); }
+
+/* QUOTE panel */
+.quote-wrap {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  height:100%; text-align:center; padding:30px;
+  gap:18px;
+}
+.quote-big {
+  font-family:'Schoolbell',cursive; font-size:1.8rem; color:var(--cy);
+  line-height:1.55; opacity:.9;
+  text-shadow:0 0 15px rgba(247,232,78,.15);
+}
+.quote-cite { font-family:'Patrick Hand',cursive; font-size:.9rem; color:rgba(237,234,222,.4); }
+
+/* chalk divider */
+.cdiv {
+  border:none; height:1.5px; margin:14px 0;
+  background:linear-gradient(90deg,transparent,rgba(237,234,222,.2) 20%,rgba(237,234,222,.35) 50%,rgba(237,234,222,.2) 80%,transparent);
+}
+
+/* ── WELCOME STATE (center of board when nothing open) ── */
+#welcome {
+  position:absolute;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  text-align:center; pointer-events:none; z-index:3;
+  transition:opacity .4s;
+}
+#welcome.hidden { opacity:0; }
+.w-emoji { font-size:5rem; margin-bottom:12px; display:block; opacity:.3; }
+.w-text { font-family:'Schoolbell',cursive; font-size:1.3rem; color:rgba(237,234,222,.22); }
+
+/* ── CHALK CURSOR ── */
+body { cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Ccircle cx='9' cy='9' r='2.5' fill='%23edeade' opacity='0.7'/%3E%3C/svg%3E") 9 9, auto; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:700px){
+  #desktop { grid-template-columns:repeat(3,1fr); left:0; }
+  #window-area { left:0; top:auto; height:55vh; bottom:0; }
+  .ach-grid, .subj-grid, .kontak-grid { grid-template-columns:1fr; }
+  .stat-row { grid-template-columns:repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- OUTER WOODEN FRAME -->
+<div id="frame">
+
+  <!-- BOARD SURFACE -->
+  <div id="board">
+
+    <!-- Decorative chalk doodles -->
+    <span class="doodle" style="top:15%;left:52%;transform:rotate(-12deg)">📐</span>
+    <span class="doodle" style="top:62%;left:48%;transform:rotate(8deg)">🌿</span>
+    <span class="doodle" style="bottom:8%;left:60%;transform:rotate(-5deg)">🔬</span>
+    <span class="doodle" style="top:8%;right:5%;transform:rotate(15deg)">✏️</span>
+    <span class="doodle" style="bottom:15%;right:4%;transform:rotate(-10deg)">🍎</span>
+
+    <!-- HEADER -->
+    <div id="header">
+      <div>
+        <div class="h-name ct">👩‍🏫 Sari Dewi Rahayu, S.Pd., M.Pd.</div>
+        <div class="h-sub">Klik ikon untuk membuka menu • Guru Senior SMAN 1 Bogor</div>
+      </div>
+      <div id="clock"></div>
+    </div>
+
+    <!-- ICON GRID (desktop-style) -->
+    <div id="desktop">
+      <button class="icon-btn" onclick="openPanel('profil')">
+        <span class="icon-emoji">👩‍🏫</span>
+        <span class="icon-label">Profil</span>
+      </button>
+      <button class="icon-btn" onclick="openPanel('pendidikan')">
+        <span class="icon-emoji">🎓</span>
+        <span class="icon-label">Pendidikan</span>
+      </button>
+      <button class="icon-btn" onclick="openPanel('keahlian')">
+        <span class="icon-emoji">⭐</span>
+        <span class="icon-label">Keahlian</span>
+      </button>
+      <button class="icon-btn" onclick="openPanel('pelajaran')">
+        <span class="icon-emoji">📚</span>
+        <span class="icon-label">Mata Pelajaran</span>
+      </button>
+      <button class="icon-btn" onclick="openPanel('pengalaman')">
+        <span class="icon-emoji">🏫</span>
+        <span class="icon-label">Pengalaman</span>
+      </button>
+      <button class="icon-btn" onclick="openPanel('prestasi')">
+        <span class="icon-emoji">🏅</span>
+        <span class="icon-label">Prestasi</span>
+      </button>
+      <button class="icon-btn" onclick="openPanel('motto')">
+        <span class="icon-emoji">💬</span>
+        <span class="icon-label">Moto Hidup</span>
+      </button>
+      <button class="icon-btn" onclick="openPanel('kontak')">
+        <span class="icon-emoji">📬</span>
+        <span class="icon-label">Kontak</span>
+      </button>
+    </div>
+
+    <!-- WELCOME HINT -->
+    <div id="welcome">
+      <span class="w-emoji">🖊️</span>
+      <div class="w-text">Klik ikon di sebelah kiri<br>untuk membuka menu</div>
+    </div>
+
+    <!-- PANEL AREA -->
+    <div id="window-area">
+
+      <!-- PROFIL -->
+      <div class="panel" id="panel-profil">
+        <div class="panel-bar">
+          <div class="panel-bar-left">
+            <span class="panel-icon">👩‍🏫</span>
+            <span class="panel-title ct" style="color:var(--cy)">Profil Saya</span>
+          </div>
+          <button class="close-btn" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-body">
+          <div class="profil-grid">
+            <div class="avatar-big">👩‍🏫</div>
+            <div>
+              <div class="bio-name ct">Sari Dewi Rahayu</div>
+              <div class="bio-role ct">S.Pd., M.Pd. — Guru Senior & Koordinator MGMP</div>
+              <div class="bio-text">
+                Pendidik berdedikasi dengan pengalaman <strong style="color:var(--cy)">15+ tahun</strong> di tingkat SMA. 
+                Saya percaya setiap anak adalah cahaya yang menunggu bersinar. 
+                Dengan metode kreatif, interaktif, dan penuh cinta, saya hadir menginspirasi generasi penerus bangsa. 🌟
+              </div>
+              <div class="tag-row">
+                <span class="ctag" style="color:var(--cy);border-color:var(--cy)">💛 IPA Terpadu</span>
+                <span class="ctag" style="color:var(--cb);border-color:var(--cb)">💙 Biologi</span>
+                <span class="ctag" style="color:var(--cg);border-color:var(--cg)">💚 Kurikulum Merdeka</span>
+                <span class="ctag" style="color:var(--cp);border-color:var(--cp)">🌸 Wali Kelas</span>
+              </div>
+            </div>
+          </div>
+          <hr class="cdiv">
+          <div class="stat-row">
+            <div class="stat-box">
+              <div class="stat-n ct" style="color:var(--cy)">15+</div>
+              <div class="stat-l">Tahun Mengajar</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-n ct" style="color:var(--cb)">1200+</div>
+              <div class="stat-l">Siswa Dididik</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-n ct" style="color:var(--cp)">8</div>
+              <div class="stat-l">Penghargaan</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-n ct" style="color:var(--cg)">30+</div>
+              <div class="stat-l">Pelatihan</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENDIDIKAN -->
+      <div class="panel" id="panel-pendidikan">
+        <div class="panel-bar">
+          <div class="panel-bar-left">
+            <span class="panel-icon">🎓</span>
+            <span class="panel-title ct" style="color:var(--cb)">Riwayat Pendidikan</span>
+          </div>
+          <button class="close-btn" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-body">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-dot" style="color:var(--cy);border-color:var(--cy)"></div>
+              <div class="tl-year" style="color:var(--cy)">2014 — 2016</div>
+              <div class="tl-title ct" style="color:var(--cw)">Magister Pendidikan (M.Pd.)</div>
+              <div class="tl-desc">Universitas Pendidikan Indonesia, Bandung<br>Konsentrasi Pendidikan Sains</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="color:var(--cb);border-color:var(--cb)"></div>
+              <div class="tl-year" style="color:var(--cb)">2005 — 2009</div>
+              <div class="tl-title ct" style="color:var(--cw)">Sarjana Pendidikan (S.Pd.)</div>
+              <div class="tl-desc">Universitas Negeri Jakarta<br>Jurusan Pendidikan Biologi — <em style="color:var(--cy)">Cum Laude</em></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="color:var(--cp);border-color:var(--cp)"></div>
+              <div class="tl-year" style="color:var(--cp)">2022</div>
+              <div class="tl-title ct" style="color:var(--cw)">Sertifikasi Pendidik (PPG)</div>
+              <div class="tl-desc">Program PPG Dalam Jabatan — Kemdikbudristek RI</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="color:var(--cg);border-color:var(--cg)"></div>
+              <div class="tl-year" style="color:var(--cg)">2023</div>
+              <div class="tl-title ct" style="color:var(--cw)">Google Certified Educator Lv.2</div>
+              <div class="tl-desc">Sertifikasi internasional integrasi teknologi dalam pembelajaran</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="color:var(--co);border-color:var(--co)"></div>
+              <div class="tl-year" style="color:var(--co)">2024</div>
+              <div class="tl-title ct" style="color:var(--cw)">Pelatihan Kurikulum Merdeka Lanjutan</div>
+              <div class="tl-desc">Pusat Pelatihan Guru Nasional — Kemdikbudristek</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KEAHLIAN -->
+      <div class="panel" id="panel-keahlian">
+        <div class="panel-bar">
+          <div class="panel-bar-left">
+            <span class="panel-icon">⭐</span>
+            <span class="panel-title ct" style="color:var(--cg)">Keahlian & Kompetensi</span>
+          </div>
+          <button class="close-btn" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-body">
+          <div class="skill-list">
+            <div class="sk-row">
+              <span class="sk-icon">🧑‍🏫</span>
+              <div class="sk-info">
+                <div class="sk-name ct" style="color:var(--cy)">Pedagogi Kreatif & Inovatif</div>
+                <div class="sk-bar"><div class="sk-fill" data-w="95%" style="background:var(--cy);width:0"></div></div>
+              </div>
+            </div>
+            <div class="sk-row">
+              <span class="sk-icon">💻</span>
+              <div class="sk-info">
+                <div class="sk-name ct" style="color:var(--cb)">Teknologi Pendidikan (EdTech)</div>
+                <div class="sk-bar"><div class="sk-fill" data-w="88%" style="background:var(--cb);width:0"></div></div>
+              </div>
+            </div>
+            <div class="sk-row">
+              <span class="sk-icon">📊</span>
+              <div class="sk-info">
+                <div class="sk-name ct" style="color:var(--cp)">Asesmen & Evaluasi Pembelajaran</div>
+                <div class="sk-bar"><div class="sk-fill" data-w="91%" style="background:var(--cp);width:0"></div></div>
+              </div>
+            </div>
+            <div class="sk-row">
+              <span class="sk-icon">🤝</span>
+              <div class="sk-info">
+                <div class="sk-name ct" style="color:var(--cg)">Manajemen Kelas</div>
+                <div class="sk-bar"><div class="sk-fill" data-w="94%" style="background:var(--cg);width:0"></div></div>
+              </div>
+            </div>
+            <div class="sk-row">
+              <span class="sk-icon">📝</span>
+              <div class="sk-info">
+                <div class="sk-name ct" style="color:var(--co)">Pengembangan Kurikulum Merdeka</div>
+                <div class="sk-bar"><div class="sk-fill" data-w="86%" style="background:var(--co);width:0"></div></div>
+              </div>
+            </div>
+            <div class="sk-row">
+              <span class="sk-icon">🌐</span>
+              <div class="sk-info">
+                <div class="sk-name ct" style="color:var(--cb)">Pembelajaran Daring & Blended</div>
+                <div class="sk-bar"><div class="sk-fill" data-w="82%" style="background:var(--cb);width:0"></div></div>
+              </div>
+            </div>
+            <div class="sk-row">
+              <span class="sk-icon">🗣️</span>
+              <div class="sk-info">
+                <div class="sk-name ct" style="color:var(--cr)">Komunikasi & Presentasi Publik</div>
+                <div class="sk-bar"><div class="sk-fill" data-w="89%" style="background:var(--cr);width:0"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATA PELAJARAN -->
+      <div class="panel" id="panel-pelajaran">
+        <div class="panel-bar">
+          <div class="panel-bar-left">
+            <span class="panel-icon">📚</span>
+            <span class="panel-title ct" style="color:var(--co)">Mata Pelajaran</span>
+          </div>
+          <button class="close-btn" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-body">
+          <div class="subj-grid">
+            <div class="subj-card">
+              <span class="subj-em">🧬</span>
+              <div class="subj-n ct" style="color:var(--cb)">Biologi</div>
+              <div class="subj-d">Kelas X, XI, XII — SMA</div>
+            </div>
+            <div class="subj-card">
+              <span class="subj-em">🌿</span>
+              <div class="subj-n ct" style="color:var(--cg)">IPA Terpadu</div>
+              <div class="subj-d">Sains lintas disiplin</div>
+            </div>
+            <div class="subj-card">
+              <span class="subj-em">🧪</span>
+              <div class="subj-n ct" style="color:var(--cy)">Kimia Dasar</div>
+              <div class="subj-d">Pengantar kimia organik</div>
+            </div>
+            <div class="subj-card">
+              <span class="subj-em">🌍</span>
+              <div class="subj-n ct" style="color:var(--co)">Lingkungan Hidup</div>
+              <div class="subj-d">Ekologi & konservasi alam</div>
+            </div>
+            <div class="subj-card">
+              <span class="subj-em">🔬</span>
+              <div class="subj-n ct" style="color:var(--cp)">Praktikum Sains</div>
+              <div class="subj-d">Lab skills & eksperimen</div>
+            </div>
+            <div class="subj-card">
+              <span class="subj-em">🧠</span>
+              <div class="subj-n ct" style="color:var(--cr)">Biologi Molekuler</div>
+              <div class="subj-d">Genetika & DNA — kelas XII</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENGALAMAN -->
+      <div class="panel" id="panel-pengalaman">
+        <div class="panel-bar">
+          <div class="panel-bar-left">
+            <span class="panel-icon">🏫</span>
+            <span class="panel-title ct" style="color:var(--co)">Pengalaman Mengajar</span>
+          </div>
+          <button class="close-btn" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-body">
+          <div class="exp-list">
+            <div class="exp-card" style="border-color:var(--cy)">
+              <div class="exp-year">2018 — Sekarang</div>
+              <div class="exp-role ct" style="color:var(--cy)">Guru Senior & Koordinator MGMP</div>
+              <div class="exp-place">🏆 SMAN 1 Bogor, Jawa Barat</div>
+              <div class="exp-desc">Memimpin tim guru IPA, mengembangkan modul ajar Kurikulum Merdeka, membimbing olimpiade sains tingkat nasional, mengelola laboratorium biologi sekolah.</div>
+            </div>
+            <div class="exp-card" style="border-color:var(--cg)">
+              <div class="exp-year">2012 — 2018</div>
+              <div class="exp-role ct" style="color:var(--cg)">Guru Biologi & Wali Kelas</div>
+              <div class="exp-place">🌟 SMAN 3 Depok, Jawa Barat</div>
+              <div class="exp-desc">Mengajar Biologi kelas X–XII, menjadi wali kelas selama 4 tahun berturut-turut. Memenangkan lomba guru teladan tingkat kota 2016.</div>
+            </div>
+            <div class="exp-card" style="border-color:var(--cb)">
+              <div class="exp-year">2009 — 2012</div>
+              <div class="exp-role ct" style="color:var(--cb)">Guru IPA & Pembina Ekskul Sains</div>
+              <div class="exp-place">🔬 SMP Negeri 7 Jakarta</div>
+              <div class="exp-desc">Memulai karier mengajar, membina klub sains, menyiapkan siswa untuk OSN tingkat kota dan provinsi. Meraih juara 1 OSN kota 2011.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRESTASI -->
+      <div class="panel" id="panel-prestasi">
+        <div class="panel-bar">
+          <div class="panel-bar-left">
+            <span class="panel-icon">🏅</span>
+            <span class="panel-title ct" style="color:var(--cp)">Prestasi & Penghargaan</span>
+          </div>
+          <button class="close-btn" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-body">
+          <div class="ach-grid">
+            <div class="ach-item" style="border-color:var(--cy)">
+              <span class="ach-ico">🥇</span>
+              <div>
+                <div class="ach-t ct" style="color:var(--cy)">Guru Berprestasi Nasional</div>
+                <div class="ach-d">Kemdikbudristek 2023 — Kategori Guru SMA Terbaik</div>
+              </div>
+            </div>
+            <div class="ach-item" style="border-color:var(--cb)">
+              <span class="ach-ico">🏆</span>
+              <div>
+                <div class="ach-t ct" style="color:var(--cb)">Best Teacher Award 2022</div>
+                <div class="ach-d">Yayasan Pendidikan Indonesia Maju</div>
+              </div>
+            </div>
+            <div class="ach-item" style="border-color:var(--cg)">
+              <span class="ach-ico">🌿</span>
+              <div>
+                <div class="ach-t ct" style="color:var(--cg)">Pembimbing OSN Biologi 2021</div>
+                <div class="ach-d">Siswa binaan meraih Medali Emas Nasional</div>
+              </div>
+            </div>
+            <div class="ach-item" style="border-color:var(--cp)">
+              <span class="ach-ico">📖</span>
+              <div>
+                <div class="ach-t ct" style="color:var(--cp)">Penulis Buku Ajar Terbaik</div>
+                <div class="ach-d">Penerbit Erlangga — Biologi SMA Kurikulum Merdeka</div>
+              </div>
+            </div>
+            <div class="ach-item" style="border-color:var(--co)">
+              <span class="ach-ico">🎤</span>
+              <div>
+                <div class="ach-t ct" style="color:var(--co)">Narasumber Seminar Nasional</div>
+                <div class="ach-d">Konferensi Pendidikan SAINS Indonesia 2022 & 2023</div>
+              </div>
+            </div>
+            <div class="ach-item" style="border-color:var(--cr)">
+              <span class="ach-ico">💻</span>
+              <div>
+                <div class="ach-t ct" style="color:var(--cr)">Guru Inovatif Teknologi 2020</div>
+                <div class="ach-d">Program Google for Education Indonesia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOTTO -->
+      <div class="panel" id="panel-motto">
+        <div class="panel-bar">
+          <div class="panel-bar-left">
+            <span class="panel-icon">💬</span>
+            <span class="panel-title ct" style="color:var(--cy)">Moto & Filosofi</span>
+          </div>
+          <button class="close-btn" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-body">
+          <div class="quote-wrap">
+            <span style="font-size:4rem;opacity:.4">✍️</span>
+            <div class="quote-big ct">
+              "Mendidik bukan sekadar<br>mengisi pikiran,<br>tapi menyalakan api semangat<br>belajar yang tak pernah padam."
+            </div>
+            <hr class="cdiv" style="width:60%">
+            <div class="quote-big ct" style="font-size:1.3rem;color:var(--cg)">
+              "Setiap anak adalah bintang.<br>Tugas guru adalah membantu<br>mereka bercahaya."
+            </div>
+            <hr class="cdiv" style="width:60%">
+            <div class="quote-big ct" style="font-size:1.1rem;color:var(--cb)">
+              "Belajar tidak mengenal batas usia.<br>Guru yang baik adalah<br>murid seumur hidup."
+            </div>
+            <div class="quote-cite">— Sari Dewi Rahayu, S.Pd., M.Pd.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KONTAK -->
+      <div class="panel" id="panel-kontak">
+        <div class="panel-bar">
+          <div class="panel-bar-left">
+            <span class="panel-icon">📬</span>
+            <span class="panel-title ct" style="color:var(--cb)">Hubungi Saya</span>
+          </div>
+          <button class="close-btn" onclick="closePanel()">✕</button>
+        </div>
+        <div class="panel-body">
+          <div class="kontak-grid">
+            <a class="kontak-card" href="mailto:saridewi@email.com">
+              <span class="kontak-ico">📧</span>
+              <div>
+                <div class="kontak-lbl ct" style="color:var(--cy)">Email</div>
+                <div class="kontak-val">saridewi@email.com</div>
+              </div>
+            </a>
+            <a class="kontak-card" href="#">
+              <span class="kontak-ico">📞</span>
+              <div>
+                <div class="kontak-lbl ct" style="color:var(--cg)">WhatsApp</div>
+                <div class="kontak-val">+62 812-3456-7890</div>
+              </div>
+            </a>
+            <a class="kontak-card" href="#">
+              <span class="kontak-ico">🏫</span>
+              <div>
+                <div class="kontak-lbl ct" style="color:var(--cb)">Sekolah</div>
+                <div class="kontak-val">SMAN 1 Bogor, Jawa Barat</div>
+              </div>
+            </a>
+            <a class="kontak-card" href="#">
+              <span class="kontak-ico">📸</span>
+              <div>
+                <div class="kontak-lbl ct" style="color:var(--cp)">Instagram</div>
+                <div class="kontak-val">@guru.saridewi</div>
+              </div>
+            </a>
+            <a class="kontak-card" href="#">
+              <span class="kontak-ico">▶️</span>
+              <div>
+                <div class="kontak-lbl ct" style="color:var(--cr)">YouTube</div>
+                <div class="kontak-val">Sari Dewi Mengajar</div>
+              </div>
+            </a>
+            <a class="kontak-card" href="#">
+              <span class="kontak-ico">💼</span>
+              <div>
+                <div class="kontak-lbl ct" style="color:var(--co)">LinkedIn</div>
+                <div class="kontak-val">linkedin.com/in/saridewi</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end #window-area -->
+
+  </div><!-- end #board -->
+
+  <!-- CHALK TRAY -->
+  <div id="tray">
+    <div class="chalk-stick" style="width:55px;background:#edeade;"></div>
+    <div class="chalk-stick" style="width:42px;background:var(--cy);"></div>
+    <div class="chalk-stick" style="width:50px;background:var(--cb);"></div>
+    <div class="chalk-stick" style="width:38px;background:var(--cp);"></div>
+    <div class="chalk-stick" style="width:46px;background:var(--cg);"></div>
+    <div class="chalk-stick" style="width:33px;background:var(--co);"></div>
+    <div class="chalk-stick" style="width:28px;background:#edeade;opacity:.4;"></div>
+  </div>
+
+</div><!-- end #frame -->
+
+<script>
+// ── Clock ──
+function updateClock(){
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── Panel logic ──
+let currentPanel = null;
+
+function openPanel(id) {
+  // Close previous
+  if(currentPanel) {
+    document.getElementById('panel-'+currentPanel).classList.remove('active');
+    document.querySelectorAll('.icon-btn').forEach(b=>b.classList.remove('active'));
+  }
+
+  const panel = document.getElementById('panel-'+id);
+  const area  = document.getElementById('window-area');
+  const welcome = document.getElementById('welcome');
+
+  if(currentPanel === id) {
+    // toggle off
+    area.classList.remove('open');
+    welcome.classList.remove('hidden');
+    currentPanel = null;
+    return;
+  }
+
+  panel.classList.add('active');
+  area.classList.add('open');
+  welcome.classList.add('hidden');
+  currentPanel = id;
+
+  // Mark icon active
+  document.querySelectorAll('.icon-btn').forEach(b=>{
+    if(b.getAttribute('onclick') === `openPanel('${id}')`) b.classList.add('active');
+  });
+
+  // Animate skill bars when keahlian opens
+  if(id === 'keahlian') {
+    setTimeout(()=>{
+      document.querySelectorAll('.sk-fill').forEach(el=>{
+        el.style.width = el.dataset.w;
+      });
+    }, 150);
+  }
+
+  // Chalk dust particle burst on open
+  dustBurst();
+}
+
+function closePanel() {
+  if(!currentPanel) return;
+  document.getElementById('panel-'+currentPanel).classList.remove('active');
+  document.getElementById('window-area').classList.remove('open');
+  document.getElementById('welcome').classList.remove('hidden');
+  document.querySelectorAll('.icon-btn').forEach(b=>b.classList.remove('active'));
+  currentPanel = null;
+}
+
+// ── Chalk dust on mouse move ──
+const board = document.getElementById('board');
+let lastX=0, lastY=0;
+board.addEventListener('mousemove', e=>{
+  const r = board.getBoundingClientRect();
+  const x = e.clientX-r.left, y = e.clientY-r.top;
+  if(Math.abs(x-lastX)+Math.abs(y-lastY) > 25) {
+    spawnDust(x, y, 2);
+    lastX=x; lastY=y;
+  }
+});
+
+function spawnDust(x, y, n=3) {
+  for(let i=0;i<n;i++){
+    const d = document.createElement('div');
+    const sz = 1.5+Math.random()*2.5;
+    d.style.cssText = `
+      position:absolute; pointer-events:none; z-index:100; border-radius:50%;
+      left:${x+(Math.random()-.5)*16}px; top:${y+(Math.random()-.5)*16}px;
+      width:${sz}px; height:${sz}px;
+      background:rgba(237,234,222,${.12+Math.random()*.22});
+      transition:opacity 1.4s, transform 1.4s;`;
+    board.appendChild(d);
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        d.style.opacity='0';
+        d.style.transform=`translate(${(Math.random()-.5)*25}px,${-15-Math.random()*25}px)`;
+      });
+    });
+    setTimeout(()=>d.remove(), 1500);
+  }
+}
+
+function dustBurst() {
+  const r = board.getBoundingClientRect();
+  const cx = 240+Math.random()*100, cy = 80+Math.random()*60;
+  for(let i=0;i<12;i++) setTimeout(()=>spawnDust(cx,cy,1),i*30);
+}
+</script>
+</body>
+</html>
