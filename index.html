@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Salman | Portfolio OS</title>
+  <title>Salman Alparisi | Portfolio OS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <style>
@@ -27,7 +27,7 @@
     .boot-bar-wrap { width: 240px; height: 3px; background: #111; border-radius: 2px; overflow: hidden; }
     .boot-bar { height: 100%; width: 0; background: linear-gradient(90deg, #388bfd, #58a6ff); border-radius: 2px; animation: bootLoad 1.8s ease forwards; }
     @keyframes bootLoad { 0%{width:0} 60%{width:70%} 85%{width:90%} 100%{width:100%} }
-    .boot-msgs { font-size: 0.65rem; color: #3fb950; text-align: left; width: 240px; height: 60px; overflow: hidden; }
+    .boot-msgs { font-size: 0.65rem; color: #3fb950; text-align: left; width: 260px; height: 70px; overflow: hidden; }
     .boot-msg { opacity: 0; animation: fadeIn 0.3s forwards; line-height: 1.8; }
     @keyframes fadeIn { to { opacity: 1; } }
 
@@ -42,17 +42,9 @@
     }
     #os.ready { opacity: 1; }
 
-    /* wallpaper */
-    #wallpaper {
-      position: absolute; inset: 0; z-index: 0;
-      transition: background 0.5s;
-    }
-    #os.dark #wallpaper {
-      background: radial-gradient(ellipse at 20% 50%, #0d2137 0%, #060d18 55%, #0a0f1e 100%);
-    }
-    #os.light #wallpaper {
-      background: radial-gradient(ellipse at 30% 40%, #c5e0ff 0%, #ddeeff 45%, #eef5ff 100%);
-    }
+    #wallpaper { position: absolute; inset: 0; z-index: 0; transition: background 0.5s; }
+    #os.dark #wallpaper { background: radial-gradient(ellipse at 20% 50%, #0d2137 0%, #060d18 55%, #0a0f1e 100%); }
+    #os.light #wallpaper { background: radial-gradient(ellipse at 30% 40%, #c5e0ff 0%, #ddeeff 45%, #eef5ff 100%); }
     .star { position: absolute; border-radius: 50%; pointer-events: none; animation: twinkle 3s infinite alternate; }
     @keyframes twinkle { from{opacity:0.15} to{opacity:0.9} }
 
@@ -73,23 +65,14 @@
     #os.dark .tb-logo { color: #58a6ff; }
     #os.light .tb-logo { color: #0969da; }
     .tb-menu { display: flex; gap: 2px; }
-    .tb-menu span {
-      padding: 3px 10px; border-radius: 5px;
-      cursor: pointer; transition: background 0.15s;
-      font-size: 11px;
-    }
+    .tb-menu span { padding: 3px 9px; border-radius: 5px; cursor: pointer; transition: background 0.15s; font-size: 11px; white-space:nowrap; }
     #os.dark .tb-menu span:hover { background: rgba(255,255,255,0.09); color: #e6edf3; }
     #os.light .tb-menu span:hover { background: rgba(0,0,0,0.06); color: #24292f; }
     .tb-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
     .tb-sys { font-size: 11px; display: flex; gap: 8px; }
     #os.dark .tb-sys { color: #58a6ff; }
     #os.light .tb-sys { color: #0969da; }
-    .theme-toggle {
-      display: flex; align-items: center; gap: 7px;
-      padding: 3px 11px; border-radius: 20px;
-      cursor: pointer; font-size: 11px; border: 1px solid;
-      transition: all 0.3s;
-    }
+    .theme-toggle { display: flex; align-items: center; gap: 7px; padding: 3px 11px; border-radius: 20px; cursor: pointer; font-size: 11px; border: 1px solid; transition: all 0.3s; }
     #os.dark .theme-toggle { background: rgba(88,166,255,0.08); border-color: rgba(88,166,255,0.28); color: #58a6ff; }
     #os.light .theme-toggle { background: rgba(9,105,218,0.07); border-color: rgba(9,105,218,0.28); color: #0969da; }
     .tog-track { width: 30px; height: 15px; border-radius: 8px; position: relative; transition: background 0.3s; flex-shrink: 0; }
@@ -103,13 +86,8 @@
     #os.light #clock { color: #24292f; }
 
     /* ── DESKTOP AREA ── */
-    #desktop-area {
-      flex: 1; position: relative; z-index: 1;
-      display: flex; padding: 14px;
-      overflow: hidden;
-    }
+    #desktop-area { flex: 1; position: relative; z-index: 1; display: flex; padding: 14px; overflow: hidden; }
 
-    /* ── DESKTOP ICONS ── */
     #desktop-icons {
       display: grid;
       grid-template-columns: repeat(2, 76px);
@@ -118,28 +96,13 @@
       align-content: start;
       flex-shrink: 0;
     }
-    .d-icon {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 6px; cursor: pointer;
-      padding: 8px 4px; border-radius: 10px;
-      border: 1px solid transparent;
-      transition: all 0.18s;
-    }
+    .d-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; padding: 8px 4px; border-radius: 10px; border: 1px solid transparent; transition: all 0.18s; }
     #os.dark .d-icon:hover  { background: rgba(88,166,255,0.12); border-color: rgba(88,166,255,0.22); }
     #os.light .d-icon:hover { background: rgba(9,105,218,0.09);  border-color: rgba(9,105,218,0.22); }
     #os.dark .d-icon.sel    { background: rgba(88,166,255,0.2);  border-color: rgba(88,166,255,0.5); }
     #os.light .d-icon.sel   { background: rgba(9,105,218,0.16);  border-color: rgba(9,105,218,0.5); }
-    .d-icon-img {
-      width: 46px; height: 46px; border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-    }
-    .d-icon-lbl {
-      font-size: 10px; text-align: center; line-height: 1.25;
-      max-width: 72px; word-break: break-word;
-    }
+    .d-icon-img { width: 46px; height: 46px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+    .d-icon-lbl { font-size: 10px; text-align: center; line-height: 1.25; max-width: 72px; word-break: break-word; }
     #os.dark  .d-icon-lbl { color: #e6edf3; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
     #os.light .d-icon-lbl { color: #24292f; text-shadow: 0 1px 3px rgba(255,255,255,0.7); }
 
@@ -159,19 +122,15 @@
     #os.dark  .win { background: rgba(22,27,34,0.97); border-color: #30363d; }
     #os.light .win { background: rgba(255,255,255,0.98); border-color: #d0d7de; }
 
-    /* default positions & sizes */
-    #win-about    { width: 540px; height: 420px; top: 30px;  left: 170px; }
-    #win-skills   { width: 510px; height: 410px; top: 50px;  left: 190px; }
-    #win-projects { width: 520px; height: 430px; top: 40px;  left: 180px; }
-    #win-contact  { width: 430px; height: 370px; top: 60px;  left: 200px; }
-    #win-terminal { width: 560px; height: 390px; top: 70px;  left: 170px; }
+    #win-about      { width: 560px; height: 460px; top: 26px;  left: 170px; }
+    #win-skills     { width: 520px; height: 440px; top: 42px;  left: 190px; }
+    #win-experience { width: 540px; height: 430px; top: 36px;  left: 200px; }
+    #win-education  { width: 480px; height: 380px; top: 50px;  left: 210px; }
+    #win-projects   { width: 560px; height: 460px; top: 40px;  left: 180px; }
+    #win-contact    { width: 470px; height: 460px; top: 60px;  left: 205px; }
+    #win-terminal   { width: 560px; height: 390px; top: 70px;  left: 170px; }
 
-    .win-bar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 13px; border-bottom: 1px solid;
-      cursor: move; flex-shrink: 0;
-      transition: background 0.3s, border-color 0.3s;
-    }
+    .win-bar { display: flex; align-items: center; gap: 8px; padding: 8px 13px; border-bottom: 1px solid; cursor: move; flex-shrink: 0; transition: background 0.3s, border-color 0.3s; }
     #os.dark  .win-bar { background: #21262d; border-color: #30363d; }
     #os.light .win-bar { background: #f6f8fa; border-color: #d0d7de; }
     .wb { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; flex-shrink: 0; transition: filter 0.15s; }
@@ -185,10 +144,7 @@
     .win-pth { font-size: 10px; margin-left: auto; }
     #os.dark  .win-pth { color: #388bfd; }
     #os.light .win-pth { color: #0969da; }
-    .win-body {
-      flex: 1; overflow-y: auto; padding: 16px;
-      scrollbar-width: thin;
-    }
+    .win-body { flex: 1; overflow-y: auto; padding: 16px; scrollbar-width: thin; }
     #os.dark  .win-body { scrollbar-color: #30363d transparent; }
     #os.light .win-body { scrollbar-color: #d0d7de transparent; }
 
@@ -203,19 +159,11 @@
     #os.dark  .c-pnk  { color: #f778ba; } #os.light .c-pnk  { color: #bf3989; }
     #os.dark  .c-err  { color: #ff5f57; } #os.light .c-err  { color: #cf222e; }
 
-    .sec-ttl {
-      font-size: 12px; font-weight: 700;
-      margin: 14px 0 7px; border-bottom: 1px solid;
-      padding-bottom: 4px;
-    }
+    .sec-ttl { font-size: 12px; font-weight: 700; margin: 14px 0 7px; border-bottom: 1px solid; padding-bottom: 4px; }
     #os.dark  .sec-ttl { color: #58a6ff; border-color: #21262d; }
     #os.light .sec-ttl { color: #0969da; border-color: #eaeef2; }
 
-    .stag {
-      font-size: 10px; padding: 2px 9px; border-radius: 20px;
-      border: 1px solid; display: inline-block; margin: 2px;
-      transition: all 0.2s;
-    }
+    .stag { font-size: 10px; padding: 2px 9px; border-radius: 20px; border: 1px solid; display: inline-block; margin: 2px; }
     #os.dark  .stag   { background: #21262d; color: #c9d1d9; border-color: #30363d; }
     #os.light .stag   { background: #f6f8fa; color: #24292f; border-color: #d0d7de; }
     #os.dark  .stag.w { border-color: #388bfd; color: #58a6ff; background: rgba(56,139,253,0.1); }
@@ -224,18 +172,30 @@
     #os.light .stag.a { border-color: #1a7f37; color: #1a7f37; background: rgba(26,127,55,0.07); }
     #os.dark  .stag.s { border-color: #f778ba; color: #f778ba; background: rgba(247,120,186,0.1); }
     #os.light .stag.s { border-color: #bf3989; color: #bf3989; background: rgba(191,57,137,0.07); }
+    #os.dark  .stag.b { border-color: #d29922; color: #d29922; background: rgba(210,153,34,0.1); }
+    #os.light .stag.b { border-color: #9a6700; color: #9a6700; background: rgba(154,103,0,0.07); }
 
+    /* language bars */
+    .lang-row { margin: 8px 0; }
+    .lang-lbl { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
+    .lang-bar-wrap { height: 6px; border-radius: 4px; overflow: hidden; }
+    #os.dark  .lang-bar-wrap { background: #21262d; }
+    #os.light .lang-bar-wrap { background: #eaeef2; }
+    .lang-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg,#388bfd,#58a6ff); }
+
+    /* project cards */
     .pcard { border: 1px solid; border-radius: 8px; padding: 12px; margin-bottom: 10px; transition: all 0.3s; }
     #os.dark  .pcard { background: #0d1117; border-color: #30363d; }
     #os.light .pcard { background: #f6f8fa; border-color: #d0d7de; }
     .pcard:hover { transform: translateY(-1px); }
+    .pcard-top { display: flex; gap: 10px; }
+    .pcard-thumb { width: 64px; height: 46px; border-radius: 6px; object-fit: cover; flex-shrink: 0; border: 1px solid; }
+    #os.dark  .pcard-thumb { border-color: #30363d; }
+    #os.light .pcard-thumb { border-color: #d0d7de; }
     .pcard-name { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
     #os.dark  .pcard-name { color: #58a6ff; } #os.light .pcard-name { color: #0969da; }
     .pcard-desc { font-size: 11px; line-height: 1.55; margin-bottom: 7px; }
     #os.dark  .pcard-desc { color: #8b949e; } #os.light .pcard-desc { color: #57606a; }
-    .ptag { font-size: 10px; padding: 2px 7px; border-radius: 10px; display: inline-block; margin: 1px; }
-    #os.dark  .ptag { background: #21262d; color: #8b949e; }
-    #os.light .ptag { background: #eaeef2; color: #57606a; }
     .pcard-links { margin-top: 7px; display: flex; gap: 8px; }
     .pcard-link { font-size: 10px; padding: 2px 10px; border-radius: 6px; border: 1px solid; cursor: pointer; text-decoration: none; transition: all 0.15s; }
     #os.dark  .pcard-link { color: #58a6ff; border-color: rgba(88,166,255,0.3); }
@@ -243,6 +203,33 @@
     #os.dark  .pcard-link:hover { background: rgba(88,166,255,0.12); }
     #os.light .pcard-link:hover { background: rgba(9,105,218,0.08); }
 
+    .pfilter { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 12px; }
+    .pfilter-btn { font-size: 10px; padding: 4px 12px; border-radius: 20px; border: 1px solid; cursor: pointer; transition: all 0.15s; }
+    #os.dark  .pfilter-btn { color: #8b949e; border-color: #30363d; }
+    #os.light .pfilter-btn { color: #57606a; border-color: #d0d7de; }
+    #os.dark  .pfilter-btn.active { color: #58a6ff; border-color: #58a6ff; background: rgba(88,166,255,0.1); }
+    #os.light .pfilter-btn.active { color: #0969da; border-color: #0969da; background: rgba(9,105,218,0.08); }
+    .pgroup-ttl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; margin: 12px 0 6px; }
+    #os.dark  .pgroup-ttl { color: #6e7681; } #os.light .pgroup-ttl { color: #6e7781; }
+
+    /* timeline (experience / education) */
+    .titem { position: relative; padding-left: 20px; padding-bottom: 18px; border-left: 2px solid; }
+    #os.dark  .titem { border-color: #30363d; }
+    #os.light .titem { border-color: #d0d7de; }
+    .titem:last-child { border-color: transparent; padding-bottom: 0; }
+    .titem::before { content:''; position: absolute; left: -6px; top: 2px; width: 10px; height: 10px; border-radius: 50%; }
+    #os.dark  .titem::before { background: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.15); }
+    #os.light .titem::before { background: #0969da; box-shadow: 0 0 0 3px rgba(9,105,218,0.12); }
+    .titem-date { font-size: 10px; }
+    #os.dark  .titem-date { color: #d29922; } #os.light .titem-date { color: #9a6700; }
+    .titem-role { font-size: 12px; font-weight: 700; margin: 3px 0 1px; }
+    #os.dark  .titem-role { color: #e6edf3; } #os.light .titem-role { color: #24292f; }
+    .titem-org { font-size: 11px; margin-bottom: 5px; }
+    #os.dark  .titem-org { color: #58a6ff; } #os.light .titem-org { color: #0969da; }
+    .titem-desc { font-size: 11px; line-height: 1.6; }
+    #os.dark  .titem-desc { color: #8b949e; } #os.light .titem-desc { color: #57606a; }
+
+    /* contact */
     .crow { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
     .cicon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
     #os.dark  .cicon { background: #21262d; }
@@ -251,9 +238,15 @@
     .csub  { font-size: 10px; }
     #os.dark  .ctxt { color: #c9d1d9; } #os.light .ctxt { color: #24292f; }
     #os.dark  .csub { color: #8b949e; } #os.light .csub { color: #57606a; }
-    .cavail { border: 1px solid; border-radius: 9px; padding: 13px; margin-top: 16px; transition: all 0.3s; }
+    .crow-link { text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px; width: 100%; }
+    .cavail { border: 1px solid; border-radius: 9px; padding: 13px; margin-top: 14px; transition: all 0.3s; }
     #os.dark  .cavail { background: #0d1117; border-color: #30363d; }
     #os.light .cavail { background: #f6f8fa; border-color: #d0d7de; }
+    .quote { border-left: 2px solid; padding: 6px 0 6px 12px; margin: 8px 0; font-size: 11px; line-height: 1.6; }
+    #os.dark  .quote { border-color: #f778ba; color: #8b949e; }
+    #os.light .quote { border-color: #bf3989; color: #57606a; }
+    .quote-by { font-size: 10px; margin-top: 4px; }
+    #os.dark  .quote-by { color: #58a6ff; } #os.light .quote-by { color: #0969da; }
 
     .neofetch { display: grid; grid-template-columns: auto 1fr; gap: 18px; }
     .ascii { font-size: 9.5px; line-height: 1.35; white-space: pre; }
@@ -273,29 +266,19 @@
     }
     #os.dark  #dock { background: rgba(10,16,26,0.82); border-color: rgba(88,166,255,0.12); }
     #os.light #dock { background: rgba(255,255,255,0.87); border-color: rgba(0,80,180,0.12); }
-    .dock-app {
-      display: flex; flex-direction: column; align-items: center; gap: 3px;
-      cursor: pointer; padding: 5px 11px; border-radius: 10px;
-      border: 1px solid transparent; transition: all 0.16s;
-      font-family: 'JetBrains Mono', monospace;
-      position: relative;
-    }
+    .dock-app { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 5px 10px; border-radius: 10px; border: 1px solid transparent; transition: all 0.16s; font-family: 'JetBrains Mono', monospace; position: relative; }
     #os.dark  .dock-app:hover { background: rgba(88,166,255,0.11); border-color: rgba(88,166,255,0.2); }
     #os.light .dock-app:hover { background: rgba(9,105,218,0.08);  border-color: rgba(9,105,218,0.2); }
     #os.dark  .dock-app.running { border-color: rgba(88,166,255,0.38); background: rgba(88,166,255,0.09); }
     #os.light .dock-app.running { border-color: rgba(9,105,218,0.38);  background: rgba(9,105,218,0.07); }
-    .dock-ic { font-size: 22px; line-height: 1; }
+    .dock-ic { font-size: 20px; line-height: 1; }
     .dock-lb { font-size: 9px; }
     #os.dark  .dock-lb { color: #8b949e; } #os.light .dock-lb { color: #57606a; }
-    .dock-dot {
-      position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
-      width: 4px; height: 4px; border-radius: 50%;
-      opacity: 0; transition: opacity 0.2s;
-    }
+    .dock-dot { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; opacity: 0; transition: opacity 0.2s; }
     #os.dark  .dock-dot { background: #58a6ff; }
     #os.light .dock-dot { background: #0969da; }
     .dock-app.running .dock-dot { opacity: 1; }
-    .dock-sep { width: 1px; height: 42px; border-radius: 1px; margin: 0 5px; flex-shrink: 0; }
+    .dock-sep { width: 1px; height: 42px; border-radius: 1px; margin: 0 4px; flex-shrink: 0; }
     #os.dark  .dock-sep { background: rgba(255,255,255,0.09); }
     #os.light .dock-sep { background: rgba(0,0,0,0.09); }
     .dock-r { display: flex; align-items: center; gap: 8px; margin-left: auto; }
@@ -304,14 +287,7 @@
     #os.light .s-pill { background: rgba(26,127,55,0.08); border-color: #1a7f37; color: #1a7f37; }
 
     /* ── CONTEXT MENU ── */
-    #ctx-menu {
-      position: fixed; z-index: 9990;
-      border: 1px solid; border-radius: 8px;
-      padding: 5px 0; min-width: 160px;
-      display: none; backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      font-size: 11px;
-    }
+    #ctx-menu { position: fixed; z-index: 9990; border: 1px solid; border-radius: 8px; padding: 5px 0; min-width: 160px; display: none; backdrop-filter: blur(12px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); font-size: 11px; }
     #os.dark  #ctx-menu { background: rgba(22,27,34,0.97); border-color: #30363d; }
     #os.light #ctx-menu { background: rgba(255,255,255,0.97); border-color: #d0d7de; }
     .ctx-item { padding: 6px 16px; cursor: pointer; transition: background 0.12s; }
@@ -323,27 +299,77 @@
     #os.dark  .ctx-sep { background: #30363d; }
     #os.light .ctx-sep { background: #d0d7de; }
 
-    /* scrollbar */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     #os.dark  ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
     #os.light ::-webkit-scrollbar-thumb { background: #d0d7de; border-radius: 3px; }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       #desktop-icons { grid-template-columns: repeat(2, 68px); }
       .win { min-width: 90vw !important; width: 95vw !important; left: 2vw !important; }
-      #win-about,#win-skills,#win-projects,#win-contact,#win-terminal { width: 95vw; left: 2vw; top: 20px; }
+      #win-about,#win-skills,#win-experience,#win-education,#win-projects,#win-contact,#win-terminal { width: 95vw; left: 2vw; top: 20px; }
       .tb-menu { display: none; }
     }
   </style>
 </head>
+<!--
+		                                          `-/++/-`                                              
+                                       -odNNmddmNNdo.                                           
+                                     -yNNh+.``yy:+hNNy-                                         
+                                   `sNNs.`    ./ho.-yMNo`                                       
+                                  -dMd:       ss:+ho.:mMd.                                      
+                                 :NMy`        ./ys:+ho-hMm:                                     
+                                /NMs`         sy:/ys:+hohMN:                                    
+                               :NMo           -:yy:/ys:+hNMN:                                   
+                              -NMs`           oy/:yy:/ho:omMN-                                  
+                             .mMh``..--:/++ooooyNh+yNy:odo:hMm.                                 
+                            `dMNsydmNNMMMMMMMMMMMMMMMMNmNMmyMMh`                                
+                            yMMMMMMMMyoooooooooooooooohMMMMMMMMs                                
+                           :MMMMMMMMM+        +       oMMMMMMMMM-                               
+                           .mMMMMMMMMm`       h+     .NMMMMMMMMm.                               
+                            .yNMMMMMMMs       ..     yMMMMMMMNy.                                
+                              :dMMMMMMM+`          `oMMMMMMMd:                                  
+                            .+hNMMMMMMMMdo:``````:omMMMMMMMMNh/.                                
+                         `/hNMMMMMMMMMMMMMMNmddmNMMMMMMMMMMMMMMNy/`                             
+                       `sNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNs`                           
+                      .mMMMMNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNMMMMd`                          
+                     `dMMMM+                                    oMMMMh                          
+                     sMMMMM+               `.--.                oMMMMMo                         
+                    /MMMMMMo            `odMMMMMNy:             sMMMMMM:                        
+                   .NMMMMMMo           :NMMMMMMMMMMh`           sMMMMMMN.                       
+                  `dMMMMMMMs          .NMMMMMMMMMMMMy           yMMMMMMMd`                      
+                  sMMMMMMMMy          :MmoyhdMNdyssMm           hMMMMMMMMo                      
+                  mMMMMMMMMh          `mN-`.+Mm-`.oMs           dMMMMMMMMd                      
+                  hMMMMMMMMd           -NNNNddymNNMh`           mMMMMMMMMy                      
+                  -NMMMMMMMm           .mNMMhmhmMNNy            NMMMMMMMm.                      
+                   -dMMMMMMN            ..oMMMMMN..`            NMMMMMMh.                       
+             :/://://hMMMMMN              `::::::              `MMMMMMy///::/:.                 
+            .dmmmmmmmmmmNMMM:----------------------------------:MMMNmmmmmmmmmmo                 
+             `..........-hMMmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmNMMh-..........`                 
+                         /MMo++++++++++++++++++++++++++++++++++sMM:                             
+                         -mNmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmNm.                             
+                          .---.--.--.--.--.--.--.--.---.--.--.--..                              
+                                                                                                
+                                                                                                
+     ``    `           ``      `      ``                                                        
+ `/.`so /+`o.+++ //.+/-o+.:/::-++--+./s--o`                                                     
+ `:-`++ +o +`///`++`:/.//`os-/::-::+-//-/o...`                                                  
+                          -`                                                                    
+                                                                                                
+ `o.--.  ---..`.  -+.`: /- -.  + `:``:.   `+.+-``-`--`.-  :.`-.  -.`.: -.                       
+ `s./-+  o:-+///  o+.+o-+.:/o  +.o/-o/-.   o`o-:+/.+.`o:  -:/+/  o+.o+`oo`                      
+  ``     `  ``/-  `` ``` ` ``     ` ./..   ` ` ` ` `  ``   ` `   -/``` ``                       
+
+  >SalmanSyuhada_
+  In my data log, there is you
+	-->
+
 <body>
 
 <!-- ═══════ BOOT SCREEN ═══════ -->
 <div id="boot">
   <div class="boot-logo">SALMAN OS</div>
-  <div class="boot-sub">Portfolio Edition v3.0</div>
+  <div class="boot-sub">Portfolio Edition v4.0</div>
   <div class="boot-bar-wrap"><div class="boot-bar"></div></div>
   <div class="boot-msgs" id="boot-msgs"></div>
 </div>
@@ -355,10 +381,12 @@
   <!-- TOP BAR -->
   <div id="topbar">
     <div class="tb-left">
-      <span class="tb-logo">⌘ salman@portfolio</span>
+      <span class="tb-logo">⌘ salman@siak</span>
       <div class="tb-menu">
         <span onclick="openWin('about')">About</span>
         <span onclick="openWin('skills')">Skills</span>
+        <span onclick="openWin('experience')">Experience</span>
+        <span onclick="openWin('education')">Education</span>
         <span onclick="openWin('projects')">Projects</span>
         <span onclick="openWin('contact')">Contact</span>
         <span onclick="openWin('terminal')">Terminal</span>
@@ -379,19 +407,27 @@
 
     <!-- Desktop Icons -->
     <div id="desktop-icons">
-      <div class="d-icon" ondblclick="openWin('about')"    onclick="selIcon(this)">
+      <div class="d-icon" ondblclick="openWin('about')" onclick="selIcon(this)">
         <div class="d-icon-img" style="background:linear-gradient(135deg,#1c3a5e,#0d1f33)">👤</div>
         <span class="d-icon-lbl">about.sh</span>
       </div>
-      <div class="d-icon" ondblclick="openWin('skills')"   onclick="selIcon(this)">
+      <div class="d-icon" ondblclick="openWin('skills')" onclick="selIcon(this)">
         <div class="d-icon-img" style="background:linear-gradient(135deg,#1a3d1a,#0a200a)">⚡</div>
         <span class="d-icon-lbl">skills/</span>
+      </div>
+      <div class="d-icon" ondblclick="openWin('experience')" onclick="selIcon(this)">
+        <div class="d-icon-img" style="background:linear-gradient(135deg,#3d2d1a,#20140a)">💼</div>
+        <span class="d-icon-lbl">experience.log</span>
+      </div>
+      <div class="d-icon" ondblclick="openWin('education')" onclick="selIcon(this)">
+        <div class="d-icon-img" style="background:linear-gradient(135deg,#1a2d3d,#0a1522)">🎓</div>
+        <span class="d-icon-lbl">education.db</span>
       </div>
       <div class="d-icon" ondblclick="openWin('projects')" onclick="selIcon(this)">
         <div class="d-icon-img" style="background:linear-gradient(135deg,#3d1a3d,#200a20)">🗂️</div>
         <span class="d-icon-lbl">projects/</span>
       </div>
-      <div class="d-icon" ondblclick="openWin('contact')"  onclick="selIcon(this)">
+      <div class="d-icon" ondblclick="openWin('contact')" onclick="selIcon(this)">
         <div class="d-icon-img" style="background:linear-gradient(135deg,#3d3a1a,#20200a)">✉️</div>
         <span class="d-icon-lbl">contact.txt</span>
       </div>
@@ -399,7 +435,7 @@
         <div class="d-icon-img" style="background:linear-gradient(135deg,#1e2d1e,#0a160a)">💻</div>
         <span class="d-icon-lbl">terminal</span>
       </div>
-      <div class="d-icon" onclick="selIcon(this)">
+      <div class="d-icon" onclick="selIcon(this); window.open('https://drive.google.com/file/d/1JlaXEU2AQWTdi42hQa6iEcwSur8B6SMr/view?usp=sharing','_blank')">
         <div class="d-icon-img" style="background:linear-gradient(135deg,#1a2d3d,#0a1020)">📄</div>
         <span class="d-icon-lbl">resume.pdf</span>
       </div>
@@ -423,25 +459,29 @@
    |||||
    |||||</div>
           <div style="font-size:11px;line-height:1.95;">
-            <div><span class="neo-k">user</span><span class="neo-v">    @ salman</span></div>
+            <div><span class="neo-k">user</span><span class="neo-v">      @ salman.alparisi</span></div>
             <div><span class="neo-k">------</span></div>
-            <div><span class="neo-k">role</span><span class="neo-v">    Web Developer</span></div>
-            <div><span class="neo-k">focus</span><span class="neo-v">   AI Explorer</span></div>
-            <div><span class="neo-k">hobby</span><span class="neo-v">   Cyber Security</span></div>
-            <div><span class="neo-k">os</span><span class="neo-v">      Arch Linux btw</span></div>
-            <div><span class="neo-k">shell</span><span class="neo-v">   zsh + oh-my-zsh</span></div>
-            <div><span class="neo-k">editor</span><span class="neo-v">  VS Code / Vim</span></div>
-            <div><span class="neo-k">uptime</span><span class="neo-v">  always learning</span></div>
+            <div><span class="neo-k">role</span><span class="neo-v">      Manggala Informatika Ahli Pertama</span></div>
+            <div><span class="neo-k">agency</span><span class="neo-v">    Diskominfo Kab. Siak — Bid. Persandian &amp; Statistik</span></div>
+            <div><span class="neo-k">previous</span><span class="neo-v">  Analis Sistem Informasi dan Jaringan</span></div>
+            <div><span class="neo-k">education</span><span class="neo-v"> Teknik Informatika, UIN SUSKA Riau</span></div>
+            <div><span class="neo-k">birthday</span><span class="neo-v"> 22 Oktober</span></div>
+            <div><span class="neo-k">status</span><span class="neo-v">    Menikah</span></div>
+            <div><span class="neo-k">nation</span><span class="neo-v">   Indonesia</span></div>
+            <div><span class="neo-k">uptime</span><span class="neo-v">   7+ tahun di dunia web development</span></div>
           </div>
         </div>
         <div style="margin-top:16px;">
-          <div class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~ $ </span><span class="c-blu">cat bio.txt</span></div>
+          <div class="tl"><span class="prompt">salman@siak</span><span class="cmd"> ~ $ </span><span class="c-blu">cat bio.txt</span></div>
           <div class="tl c-out" style="margin-top:8px;line-height:1.85;">
-            Hi! I'm <span class="c-grn">Salman</span> — a passionate Web Developer who loves exploring<br>
-            the intersection of <span class="c-blu">AI</span> and technology. I'm also deeply interested in<br>
-            <span class="c-pnk">Cyber Security</span>, always looking to understand systems from inside out.<br><br>
-            I build things, break things (ethically), and learn constantly.<br>
-            <span class="c-yel">▶ Currently open to new opportunities &amp; collaborations.</span>
+            Halo! Saya <span class="c-grn">Salman Alparisi</span>, web programmer dengan lebih dari<br>
+            <span class="c-blu">7 tahun pengalaman</span> di pengembangan front-end dan back-end,<br>
+            kini bertugas sebagai Manggala Informatika di Diskominfo Kabupaten Siak.<br><br>
+            Terbiasa bekerja dengan <span class="c-yel">HTML, CSS, JavaScript, PHP, Laravel, Yii2, CI</span><br>
+            serta WordPress/CMS di sisi front-end, dan <span class="c-pnk">MySQL &amp; PostgreSQL</span><br>
+            di sisi database. Belakangan fokusnya melebar ke keamanan informasi,<br>
+            persandian, dan tata kelola sistem pemerintahan digital.<br><br>
+            <span class="c-yel">▶ Terbuka untuk kolaborasi, konsultasi web &amp; keamanan informasi.</span>
           </div>
         </div>
       </div>
@@ -457,27 +497,114 @@
         <span class="win-pth">~/portfolio/skills</span>
       </div>
       <div class="win-body">
-        <div class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~/skills $ </span><span class="c-blu">ls -la</span></div>
+        <div class="tl"><span class="prompt">salman@siak</span><span class="cmd"> ~/skills $ </span><span class="c-blu">ls -la</span></div>
+
         <div class="sec-ttl">🌐 Web Development</div>
         <div>
-          <span class="stag w">HTML5</span><span class="stag w">CSS3</span><span class="stag w">JavaScript</span>
-          <span class="stag w">React</span><span class="stag w">Node.js</span><span class="stag w">REST API</span><span class="stag w">Git</span>
+          <span class="stag w">HTML</span><span class="stag w">CSS</span><span class="stag w">JavaScript</span>
+          <span class="stag w">PHP</span><span class="stag w">Laravel</span><span class="stag w">YII2</span>
+          <span class="stag w">CodeIgniter</span><span class="stag w">CMS</span><span class="stag w">WordPress</span>
         </div>
-        <div class="sec-ttl">🤖 AI &amp; Machine Learning</div>
+
+        <div class="sec-ttl">🗄️ Database</div>
+        <div><span class="stag a">MySQL</span><span class="stag a">PostgreSQL</span></div>
+
+        <div class="sec-ttl">🔐 Keamanan &amp; Tata Kelola TI</div>
         <div>
-          <span class="stag a">Python</span><span class="stag a">Prompt Engineering</span>
-          <span class="stag a">LLM Integration</span><span class="stag a">Automation</span><span class="stag a">AI Tools</span>
+          <span class="stag s">Keamanan Informasi</span><span class="stag s">Persandian</span>
+          <span class="stag s">SPBE</span><span class="stag s">Audit SMKI</span>
+          <span class="stag s">Network Security</span><span class="stag s">MikroTik (MTCNA/MTCRE)</span>
         </div>
-        <div class="sec-ttl">🔐 Cyber Security</div>
+
+        <div class="sec-ttl">🚀 Business &amp; Innovation</div>
         <div>
-          <span class="stag s">Linux</span><span class="stag s">Networking</span><span class="stag s">CTF</span>
-          <span class="stag s">OSINT</span><span class="stag s">Kali Linux</span><span class="stag s">Ethical Hacking</span>
+          <span class="stag b">Start Up</span><span class="stag b">Innovation</span><span class="stag b">Products</span>
+          <span class="stag b">Business</span><span class="stag b">E-commerce</span><span class="stag b">Creative</span>
         </div>
-        <div class="sec-ttl">🛠 Tools &amp; Environment</div>
-        <div>
-          <span class="stag">VS Code</span><span class="stag">Vim</span><span class="stag">Docker</span>
-          <span class="stag">GitHub</span><span class="stag">Bash</span><span class="stag">Zsh</span>
+
+        <div class="sec-ttl">🗣 Languages</div>
+        <div class="lang-row">
+          <div class="lang-lbl"><span>Bahasa Indonesia</span><span class="c-out">Advanced</span></div>
+          <div class="lang-bar-wrap"><div class="lang-bar-fill" style="width:92%"></div></div>
         </div>
+        <div class="lang-row">
+          <div class="lang-lbl"><span>English</span><span class="c-out">Basic</span></div>
+          <div class="lang-bar-wrap"><div class="lang-bar-fill" style="width:35%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EXPERIENCE ── -->
+    <div class="win" id="win-experience">
+      <div class="win-bar" onmousedown="dragStart(event,'win-experience')">
+        <div class="wb wb-r" onclick="closeWin('experience')"></div>
+        <div class="wb wb-y" onclick="minWin('experience')"></div>
+        <div class="wb wb-g" onclick="maxWin('win-experience')"></div>
+        <span class="win-ttl">experience.log — tail -f</span>
+        <span class="win-pth">~/portfolio/experience</span>
+      </div>
+      <div class="win-body">
+        <div class="tl"><span class="prompt">salman@siak</span><span class="cmd"> ~/experience $ </span><span class="c-blu">tail -f experience.log</span></div>
+        <div style="margin-top:14px;">
+          <div class="titem">
+            <div class="titem-date">Juli 2025 — Sekarang</div>
+            <div class="titem-role">Manggala Informatika Ahli Pertama</div>
+            <div class="titem-org">Dinas Komunikasi dan Informatika Kabupaten Siak</div>
+            <div class="titem-desc">Pejabat Fungsional Manggala Informatika, berperan dalam pengelolaan dan pengamanan TI, persandian, serta keamanan sistem pemerintahan digital — mulai dari analisis risiko dan kerentanan hingga deteksi dan respons insiden siber.</div>
+          </div>
+          <div class="titem">
+            <div class="titem-date">Jan 2021 — Juli 2025</div>
+            <div class="titem-role">Analis Sistem Informasi dan Jaringan</div>
+            <div class="titem-org">Dinas Komunikasi dan Informatika Kabupaten Siak</div>
+            <div class="titem-desc">Mengidentifikasi kebutuhan TI, merancang arsitektur sistem yang efisien, serta memastikan jaringan komputer berjalan lancar dan aman.</div>
+          </div>
+          <div class="titem">
+            <div class="titem-date">Jan 2018 — Des 2020</div>
+            <div class="titem-role">Tenaga Ahli Programmer</div>
+            <div class="titem-org">RSUD Arifin Achmad Prov. Riau, Pekanbaru</div>
+            <div class="titem-desc">Merancang, mengembangkan dan memelihara sistem informasi rumah sakit — manajemen pasien, rekam medis elektronik, penjadwalan, dan inventaris — serta mengintegrasikan berbagai sistem dan basis data.</div>
+          </div>
+          <div class="titem">
+            <div class="titem-date">Mei 2015 — Des 2017</div>
+            <div class="titem-role">Tenaga IT</div>
+            <div class="titem-org">Dinas Perpustakaan dan Kearsipan Kota Pekanbaru</div>
+            <div class="titem-desc">Mengelola infrastruktur TI perpustakaan dan kearsipan; mengembangkan sistem manajemen perpustakaan digital dan menerapkan langkah keamanan data.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EDUCATION ── -->
+    <div class="win" id="win-education">
+      <div class="win-bar" onmousedown="dragStart(event,'win-education')">
+        <div class="wb wb-r" onclick="closeWin('education')"></div>
+        <div class="wb wb-y" onclick="minWin('education')"></div>
+        <div class="wb wb-g" onclick="maxWin('win-education')"></div>
+        <span class="win-ttl">education.db — query</span>
+        <span class="win-pth">~/portfolio/education</span>
+      </div>
+      <div class="win-body">
+        <div class="tl"><span class="prompt">salman@siak</span><span class="cmd"> ~/education $ </span><span class="c-blu">SELECT * FROM riwayat_pendidikan;</span></div>
+        <div style="margin-top:14px;">
+          <div class="titem">
+            <div class="titem-date">2011 — 2015</div>
+            <div class="titem-role">Teknik Informatika</div>
+            <div class="titem-org">UIN Sultan Syarif Kasim (SUSKA) Riau</div>
+          </div>
+          <div class="titem">
+            <div class="titem-date">2009 — 2011</div>
+            <div class="titem-role">SMAN 1 Tualang</div>
+          </div>
+          <div class="titem">
+            <div class="titem-date">2005 — 2009</div>
+            <div class="titem-role">SMPN 1 Tualang</div>
+          </div>
+          <div class="titem">
+            <div class="titem-date">1999 — 2005</div>
+            <div class="titem-role">SDN 005 Tualang</div>
+          </div>
+        </div>
+        <div class="tl c-out" style="font-size:10px;margin-top:8px;">// 4 rows returned</div>
       </div>
     </div>
 
@@ -491,36 +618,180 @@
         <span class="win-pth">~/portfolio/projects</span>
       </div>
       <div class="win-body">
-        <div class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~/projects $ </span><span class="c-blu">ls --sort=date</span></div>
-        <div style="margin-top:12px;">
-          <div class="pcard">
-            <div class="pcard-name">▶ AI Chat Interface</div>
-            <div class="pcard-desc">Custom AI-powered chat application with multi-model support and prompt engineering capabilities.</div>
-            <div><span class="ptag">React</span><span class="ptag">Node.js</span><span class="ptag">OpenAI API</span><span class="ptag">LLM</span></div>
-            <div class="pcard-links">
-              <a class="pcard-link" href="#" target="_blank">GitHub →</a>
-              <a class="pcard-link" href="#" target="_blank">Live Demo →</a>
+        <div class="tl"><span class="prompt">salman@siak</span><span class="cmd"> ~/projects $ </span><span class="c-blu">ls --sort=category</span></div>
+
+        <div class="pfilter" id="pfilter">
+          <div class="pfilter-btn active" data-cat="all" onclick="filterProjects('all',this)">All</div>
+          <div class="pfilter-btn" data-cat="website" onclick="filterProjects('website',this)">Websites</div>
+          <div class="pfilter-btn" data-cat="app" onclick="filterProjects('app',this)">Apps</div>
+          <div class="pfilter-btn" data-cat="cert" onclick="filterProjects('cert',this)">Certificates</div>
+          <div class="pfilter-btn" data-cat="award" onclick="filterProjects('award',this)">Achievements</div>
+        </div>
+
+        <div id="pgrid">
+          <div class="pgroup-ttl" data-grp="website">Websites</div>
+          <div class="pcard" data-cat="website">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Web_PendopoTransJogja.png" alt="PendopoTransJogja">
+              <div><div class="pcard-name">Pendopo TransJogja</div><div class="pcard-desc">Website informasi &amp; layanan TransJogja.</div></div>
             </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Web_PendopoTransJogja.png" target="_blank">Preview →</a></div>
           </div>
-          <div class="pcard">
-            <div class="pcard-name">▶ Security Dashboard</div>
-            <div class="pcard-desc">Real-time network monitoring tool to visualize traffic and detect anomalies for home lab use.</div>
-            <div><span class="ptag">Python</span><span class="ptag">Bash</span><span class="ptag">Linux</span><span class="ptag">Networking</span></div>
-            <div class="pcard-links">
-              <a class="pcard-link" href="#" target="_blank">GitHub →</a>
+          <div class="pcard" data-cat="website">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Web_Faktanusantararaya.png" alt="FaktaNusantaraRaya">
+              <div><div class="pcard-name">FaktaNusantaraRaya.com</div><div class="pcard-desc">Portal berita nasional.</div></div>
             </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Web_Faktanusantararaya.png" target="_blank">Preview →</a></div>
           </div>
-          <div class="pcard">
-            <div class="pcard-name">▶ Portfolio OS</div>
-            <div class="pcard-desc">This portfolio — a Linux desktop-themed interactive site built entirely with web technologies.</div>
-            <div><span class="ptag">HTML</span><span class="ptag">CSS</span><span class="ptag">JavaScript</span></div>
-            <div class="pcard-links">
-              <a class="pcard-link" href="#" target="_blank">GitHub →</a>
-              <a class="pcard-link" href="#" target="_blank">Live →</a>
+          <div class="pcard" data-cat="website">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Web_SMP4Pekaitan.png" alt="SMP4Pekaitan">
+              <div><div class="pcard-name">SMP 4 Pekaitan</div><div class="pcard-desc">Website profil sekolah.</div></div>
             </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Web_SMP4Pekaitan.png" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="website">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Web_KelanaRiau.png" alt="Kelana Riau">
+              <div><div class="pcard-name">Kelana Riau</div><div class="pcard-desc">Website eksplorasi wisata &amp; budaya Riau.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Web_KelanaRiau.png" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="website">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Web_Covid19.png" alt="Covid19">
+              <div><div class="pcard-name">Info Covid-19</div><div class="pcard-desc">Dashboard informasi &amp; edukasi Covid-19.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Web_Covid19.png" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="website">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Web_Pusatherbal.png" alt="Pusat Herbal">
+              <div><div class="pcard-name">Pusat Herbal</div><div class="pcard-desc">Website toko produk herbal.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Web_Pusatherbal.png" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="website">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Web_Undangan.png" alt="Undangan">
+              <div><div class="pcard-name">Undangan Digital</div><div class="pcard-desc">Website undangan pernikahan digital.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Web_Undangan.png" target="_blank">Preview →</a></div>
+          </div>
+
+          <div class="pgroup-ttl" data-grp="app">Apps</div>
+          <div class="pcard" data-cat="app">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/App_ServerMon.png" alt="Server Monitoring">
+              <div><div class="pcard-name">Server Monitoring</div><div class="pcard-desc">Aplikasi pemantauan status server.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/App_ServerMon.png" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="app">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/App_ESS.png" alt="E-Support System">
+              <div><div class="pcard-name">E-Support System (ESS)</div><div class="pcard-desc">Sistem pendukung layanan elektronik.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/App_ESS.png" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="app">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/App_Kasbank.png" alt="Kasbank">
+              <div><div class="pcard-name">Kasbank</div><div class="pcard-desc">Aplikasi manajemen kas &amp; transaksi bank.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/App_Kasbank.png" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="app">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/App_MonitoringPembayaran.png" alt="Monitoring Pembayaran">
+              <div><div class="pcard-name">Monitoring Pembayaran</div><div class="pcard-desc">Aplikasi pemantauan transaksi pembayaran.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/App_MonitoringPembayaran.png" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="app">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/App_ECS_Dashboard.png" alt="ECS Dashboard">
+              <div><div class="pcard-name">ECS Dashboard</div><div class="pcard-desc">Dashboard sistem electronic claim.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/App_ECS_Dashboard.png" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="app">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Apps_SIKIMED.jpeg" alt="SIKIMED">
+              <div><div class="pcard-name">SIKIMED</div><div class="pcard-desc">Sistem Informasi Kinerja Medis RSUD Arifin Achmad Prov. Riau.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Apps_SIKIMED.jpeg" target="_blank">Preview →</a></div>
+          </div>
+          <div class="pcard" data-cat="app">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/App_M_Akses.png" alt="Mobile Akses">
+              <div><div class="pcard-name">Mobile Akses</div><div class="pcard-desc">Aplikasi mobile untuk manajemen akses.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/App_M_Akses.png" target="_blank">Preview →</a></div>
+          </div>
+
+          <div class="pgroup-ttl" data-grp="cert">Certificates</div>
+          <div class="pcard" data-cat="cert">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_SMKI.png" alt="SMKI">
+              <div><div class="pcard-name">Sistem Manajemen Keamanan Informasi</div><div class="pcard-desc">Sertifikat SMKI.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_SMKI.png" target="_blank">Lihat →</a></div>
+          </div>
+          <div class="pcard" data-cat="cert">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_MTCNA.png" alt="MTCNA">
+              <div><div class="pcard-name">MikroTik MTCNA</div><div class="pcard-desc">MikroTik Certified Network Associate.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_MTCNA.png" target="_blank">Lihat →</a></div>
+          </div>
+          <div class="pcard" data-cat="cert">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_MTCRE.png" alt="MTCRE">
+              <div><div class="pcard-name">MikroTik MTCRE</div><div class="pcard-desc">MikroTik Certified Routing Engineer.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_MTCRE.png" target="_blank">Lihat →</a></div>
+          </div>
+          <div class="pcard" data-cat="cert">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_PDP.png" alt="PDP">
+              <div><div class="pcard-name">Pelindungan Data Pribadi</div><div class="pcard-desc">Sertifikat pelatihan PDP.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_PDP.png" target="_blank">Lihat →</a></div>
+          </div>
+          <div class="pcard" data-cat="cert">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_Microsoft.png" alt="BSSN Microsoft">
+              <div><div class="pcard-name">BSSN – Microsoft</div><div class="pcard-desc">Sertifikat kolaborasi keamanan siber.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Sertifikat_Microsoft.png" target="_blank">Lihat →</a></div>
+          </div>
+          <div class="pcard" data-cat="cert">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/sertifikat_course_dicoding.png" alt="Dicoding">
+              <div><div class="pcard-name">Dicoding Course</div><div class="pcard-desc">Sertifikat kursus pengembangan web.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/sertifikat_course_dicoding.png" target="_blank">Lihat →</a></div>
+          </div>
+
+          <div class="pgroup-ttl" data-grp="award">Achievements</div>
+          <div class="pcard" data-cat="award">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Archievements_PemuncakJurusan.jpeg" alt="Pemuncak Jurusan">
+              <div><div class="pcard-name">Pemuncak Jurusan</div><div class="pcard-desc">Penghargaan lulusan terbaik jurusan.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Archievements_PemuncakJurusan.jpeg" target="_blank">Lihat →</a></div>
+          </div>
+          <div class="pcard" data-cat="award">
+            <div class="pcard-top">
+              <img class="pcard-thumb" src="https://salmansyuhada.github.io/assets/img/portfolio/Archievements_PemuncakFakultas.jpeg" alt="Pemuncak Fakultas">
+              <div><div class="pcard-name">Pemuncak Fakultas</div><div class="pcard-desc">Penghargaan lulusan terbaik fakultas.</div></div>
+            </div>
+            <div class="pcard-links"><a class="pcard-link" href="https://salmansyuhada.github.io/assets/img/portfolio/Archievements_PemuncakFakultas.jpeg" target="_blank">Lihat →</a></div>
           </div>
         </div>
-        <div class="tl c-yel" style="font-size:10px;margin-top:6px;">// Edit file ini untuk menambah project aslimu!</div>
+        <div class="tl c-yel" style="font-size:10px;margin-top:6px;">// +20 proyek &amp; sertifikat lainnya tersedia di portofolio lengkap</div>
       </div>
     </div>
 
@@ -534,32 +805,53 @@
         <span class="win-pth">~/portfolio/contact</span>
       </div>
       <div class="win-body">
-        <div class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~ $ </span><span class="c-blu">cat contact.txt</span></div>
+        <div class="tl"><span class="prompt">salman@siak</span><span class="cmd"> ~ $ </span><span class="c-blu">cat contact.txt</span></div>
         <div style="margin-top:14px;">
-          <div class="crow">
+          <a class="crow-link" href="mailto:syuhadasalman@gmail.com">
             <div class="cicon">✉️</div>
-            <div><div class="ctxt">salman@email.com</div><div class="csub">Email — preferred method</div></div>
-          </div>
-          <div class="crow">
-            <div class="cicon">💻</div>
-            <div><div class="ctxt">github.com/salman</div><div class="csub">GitHub — code &amp; projects</div></div>
-          </div>
-          <div class="crow">
+            <div><div class="ctxt">syuhadasalman@gmail.com</div><div class="csub">Email — metode utama</div></div>
+          </a>
+          <a class="crow-link" href="https://wa.me/+6281266883949?text=Halo,%20Salman,%20Kami%20mau%20tanya%20tentang%20website..." target="_blank">
+            <div class="cicon">💬</div>
+            <div><div class="ctxt">0812-6688-3949</div><div class="csub">WhatsApp</div></div>
+          </a>
+          <a class="crow-link" href="tel:+6281266883949">
+            <div class="cicon">📞</div>
+            <div><div class="ctxt">+62 812-6688-3949</div><div class="csub">Telepon</div></div>
+          </a>
+          <a class="crow-link" href="https://www.linkedin.com/in/salman-syuhada-8513a1182" target="_blank">
             <div class="cicon">🔗</div>
-            <div><div class="ctxt">linkedin.com/in/salman</div><div class="csub">LinkedIn — professional network</div></div>
-          </div>
-          <div class="crow">
+            <div><div class="ctxt">linkedin.com/in/salman-syuhada</div><div class="csub">LinkedIn</div></div>
+          </a>
+          <a class="crow-link" href="https://www.instagram.com/salmansyuhada/" target="_blank">
+            <div class="cicon">📷</div>
+            <div><div class="ctxt">@salmansyuhada</div><div class="csub">Instagram</div></div>
+          </a>
+          <a class="crow-link" href="https://x.com/salmansyuhada_" target="_blank">
             <div class="cicon">🐦</div>
-            <div><div class="ctxt">@salman_dev</div><div class="csub">Twitter/X — tech thoughts</div></div>
-          </div>
+            <div><div class="ctxt">@salmansyuhada_</div><div class="csub">Twitter / X</div></div>
+          </a>
+          <a class="crow-link" href="https://facebook.com/salman.syuhada" target="_blank">
+            <div class="cicon">📘</div>
+            <div><div class="ctxt">salman.syuhada</div><div class="csub">Facebook</div></div>
+          </a>
         </div>
         <div class="cavail">
           <div class="tl c-out" style="font-size:11px;line-height:2;">
-            <span class="c-grn">✔</span>&nbsp; Open to freelance &amp; collaboration<br>
-            <span class="c-grn">✔</span>&nbsp; Available for security consulting<br>
-            <span class="c-grn">✔</span>&nbsp; Interested in AI/ML projects<br>
-            <span class="c-yel">●</span>&nbsp; Response time: &lt; 24 hours
+            <span class="c-grn">✔</span>&nbsp; Terbuka untuk freelance &amp; kolaborasi<br>
+            <span class="c-grn">✔</span>&nbsp; Tersedia untuk konsultasi keamanan informasi<br>
+            <span class="c-grn">✔</span>&nbsp; Tertarik proyek web &amp; sistem informasi<br>
+            <span class="c-yel">●</span>&nbsp; Waktu respon: &lt; 24 jam
           </div>
+        </div>
+        <div class="sec-ttl">💬 Recommendations</div>
+        <div class="quote">
+          "Baik, jujur, ramah, dan responsif — sudah mendesain dan membantu proses pengembangan web Pengembara Imajinasi. Jangan ragu bekerja sama dengan Salman."
+          <div class="quote-by">— Admin Utama Pengembara Imajinasi (IG @pengembara.imajinasi)</div>
+        </div>
+        <div class="quote">
+          "Recommended banget buat kamu yang pengen punya blog atau website kece. Fast response dan bisa bantu via remote juga."
+          <div class="quote-by">— Dinni Ramayani, Delegation of JENESYS 2.0 Japan &amp; Penulis buku 'Sakura with You'</div>
         </div>
       </div>
     </div>
@@ -574,15 +866,15 @@
         <span class="win-pth">~/</span>
       </div>
       <div class="win-body" id="term-body">
-        <div class="tl c-grn">SalmanOS Terminal v3.0 — Portfolio Edition</div>
-        <div class="tl c-out" style="font-size:11px;">Type <span class="c-blu">help</span> for available commands.</div>
+        <div class="tl c-grn">SalmanOS Terminal v4.0 — Portfolio Edition</div>
+        <div class="tl c-out" style="font-size:11px;">Ketik <span class="c-blu">help</span> untuk daftar perintah.</div>
         <div id="term-lines"></div>
         <div style="display:flex;align-items:center;gap:4px;margin-top:8px;">
-          <span class="tl"><span class="prompt">salman@portfolio</span><span class="cmd"> ~ $ </span></span>
+          <span class="tl"><span class="prompt">salman@siak</span><span class="cmd"> ~ $ </span></span>
           <input id="term-in" autocomplete="off" autocorrect="off" spellcheck="false"
             type="text"
             style="background:transparent;border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:12px;flex:1;color:inherit;"
-            placeholder="type a command..."
+            placeholder="ketik perintah..."
             onkeydown="runCmd(event)" />
         </div>
       </div>
@@ -593,34 +885,28 @@
   <!-- DOCK -->
   <div id="dock">
     <div class="dock-app" id="da-about" onclick="toggleWin('about')">
-      <div class="dock-ic">👤</div>
-      <div class="dock-lb">About</div>
-      <div class="dock-dot"></div>
+      <div class="dock-ic">👤</div><div class="dock-lb">About</div><div class="dock-dot"></div>
     </div>
     <div class="dock-app" id="da-skills" onclick="toggleWin('skills')">
-      <div class="dock-ic">⚡</div>
-      <div class="dock-lb">Skills</div>
-      <div class="dock-dot"></div>
+      <div class="dock-ic">⚡</div><div class="dock-lb">Skills</div><div class="dock-dot"></div>
+    </div>
+    <div class="dock-app" id="da-experience" onclick="toggleWin('experience')">
+      <div class="dock-ic">💼</div><div class="dock-lb">Work</div><div class="dock-dot"></div>
+    </div>
+    <div class="dock-app" id="da-education" onclick="toggleWin('education')">
+      <div class="dock-ic">🎓</div><div class="dock-lb">Edu</div><div class="dock-dot"></div>
     </div>
     <div class="dock-app" id="da-projects" onclick="toggleWin('projects')">
-      <div class="dock-ic">🗂️</div>
-      <div class="dock-lb">Projects</div>
-      <div class="dock-dot"></div>
+      <div class="dock-ic">🗂️</div><div class="dock-lb">Projects</div><div class="dock-dot"></div>
     </div>
     <div class="dock-app" id="da-contact" onclick="toggleWin('contact')">
-      <div class="dock-ic">✉️</div>
-      <div class="dock-lb">Contact</div>
-      <div class="dock-dot"></div>
+      <div class="dock-ic">✉️</div><div class="dock-lb">Contact</div><div class="dock-dot"></div>
     </div>
     <div class="dock-app" id="da-terminal" onclick="toggleWin('terminal')">
-      <div class="dock-ic">💻</div>
-      <div class="dock-lb">Terminal</div>
-      <div class="dock-dot"></div>
+      <div class="dock-ic">💻</div><div class="dock-lb">Terminal</div><div class="dock-dot"></div>
     </div>
     <div class="dock-sep"></div>
-    <div class="dock-r">
-      <span class="s-pill">● available</span>
-    </div>
+    <div class="dock-r"><span class="s-pill">● available</span></div>
   </div>
 
   <!-- CONTEXT MENU -->
@@ -642,6 +928,7 @@ const bootMsgs = [
   '[ OK ] Starting network manager...',
   '[ OK ] Mounting portfolio filesystem...',
   '[ OK ] Initializing desktop environment...',
+  '[ OK ] Welcome, salman.alparisi',
   '[ OK ] SalmanOS ready.',
 ];
 let mi = 0;
@@ -653,14 +940,14 @@ function showBootMsg() {
   d.style.animationDelay = '0s';
   d.textContent = bootMsgs[mi++];
   bm.appendChild(d);
-  if(mi < bootMsgs.length) setTimeout(showBootMsg, 340);
+  if(mi < bootMsgs.length) setTimeout(showBootMsg, 300);
 }
 setTimeout(showBootMsg, 300);
 setTimeout(() => {
   document.getElementById('boot').classList.add('hide');
   document.getElementById('os').classList.add('ready');
   spawnStars();
-}, 2200);
+}, 2300);
 
 /* ═══════════════════════════════════
    THEME
@@ -693,7 +980,7 @@ function spawnStars() {
 ═══════════════════════════════════ */
 function tick() {
   document.getElementById('clock').textContent =
-    new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+    new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
 }
 tick(); setInterval(tick, 1000);
 
@@ -701,19 +988,19 @@ tick(); setInterval(tick, 1000);
    WINDOWS
 ═══════════════════════════════════ */
 let zTop = 20;
-const wins = ['about','skills','projects','contact','terminal'];
+const wins = ['about','skills','experience','education','projects','contact','terminal'];
 const maxed = {};
 
 function openWin(id) {
   const el = document.getElementById('win-' + id);
   el.classList.add('open', 'focused');
   el.style.zIndex = ++zTop;
-  document.getElementById('da-' + id).classList.add('running');
+  document.getElementById('da-' + id) && document.getElementById('da-' + id).classList.add('running');
   if (id === 'terminal') setTimeout(() => document.getElementById('term-in').focus(), 80);
 }
 function closeWin(id) {
   document.getElementById('win-' + id).classList.remove('open', 'focused');
-  document.getElementById('da-' + id).classList.remove('running');
+  document.getElementById('da-' + id) && document.getElementById('da-' + id).classList.remove('running');
 }
 function minWin(id) { closeWin(id); }
 function toggleWin(id) {
@@ -728,7 +1015,6 @@ function maxWin(winId) {
   const da = document.getElementById('desktop-area');
   if (!maxed[winId]) {
     maxed[winId] = { w: el.style.width, h: el.style.height, t: el.style.top, l: el.style.left };
-    const rect = da.getBoundingClientRect();
     el.style.width  = (da.offsetWidth  - 24) + 'px';
     el.style.height = (da.offsetHeight - 16) + 'px';
     el.style.top    = '4px';
@@ -777,6 +1063,20 @@ document.addEventListener('mousemove', e => {
 document.addEventListener('mouseup', () => drag.active = false);
 
 /* ═══════════════════════════════════
+   PROJECT FILTER
+═══════════════════════════════════ */
+function filterProjects(cat, btn) {
+  document.querySelectorAll('.pfilter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.pcard').forEach(c => {
+    c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
+  });
+  document.querySelectorAll('.pgroup-ttl').forEach(g => {
+    g.style.display = (cat === 'all' || g.dataset.grp === cat) ? '' : 'none';
+  });
+}
+
+/* ═══════════════════════════════════
    CONTEXT MENU
 ═══════════════════════════════════ */
 const ctxMenu = document.getElementById('ctx-menu');
@@ -797,17 +1097,20 @@ const history = [];
 let histIdx = -1;
 
 const cmds = {
-  help:     () => 'Commands: <span class="c-blu">about</span>  <span class="c-blu">skills</span>  <span class="c-blu">projects</span>  <span class="c-blu">contact</span>  <span class="c-blu">whoami</span>  <span class="c-blu">uname</span>  <span class="c-blu">ls</span>  <span class="c-blu">theme</span>  <span class="c-blu">date</span>  <span class="c-blu">clear</span>',
-  whoami:   () => '<span class="c-grn">salman</span> — Web Developer | AI Explorer | Security Enthusiast',
-  about:    () => { openWin('about');    return '<span class="c-grn">Opening about.sh...</span>'; },
-  skills:   () => { openWin('skills');   return '<span class="c-grn">Opening skills/...</span>'; },
-  projects: () => { openWin('projects'); return '<span class="c-grn">Opening projects/...</span>'; },
-  contact:  () => { openWin('contact');  return '<span class="c-grn">Opening contact.txt...</span>'; },
-  uname:    () => '<span class="c-yel">SalmanOS 3.0 x86_64 GNU/Linux — Portfolio Edition</span>',
-  ls:       () => '<span class="c-blu">about.sh</span>  <span class="c-blu">skills/</span>  <span class="c-blu">projects/</span>  <span class="c-blu">contact.txt</span>  <span class="c-blu">terminal</span>  <span class="c-yel">resume.pdf</span>',
-  theme:    () => { toggleTheme(); return '<span class="c-grn">Switched to ' + (isDark ? 'Dark' : 'Light') + ' mode.</span>'; },
-  date:     () => '<span class="c-grn">' + new Date().toLocaleString() + '</span>',
-  clear:    () => { document.getElementById('term-lines').innerHTML = ''; return null; },
+  help:       () => 'Perintah: <span class="c-blu">about</span> <span class="c-blu">skills</span> <span class="c-blu">experience</span> <span class="c-blu">education</span> <span class="c-blu">projects</span> <span class="c-blu">contact</span> <span class="c-blu">resume</span> <span class="c-blu">whoami</span> <span class="c-blu">uname</span> <span class="c-blu">ls</span> <span class="c-blu">theme</span> <span class="c-blu">date</span> <span class="c-blu">clear</span>',
+  whoami:     () => '<span class="c-grn">salman.alparisi</span> — Manggala Informatika | Web Programmer | Security Enthusiast',
+  about:      () => { openWin('about');      return '<span class="c-grn">Opening about.sh...</span>'; },
+  skills:     () => { openWin('skills');     return '<span class="c-grn">Opening skills/...</span>'; },
+  experience: () => { openWin('experience'); return '<span class="c-grn">Opening experience.log...</span>'; },
+  education:  () => { openWin('education');  return '<span class="c-grn">Opening education.db...</span>'; },
+  projects:   () => { openWin('projects');   return '<span class="c-grn">Opening projects/...</span>'; },
+  contact:    () => { openWin('contact');    return '<span class="c-grn">Opening contact.txt...</span>'; },
+  resume:     () => { window.open('https://drive.google.com/file/d/1JlaXEU2AQWTdi42hQa6iEcwSur8B6SMr/view?usp=sharing','_blank'); return '<span class="c-grn">Membuka resume.pdf di tab baru...</span>'; },
+  uname:      () => '<span class="c-yel">SalmanOS 4.0 x86_64 GNU/Linux — Portfolio Edition</span>',
+  ls:         () => '<span class="c-blu">about.sh</span>  <span class="c-blu">skills/</span>  <span class="c-blu">experience.log</span>  <span class="c-blu">education.db</span>  <span class="c-blu">projects/</span>  <span class="c-blu">contact.txt</span>  <span class="c-blu">terminal</span>  <span class="c-yel">resume.pdf</span>',
+  theme:      () => { toggleTheme(); return '<span class="c-grn">Switched to ' + (isDark ? 'Dark' : 'Light') + ' mode.</span>'; },
+  date:       () => '<span class="c-grn">' + new Date().toLocaleString('id-ID') + '</span>',
+  clear:      () => { document.getElementById('term-lines').innerHTML = ''; return null; },
 };
 
 function runCmd(e) {
@@ -831,7 +1134,7 @@ function runCmd(e) {
   const lines = document.getElementById('term-lines');
   const row = document.createElement('div');
   row.className = 'tl';
-  row.innerHTML = '<span class="prompt">salman@portfolio</span><span class="cmd"> ~ $ </span><span class="c-blu">' + val + '</span>';
+  row.innerHTML = '<span class="prompt">salman@siak</span><span class="cmd"> ~ $ </span><span class="c-blu">' + val + '</span>';
   lines.appendChild(row);
 
   const fn = cmds[val.toLowerCase()];
